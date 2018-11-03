@@ -1,20 +1,16 @@
 import * as React from 'react'
 import {
-    Form, Select, InputNumber, Switch, Radio,
-    Slider, Button, Upload, Icon, Rate,
-    Input, Checkbox, Progress
+    Form, Button, Upload, Icon,
+    Input, Progress
 } from 'antd';
-import {WrappedFormUtils} from 'antd/lib/form/Form';
 import jimp from 'jimp'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunkMiddleware from 'redux-thunk';
 import withRedux from 'next-redux-wrapper';
 import reduxApi from '../../lib/reduxApi';
 import cachios from 'cachios';
+import redirect from '../../lib/redirect'
 const FormItem = Form.Item;
-const Option = Select.Option;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 
 
 
@@ -167,6 +163,7 @@ class CForm extends React.Component {
                     console.log(resp.data.uuid)
                     if ( resp.status == 200 ){
                         this.setState({progress: 100, isSubmitting: false})
+                        redirect({}, e, '/sticker/' + resp.data.uuid)
                     }
                 });
             }
@@ -174,6 +171,9 @@ class CForm extends React.Component {
 
     }
 
+    trayToBase64 = () =>{
+        return false;
+    }
 
     normFile = (e, type) => {
         console.log('Upload event:', e.fileList);
