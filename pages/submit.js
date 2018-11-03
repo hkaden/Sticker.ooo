@@ -4,20 +4,25 @@ import Helmet from 'react-helmet'
 import ConverterForm from '../components/ConverterForm/ConverterForm'
 import Wapper from '../components/Wapper/Wapper'
 import {Row, Col, Card } from 'antd';
+import Head from 'next/head';
 
 const Converter = ({content}) => (
     <div>
-        <Helmet>
+        <Head>
             <title>Submit page</title>
-            <meta name="description" content="Converter page description"/>
-        </Helmet>
-
+            <meta name='description' content="Converter page description"/>
+            <meta charSet='utf-8'/>
+            <meta httpEquiv='content-language' content='en'/>
+            <meta name='viewport' content='initial-scale=1.0, width=device-width'/>
+            <link rel='stylesheet' href='/static/app.css'/>
+            <script src="static/libwebpjs.out.js"/>
+        </Head>
 
         <Wapper>
 
             <Row type="flex" justify="center">
                 <Col lg={10}>
-                    <Card title="WhatsApp Stickers Converter (Chrome Desktop only)" bordered={false}>
+                    <Card title="WhatsApp Stickers Converter" bordered={false}>
                         <ConverterForm/>
                     </Card>
 
