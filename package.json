@@ -38,8 +38,7 @@
 		"redux": "^3.7.2",
 		"redux-api": "^0.11.1",
 		"redux-thunk": "^2.2.0",
-		"uuid": "^3.3.2",
-		"whatsapp-stickers-convert": "github:lckj210/whatsapp-stickers-converter"
+		"uuid": "^3.3.2"
 	},
 	"devDependencies": {
 		"nodemon": "^1.12.1"
