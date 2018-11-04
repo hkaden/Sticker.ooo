@@ -16,7 +16,7 @@ module.exports = function (server) {
                 list: (req, res, next) => {
                     let query = Sticker.find({})
                         //.skip(1 * 5)
-                        .limit(1)
+                        //.limit(1)
                         .sort({'_id':-1});
 
                     if (selectFields) {
@@ -25,19 +25,26 @@ module.exports = function (server) {
 
                     query.exec((err, docs) => {
                         if (endResponseInAction) {
+                            console.log("here")
                             if (err) {
+                                console.log("Err")
                                 return res.json(err)
                             }
-                            }
-                        let newJson = {
-                            stickers: docs.map(item => ({
+                        }
+                        let stickersArr = [];
+                        docs.map(item => {
+                            console.log("pushing item")
+                            stickersArr.push({
                                 name: item.name,
                                 publisher: item.publisher,
                                 uuid: item.uuid,
                                 preview: item.stickers.slice(0, 5).map(i=>{
                                     return( i )
                                 })
-                            })),
+                            })
+                        })
+                        let newJson = {
+                            stickers: stickersArr,
                         }
                             console.log(newJson)
                             res.json(newJson)
