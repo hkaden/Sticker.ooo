@@ -26,21 +26,21 @@ class StickerPage extends Component {
 
 
     render () {
+        console.log(this.props.stickers[0].stickers);
         const {stickers} = this.props;
-
-        const packList = stickers[0].stickers.map((pack, index)=> 
-            <Card 
+        const packList = stickers[0].stickers.map((pack, index)=>
+            <Card
                 key={index}
-                title={'Pack ' + index} 
+                title={'Pack ' + index}
                 extra={
                     <Button type="primary" icon="plus" size='large' ghost href={'twesticker://json?urlString=' +config.BASE_URL+ '/api/addtowhatsapp/'+this.props.uuid+'?chunk='+index}>
                         Add to Whatsapp
                     </Button>
                 }
-            > 
+            >
                 {
                     pack.map((item, itemIndex)=> <img key={itemIndex} src={item} width={'100px'}/>)
-                } 
+                }
             </Card>
         )
 
