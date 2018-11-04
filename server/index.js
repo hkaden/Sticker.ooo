@@ -10,8 +10,7 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const defaultRequestHandler = app.getRequestHandler()
 
-const LOCAL_DB = 'Twemoji'
-const MONGODB_URI = config.MONGODB_URI + LOCAL_DB
+const MONGODB_URI = config.MONGODB_URI
 const PORT = process.env.PORT || 3001
 
 app.prepare().then(() => {
