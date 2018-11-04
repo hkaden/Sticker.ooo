@@ -14,22 +14,52 @@ class stickersList extends Component {
 
 
     static async getInitialProps ({store, isServer, pathname, query, router}) {
-        //console.log(reduxApi.actions.listSticker.get());
-        const stickersList = await store.dispatch(reduxApi.actions.kittens.sync())
+        const stickersList = await store.dispatch(reduxApi.actions.listSticker.get())
         return { stickersList }
     }
 
     constructor (props) {
         super(props)
-
+        this.state = {
+            stickers: []
+        }
     }
 
+    componentDidMount() {
+        const { stickers } = this.props.stickersList.data[0];
+        this.setState({ stickers: stickers });
+    }
+
+    renderLoader() {
+        return (
+            <Card loading={true}></Card>
+        )
+    }
 
     render () {
-        const {stickersList} = this.props;//dd
-        console.log(this.props)
-        //const packList = stickers.map((sticker, index)=> <Card title={sticker.name} extra={<Button type="primary" icon="plus" size='large' ghost href={'twesticker://json?urlString=' +config.BASE_URL+ '/api/addtowhatsapp/'+this.props.uuid+'?chunk='+index}>Add to Whatsapp</Button>}> {sticker.stickers.map((item, itemIndex)=> <img src={item.image_data} width={'100px'}/>)} </Card>)
-
+        var packList = this.renderLoader();
+        
+        if( this.state.stickers.length > 0) {
+            packList = this.state.stickers.map((sticker, itemIndex)=> 
+                <Card 
+                    key={itemIndex}
+                    title={sticker.name} 
+                    extra={
+                        <Button type="primary" icon="plus" size='large' ghost href={'twesticker://json?urlString=' +config.BASE_URL+ '/api/addtowhatsapp/'+this.props.uuid+'?chunk='+itemIndex}>
+                            Add to Whatsapp
+                        </Button>
+                    }> 
+                    {
+                        sticker.preview[0].map((item, itemIndex) => {
+                            return (
+                                <img key={itemIndex} src={item} width={'100px'}/>
+                            );
+                        })
+                    } 
+                </Card>
+            )
+        } 
+       
         return(
             <div>
                 <Helmet>
@@ -44,16 +74,13 @@ class stickersList extends Component {
                         <Col lg={12}>
                             <Card title='Stickers List'
                                   bordered={false}>
+                                  { packList }
                             </Card>
-
+                            
                         </Col>
                     </Row>
                 </Wapper>
             </div>
-
-
-
-
         )
     };
 
@@ -61,7 +88,7 @@ class stickersList extends Component {
 
 const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
 const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
-const mapStateToProps = (reduxState) => ({ stickersList: reduxState.stickersList }); // Use reduxApi endpoint names here
+const mapStateToProps = (reduxState) => ({ stickersList: reduxState.listSticker }); // Use reduxApi endpoint names here
 
 const stickersListConnected = withRedux({ createStore: makeStore, mapStateToProps })(stickersList)
 export default stickersListConnected;
