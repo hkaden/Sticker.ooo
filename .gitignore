@@ -4,4 +4,5 @@ config.js
 yarn.lock
 yarn-error.log
 .idea
-/static/imageStore/
+/static/imageStore/stickers/*/*.png
+/static/imageStore/tray/*/*.png
