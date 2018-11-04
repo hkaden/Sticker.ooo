@@ -14,38 +14,67 @@ module.exports = function (server) {
             identifyingKey: 'uuid',
             actions: {
                 list: (req, res, next) => {
-                    let query = Sticker.find({})
-                        //.skip(1 * 5)
-                        .limit(1)
-                        .sort({'_id':-1});
+                    let initList = req.query.initList || false;
+                    
+                    let currentPage = req.query.currentPage;
+                        let pageSize = 5;
+                        let query = Sticker.find({})
+                            .skip(pageSize * (currentPage-1))
+                            .limit(pageSize)
+                            .sort({'_id':-1});
+                            
+                        if (selectFields) {
+                            query.select(selectFields)
+                        }
 
-                    if (selectFields) {
-                        query.select(selectFields)
-                    }
-
-                    query.exec((err, docs) => {
-                        if (endResponseInAction) {
-                            if (err) {
-                                return res.json(err)
+                        query.exec((err, docs) => {
+                            if (endResponseInAction) {
+                                if (err) {
+                                    return res.json(err)
+                                }
                             }
-                            }
-                        let newJson = {
-                            stickers: docs.map(item => ({
-                                name: item.name,
-                                publisher: item.publisher,
-                                uuid: item.uuid,
-                                preview: item.stickers.slice(0, 5).map(i=>{
-                                    return( i )
+                            let stickersArr = [];
+                            docs.map(item => {
+                                stickersArr.push({
+                                    name: item.name,
+                                    publisher: item.publisher,
+                                    uuid: item.uuid,
+                                    preview: item.stickers.slice(0, 5).map(i=>{
+                                        return( i )
+                                    })
                                 })
-                            })),
-                        }
-                            console.log(newJson)
-                            res.json(newJson)
+                            })
 
-                        if (mongooseCrudify.exposure.hooks['after']['list'].length > 0) {
-                            next()
-                        }
-                    })
+                            let newJson = {
+                                stickers: stickersArr,
+                            }
+
+                            if(initList) {
+                                let query = Sticker.count();
+                                query.exec((err, docs) => {
+                                    if (endResponseInAction) {
+                                        if (err) {
+                                            return res.json(err)
+                                        }
+                                    }
+                                    
+                                    newJson = {
+                                        ...newJson,
+                                        count: docs
+                                    }
+                                    
+                                    return res.json(newJson)
+                                })
+                            } else {
+                                return res.json(newJson)
+                            }
+                            
+
+                            // if (mongooseCrudify.exposure.hooks['after']['list'].length > 0) {
+                            //     next()
+                            // }
+                        })
+                    
                 }
             },
             // beforeActions: [],
