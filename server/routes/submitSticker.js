@@ -64,12 +64,12 @@ module.exports = function (server) {
     }
 
     /**
-     * Download Images to target path from a base64 string 
+     * Download Images to target path from a base64 string
      * and return its relative path
      */
     function downloadBase64Image (image, path) {
         let data = image.replace(/^data:image\/\w+;base64,/, "");
-        let buffer = new Buffer(data, 'base64');
+        let buffer = new Buffer.from(data, 'base64');
         let local = __dirname + '/../..' + path;
         let file =  '/' + uuidv4() + '.png';
         let localPath = local + file;
@@ -78,8 +78,10 @@ module.exports = function (server) {
         if (!fs.existsSync(local)){
             fs.mkdirSync(local);
         }
-        fs.writeFile(localPath, buffer);
-        return dbPath; 
+        fs.writeFile(localPath, buffer, () => {
+            return dbPath;
+        });
+
     }
 
 };
