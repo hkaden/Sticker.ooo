@@ -50,6 +50,7 @@ module.exports = function (server) {
         req.body.stickers.map((stickerPack, stickerPackIndex) => stickerPack.map((image, itemIndex) => {
             let path = '/static/imageStore/stickers/' + id;
             let fd = downloadBase64Image(image, path);
+            console.log(fd);
             req.body.stickers[stickerPackIndex][itemIndex] = fd;
         }));
 
@@ -78,10 +79,9 @@ module.exports = function (server) {
         if (!fs.existsSync(local)){
             fs.mkdirSync(local);
         }
-        fs.writeFile(localPath, buffer, () => {
-            return dbPath;
-        });
 
+        fs.writeFile(localPath, buffer, () => {});
+        return dbPath;
     }
 
 };
