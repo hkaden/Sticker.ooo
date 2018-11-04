@@ -6,7 +6,7 @@ import withRedux from 'next-redux-wrapper';
 import reduxApi from '../lib/reduxApi';
 import Helmet from "react-helmet"
 import Wapper from "../components/Wapper/Wapper"
-import {Card, Col, Row, Button} from "antd"
+import {Card, Col, Row, Button, Pagination} from "antd"
 import * as React from "react"
 
 class stickersList extends Component {
@@ -14,20 +14,43 @@ class stickersList extends Component {
 
 
     static async getInitialProps ({store, isServer, pathname, query, router}) {
-        const stickersList = await store.dispatch(reduxApi.actions.listSticker.get())
+        const { stickersList } = await store.dispatch(reduxApi.actions.listSticker.get({initList: true, currentPage: 1}))
         return { stickersList }
     }
 
     constructor (props) {
         super(props)
         this.state = {
-            stickers: []
+            stickers: [],
+            currentPage: 1,
+            totalItems: 1
         }
     }
 
+    async getStickersList(currentPage) {
+        const stickersList = await this.props.dispatch(reduxApi.actions.listSticker.get({currentPage}))
+        this.setState({
+            stickers: stickersList[0].stickers
+        })
+    }
+
+    pageinationOnChange = (page) => {
+        this.setState({
+            currentPage: page
+        });
+
+        this.getStickersList(page);
+    }
+
     componentDidMount() {
-        const { stickers } = this.props.stickersList.data[0];
-        this.setState({ stickers: stickers });
+        const { stickers, count } = this.props.stickersList.data[0];
+        let pageSize = 10;
+        let limit = 5;
+        let totalItems = Math.ceil((count/limit)*pageSize) || this.state.totalItems;
+        this.setState({ 
+            stickers: stickers,
+            totalItems: totalItems
+        });
     }
 
     renderLoader() {
@@ -37,8 +60,7 @@ class stickersList extends Component {
     }
 
     render () {
-        var packList = this.renderLoader();
-        
+        var packList = null;
         if( this.state.stickers.length > 0) {
             packList = this.state.stickers.map((sticker, itemIndex)=> 
                 <Card 
@@ -58,6 +80,8 @@ class stickersList extends Component {
                     } 
                 </Card>
             )
+        } else {
+            packList = this.renderLoader();
         } 
        
         return(
@@ -75,6 +99,7 @@ class stickersList extends Component {
                             <Card title='Stickers List'
                                   bordered={false}>
                                   { packList }
+                                  <Pagination current={this.state.currentPage} onChange={this.pageinationOnChange} total={this.state.totalItems} />,
                             </Card>
                             
                         </Col>
@@ -88,7 +113,7 @@ class stickersList extends Component {
 
 const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
 const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
-const mapStateToProps = (reduxState) => ({ stickersList: reduxState.listSticker }); // Use reduxApi endpoint names here
+const mapStateToProps = (reduxState) => ({ stickersList: reduxState.listSticker, reduxState:reduxState }); // Use reduxApi endpoint names here
 
 const stickersListConnected = withRedux({ createStore: makeStore, mapStateToProps })(stickersList)
 export default stickersListConnected;
