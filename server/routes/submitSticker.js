@@ -4,6 +4,7 @@ const mongooseCrudify = require('mongoose-crudify');
 const uuidv4 = require('uuid/v4');
 const helpers = require('../services/helpers');
 const Sticker = require('../models/Sticker');
+const fs = require('fs');
 
 module.exports = function (server) {
 
@@ -16,7 +17,7 @@ module.exports = function (server) {
             endResponseInAction: false,
 
             beforeActions: [{
-                middlewares: [uuidGenerator]
+                middlewares: [generateStickersAndTrayImages]
             }],
             // actions: {}, // list (GET), create (POST), read (GET), update (PUT), delete (DELETE)
             afterActions: [
@@ -39,9 +40,46 @@ module.exports = function (server) {
 
     }
 
-    function uuidGenerator (req, res, next) {
-        req.body.uuid = uuidv4();
-        next()
+    /**
+     * Generate sticker and tray images
+     * and set uuid before inserting into db
+     */
+    function generateStickersAndTrayImages (req, res, next) {
+        var id = uuidv4();
+
+        req.body.stickers.map((stickerPack, stickerPackIndex) => stickerPack.map((image, itemIndex) => {
+            let path = '/static/imageStore/stickers/' + id;
+            let fd = downloadBase64Image(image, path);
+            req.body.stickers[stickerPackIndex][itemIndex] = fd;
+        }));
+
+        req.body.tray.map((image, itemIndex) => {
+            let path = '/static/imageStore/tray/' + id;
+            let fd = downloadBase64Image(image, path);
+            req.body.tray[itemIndex] = fd;
+        });
+
+        req.body.uuid = id;
+        next();
+    }
+
+    /**
+     * Download Images to target path from a base64 string 
+     * and return its relative path
+     */
+    function downloadBase64Image (image, path) {
+        let data = image.replace(/^data:image\/\w+;base64,/, "");
+        let buffer = new Buffer(data, 'base64');
+        let local = __dirname + '/../..' + path;
+        let file =  '/' + uuidv4() + '.png';
+        let localPath = local + file;
+        let dbPath = path + file;
+
+        if (!fs.existsSync(local)){
+            fs.mkdirSync(local);
+        }
+        fs.writeFile(localPath, buffer);
+        return dbPath; 
     }
 
 };

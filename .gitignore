@@ -4,3 +4,4 @@ config.js
 yarn.lock
 yarn-error.log
 .idea
+/static/imageStore/
