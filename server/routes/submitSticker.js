@@ -48,15 +48,13 @@ module.exports = function (server) {
         var id = uuidv4();
 
         req.body.stickers.map((stickerPack, stickerPackIndex) => stickerPack.map((image, itemIndex) => {
-            let path = '/static/imageStore/stickers/' + id;
-            let fd = downloadBase64Image(image, path);
+            let fd = downloadBase64Image(image, 'stickers', id);
             console.log(fd);
             req.body.stickers[stickerPackIndex][itemIndex] = fd;
         }));
 
         req.body.tray.map((image, itemIndex) => {
-            let path = '/static/imageStore/tray/' + id;
-            let fd = downloadBase64Image(image, path);
+            let fd = downloadBase64Image(image, 'tray', id);
             req.body.tray[itemIndex] = fd;
         });
 
@@ -68,15 +66,30 @@ module.exports = function (server) {
      * Download Images to target path from a base64 string
      * and return its relative path
      */
-    function downloadBase64Image (image, path) {
-        let data = image.replace(/^data:image\/\w+;base64,/, "");
-        let buffer = new Buffer.from(data, 'base64');
+    function downloadBase64Image (image, type, id) {
+
+        let dataUrlRegex = /^data:image\/(\w+);base64,/;
+
+        const execArray = dataUrlRegex.exec(image);
+        let extension = execArray[1];
+        console.log(extension);
+        if (execArray == null) {
+            throw new Error('Invalid dataUrl');
+        } else {
+            if (type === 'stickers' && extension !== 'webp' || type === 'tray' && extension !== 'png') {
+                throw new Error('Invalid dataUrl');
+            }
+        }
+
+        const path = `/static/imageStore/${type}/${id}`;
+        let data = image.replace(dataUrlRegex, '');
+        let buffer = Buffer.from(data, 'base64');
         let local = __dirname + '/../..' + path;
-        let file =  '/' + uuidv4() + '.png';
+        let file =  `/${uuidv4()}.${extension}`;
         let localPath = local + file;
         let dbPath = path + file;
 
-        if (!fs.existsSync(local)){
+        if (!fs.existsSync(local)) {
             fs.mkdirSync(local);
         }
 
