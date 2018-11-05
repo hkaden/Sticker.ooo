@@ -60,7 +60,7 @@ class stickersList extends Component {
     }
 
     render () {
-        var packList = null;
+        var packList = this.renderLoader();
         if( this.state.stickers.length > 0) {
             packList = this.state.stickers.map((sticker, itemIndex)=> 
                 <Card 
@@ -80,9 +80,7 @@ class stickersList extends Component {
                     } 
                 </Card>
             )
-        } else {
-            packList = this.renderLoader();
-        } 
+        }
        
         return(
             <div>
@@ -113,7 +111,7 @@ class stickersList extends Component {
 
 const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
 const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
-const mapStateToProps = (reduxState) => ({ stickersList: reduxState.listSticker, reduxState:reduxState }); // Use reduxApi endpoint names here
+const mapStateToProps = (reduxState) => ({ stickersList: reduxState.listSticker}); // Use reduxApi endpoint names here
 
 const stickersListConnected = withRedux({ createStore: makeStore, mapStateToProps })(stickersList)
 export default stickersListConnected;
