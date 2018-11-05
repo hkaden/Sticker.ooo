@@ -9,7 +9,7 @@ module.exports = function (server) {
 
     // Docs: https://github.com/ryo718/mongoose-crudify
     server.use(
-        '/api/fechsticker',
+        '/api/fetchsticker',
         mongooseCrudify({
             Model: Sticker,
             identifyingKey: 'uuid',

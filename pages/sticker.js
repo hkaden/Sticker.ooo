@@ -1,34 +1,49 @@
+import { decodeWebp, decodeWebpByPath, loadStickersList, stickersListReducer } from '../lib/customReducers';
+
 const config = require('../config.js')
 import { Component } from 'react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import withRedux from 'next-redux-wrapper';
 import reduxApi from '../lib/reduxApi';
-import Helmet from "react-helmet"
+import Head from 'next/head';
 import Wapper from "../components/Wapper/Wapper"
 import {Card, Col, Row, Button} from "antd"
 import * as React from "react"
+import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
 
 class StickerPage extends Component {
 
+    converter = null;
 
-
-    static async getInitialProps ({store, isServer, pathname, query, router}) {
+    static async getInitialProps({store, isServer, pathname, query, router, req}) {
         const uuid = query.uuid;
-        const stickers = await store.dispatch(reduxApi.actions.fechSticker.get({uuid: uuid}));
-        return { uuid, stickers, router };
+        const stickersList = await store.dispatch(reduxApi.actions.fetchSticker.get({uuid: uuid}));
+        await store.dispatch(loadStickersList(stickersList));
+        const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
+        return { uuid, router, userAgent };
     }
 
     constructor (props) {
         super(props)
-
     }
 
+    isWebpSupported() {
+        return this.props.userAgent.includes('Chrome') || this.props.userAgent.includes('Android');
+    }
 
-    render () {
-        console.log(this.props.stickers[0].stickers);
-        const {stickers} = this.props;
-        const packList = stickers[0].stickers.map((pack, index)=>
+    componentDidMount() {
+        if (!this.isWebpSupported()) {
+            this.converter = new WhatsAppStickersConverter();
+            this.converter.init().then(async () => {
+                this.props.decodeWebp(this.converter, this.props.stickersList)
+            }).catch(e => console.log(e));
+        }
+    }
+
+    render() {
+        const {stickersList} = this.props;
+        const packList = stickersList[0].stickers.map((pack, index)=>
             <Card
                 key={index}
                 title={'Pack ' + index}
@@ -39,7 +54,7 @@ class StickerPage extends Component {
                 }
             >
                 {
-                    pack.map((item, itemIndex)=> <img key={itemIndex} src={item} width={'100px'}/>)
+                    pack.map((item, itemIndex)=> <img key={itemIndex} src={this.isWebpSupported() ? item : (item.startsWith('data:image/webp') ? '' : item)} width={'100px'}/>)
                 }
             </Card>
         )
@@ -47,19 +62,20 @@ class StickerPage extends Component {
 
         return(
         <div>
-            <Helmet>
+            <Head>
                 <title>Submit page</title>
                 <meta name="description" content="Converter page description"/>
-            </Helmet>
+                <script src="../static/libwebpjs.out.js"/>
+            </Head>
 
 
             <Wapper>
 
                 <Row type="flex" justify="center">
                     <Col lg={12}>
-                        <Card title={stickers[0].name
+                        <Card title={stickersList[0].name
                         }
-                              extra={ 'Publisher: ' + stickers[0].publisher}
+                              extra={ 'Publisher: ' + stickersList[0].publisher}
                               bordered={false}>
                             {packList}
 
@@ -69,18 +85,17 @@ class StickerPage extends Component {
                 </Row>
             </Wapper>
         </div>
-
-
-
-
     )
     };
 
 }
 
 const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
-const mapStateToProps = (reduxState) => ({ sticker: reduxState.sticker }); // Use reduxApi endpoint names here
+const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers({...reduxApi.reducers, stickersList: stickersListReducer}), reduxState);
+const mapStateToProps = (reduxState) => {
+    return ({stickersList: reduxState.stickersList});
+} // Use reduxApi endpoint names here
 
-const IndexPageConnected = withRedux({ createStore: makeStore, mapStateToProps })(StickerPage)
+const mapDispatchToProps = (dispatch) => ({decodeWebp: (converter, stickersList) => {dispatch(decodeWebp(converter, stickersList))}});
+const IndexPageConnected = withRedux({ createStore: makeStore, mapStateToProps, mapDispatchToProps })(StickerPage)
 export default IndexPageConnected;

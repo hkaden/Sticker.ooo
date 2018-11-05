@@ -16,7 +16,7 @@ class appToWhatsapp extends Component {
     static async getInitialProps ({store, isServer, pathname, query }) {
         const uuid = query.uuid;
         const chunk = query.chunk;
-        const stickers = await store.dispatch(reduxApi.actions.fechSticker.get({uuid: uuid}));
+        const stickers = await store.dispatch(reduxApi.actions.fetchSticker.get({uuid: uuid}));
         return { uuid, stickers, chunk };
     }
 
