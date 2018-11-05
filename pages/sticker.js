@@ -15,7 +15,7 @@ class StickerPage extends Component {
 
     static async getInitialProps ({store, isServer, pathname, query, router}) {
         const uuid = query.uuid;
-        const stickers = await store.dispatch(reduxApi.actions.fechSticker.get({uuid: uuid}));
+        const stickers = await store.dispatch(reduxApi.actions.fetchSticker.get({uuid: uuid}));
         return { uuid, stickers, router };
     }
 
