@@ -47,19 +47,23 @@ module.exports = function (server) {
     function generateStickersAndTrayImages (req, res, next) {
         var id = uuidv4();
 
-        req.body.stickers.map((stickerPack, stickerPackIndex) => stickerPack.map((image, itemIndex) => {
-            let fd = downloadBase64Image(image, 'stickers', id);
-            console.log(fd);
-            req.body.stickers[stickerPackIndex][itemIndex] = fd;
-        }));
+        try {
+            req.body.stickers.map((stickerPack, stickerPackIndex) => stickerPack.map((image, itemIndex) => {
+                let fd = downloadBase64Image(image, 'stickers', id);
+                console.log(fd);
+                req.body.stickers[stickerPackIndex][itemIndex] = fd;
+            }));
 
-        req.body.tray.map((image, itemIndex) => {
-            let fd = downloadBase64Image(image, 'tray', id);
-            req.body.tray[itemIndex] = fd;
-        });
+            req.body.tray.map((image, itemIndex) => {
+                let fd = downloadBase64Image(image, 'tray', id);
+                req.body.tray[itemIndex] = fd;
+            });
 
-        req.body.uuid = id;
-        next();
+            req.body.uuid = id;
+            next();
+        } catch (e) {
+            next(e);
+        }
     }
 
     /**
