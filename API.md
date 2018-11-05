@@ -4,7 +4,7 @@
 
 * **URL**
 
-  https://stickerizdemo.hkaden.me/api/fechsticker/:uuid
+  https://stickerizdemo.hkaden.me/api/fetchsticker/:uuid
 
 * **Method:**
 
