@@ -1,4 +1,4 @@
-**Fech Sticker**
+**Fetch Sticker**
 ----
   get sticker pack
 
