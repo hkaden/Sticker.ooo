@@ -36,7 +36,7 @@ class StickerPage extends Component {
         if (!this.isWebpSupported()) {
             this.converter = new WhatsAppStickersConverter();
             this.converter.init().then(async () => {
-                this.props.decodeWebp(this.converter, this.props.stickersList)
+                this.props.decodeWebp(this.converter);
             }).catch(e => console.log(e));
         }
     }
@@ -96,6 +96,6 @@ const mapStateToProps = (reduxState) => {
     return ({stickersList: reduxState.stickersList});
 } // Use reduxApi endpoint names here
 
-const mapDispatchToProps = (dispatch) => ({decodeWebp: (converter, stickersList) => {dispatch(decodeWebp(converter, stickersList))}});
+const mapDispatchToProps = (dispatch) => ({decodeWebp: (converter) => {dispatch(decodeWebp(converter))}});
 const IndexPageConnected = withRedux({ createStore: makeStore, mapStateToProps, mapDispatchToProps })(StickerPage)
 export default IndexPageConnected;
