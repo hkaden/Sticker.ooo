@@ -30,10 +30,9 @@ class stickersList extends Component {
 
     async getStickersList(currentPage) {
         const stickersList = await this.props.dispatch(reduxApi.actions.listSticker.get({currentPage}))
-        let stickers = JSON.parse(decrypt(stickersList.data))
-        
+        let stickers = JSON.parse(decrypt(stickersList[0].data)).stickers
         this.setState({
-            stickers: stickersList[0].stickers
+            stickers: stickers
         })
     }
 
