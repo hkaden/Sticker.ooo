@@ -72,17 +72,19 @@
      **Content:** 
      ```json
      {  
-        "stickers": [
+       "stickers": [
             {
                 "name": "test",
                 "publisher": "test",
-                "preview": [
-                         [
-                         "data:imge/webp;base64,.........."
-                    ]
+                "preview":[  
+                      [  
+                         "/static/imageStore/stickers/d23db856-6dca-4d17-b8ae-0924975a29f5/f3188c9b-87c9-4fc2-9f03-5234ce4d5237.png",
+                         "/static/imageStore/stickers/d23db856-6dca-4d17-b8ae-0924975a29f5/f7ab38f4-b7ec-40dc-9169-c07b5dc5b49b.png",
+                         "/static/imageStore/stickers/d23db856-6dca-4d17-b8ae-0924975a29f5/0a5c763b-e366-4c8a-908c-87b4d977e64f.png"
+                      ]
                 ]
             }
-        ]
+       ]
      }    
      ```
      
