@@ -1,39 +1,47 @@
-const config = require('../config.js')
+import { decodeWebp, loadStickersList, stickersListReducer } from '../lib/customReducers';
+import * as React from 'react';
 import { Component } from 'react';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import withRedux from 'next-redux-wrapper';
 import reduxApi from '../lib/reduxApi';
-import Helmet from "react-helmet"
-import Wapper from "../components/Wapper/Wapper"
-import {Card, Col, Row, Button, Pagination} from "antd"
-import * as React from "react"
+import Wapper from '../components/Wapper/Wapper'
+import { Button, Card, Col, Pagination, Row } from 'antd'
 import { decrypt } from '../server/services/crypto';
+import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
+import Head from 'next/head';
+
+const config = require('../config.js')
 
 class stickersList extends Component {
 
+    converter = null;
 
-
-    static async getInitialProps ({store, isServer, pathname, query, router}) {
-        const { stickersList } = await store.dispatch(reduxApi.actions.listSticker.get({initList: true, currentPage: 1}))
-        return { stickersList }
+    static async getInitialProps ({store, isServer, pathname, query, router, req}) {
+        const encryptedData = await store.dispatch(reduxApi.actions.listSticker.get({initList: true, currentPage: 1}));
+        const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
+        return { userAgent, encryptedData };
     }
 
     constructor (props) {
         super(props);
         this.state = {
-            stickers: [],
             currentPage: 1,
-            totalItems: 1
         }
     }
 
+    isWebpSupported() {
+        return this.props.userAgent.includes('Chrome') || this.props.userAgent.includes('Android');
+    }
+
     async getStickersList(currentPage) {
-        const stickersList = await this.props.dispatch(reduxApi.actions.listSticker.get({currentPage}))
-        let stickers = JSON.parse(decrypt(stickersList[0].data)).stickers
-        this.setState({
-            stickers: stickers
-        })
+        const encryptedData = await this.props.dispatch(reduxApi.actions.listSticker.get({currentPage}))
+        let stickersList = JSON.parse(decrypt(encryptedData[0].data)).stickers;
+        await this.props.dispatch(loadStickersList(stickersList));
+
+        if (!this.isWebpSupported()) {
+            this.props.dispatch(decodeWebp(this.converter));
+        }
     }
 
     pageinationOnChange = (page) => {
@@ -41,18 +49,29 @@ class stickersList extends Component {
             currentPage: page
         });
 
-        this.getStickersList(page);
+        this.getStickersList(page).then(() => {
+            if (!this.isWebpSupported()) {
+                this.props.dispatch(decodeWebp(this.converter));
+            }
+        });
     }
 
     componentDidMount() {
-        const { stickers, count } = JSON.parse(decrypt(this.props.stickersList.data[0].data));
+        const { stickers: stickersList, count } = JSON.parse(decrypt(this.props.encryptedData[0].data));
         let pageSize = 10;
         let limit = 5;
-        let totalItems = Math.ceil((count/limit)*pageSize) || this.state.totalItems;
         this.setState({
-            stickers: stickers,
-            totalItems: totalItems
+            totalItems: Math.ceil((count/limit)*pageSize)
         });
+
+        this.props.dispatch(loadStickersList(stickersList))
+
+        if (!this.isWebpSupported()) {
+            this.converter = new WhatsAppStickersConverter();
+            this.converter.init().then(async () => {
+                this.props.dispatch(decodeWebp(this.converter));
+            }).catch(e => console.log(e));
+        }
     }
 
     renderLoader() {
@@ -63,20 +82,20 @@ class stickersList extends Component {
 
     render () {
         var packList = this.renderLoader();
-        if( this.state.stickers.length > 0) {
-            packList = this.state.stickers.map((sticker, itemIndex)=>
+        if( this.props.stickersList.length > 0) {
+            packList = this.props.stickersList.map((sticker, itemIndex)=>
                 <Card
                     key={itemIndex}
                     title={sticker.name}
                     extra={
                         <Button type="primary" icon="plus" size='large' ghost href={'twesticker://json?urlString=' +config.BASE_URL+ '/api/addtowhatsapp/'+this.props.uuid+'?chunk='+itemIndex}>
-                            Add to Whatsapp
+                            Add to WhatsApp
                         </Button>
                     }>
                     {
                         sticker.preview[0].map((item, itemIndex) => {
                             return (
-                                <img key={itemIndex} src={item} width={'100px'}/>
+                                <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width={'100px'}/>
                             );
                         })
                     }
@@ -86,14 +105,14 @@ class stickersList extends Component {
 
         return(
             <div>
-                <Helmet>
+                <Head>
                     <title>List page</title>
                     <meta name="description" content="Converter page description"/>
-                </Helmet>
+                    <script src="../static/libwebpjs.out.js"/>
+                </Head>
 
 
                 <Wapper>
-
                     <Row type="flex" justify="center">
                         <Col lg={12}>
                             <Card title='Stickers List'
@@ -111,8 +130,8 @@ class stickersList extends Component {
 }
 
 const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
-const mapStateToProps = (reduxState) => ({ stickersList: reduxState.listSticker}); // Use reduxApi endpoint names here
+const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers({...reduxApi.reducers, stickersList: stickersListReducer}), reduxState);
+const mapStateToProps = (reduxState) => ({ stickersList: reduxState.stickersList}); // Use reduxApi endpoint names here
 
 const stickersListConnected = withRedux({ createStore: makeStore, mapStateToProps })(stickersList)
 export default stickersListConnected;

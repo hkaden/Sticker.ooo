@@ -11,7 +11,6 @@ module.exports.encrypt = function (content) {
 }
 
 module.exports.decrypt = function (content) {
-  console.log("[FIXME] Remove this line will fali..")
   let textParts = content.split(':');
   let iv = Buffer.from(textParts.shift(), 'HEX');
   let encryptedContent = Buffer.from(textParts.join(':'), 'HEX');

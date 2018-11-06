@@ -49,12 +49,12 @@ class StickerPage extends Component {
                 title={'Pack ' + index}
                 extra={
                     <Button type="primary" icon="plus" size='large' ghost href={'twesticker://json?urlString=' +config.BASE_URL+ '/api/addtowhatsapp/'+this.props.uuid+'?chunk='+index}>
-                        Add to Whatsapp
+                        Add to WhatsApp
                     </Button>
                 }
             >
                 {
-                    pack.map((item, itemIndex)=> <img key={itemIndex} src={this.isWebpSupported() ? item : (item.startsWith('data:image/webp') ? '' : item)} width={'100px'}/>)
+                    pack.map((item, itemIndex)=> <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width={'100px'}/>)
                 }
             </Card>
         )
