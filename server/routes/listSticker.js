@@ -2,6 +2,7 @@
 
 const mongooseCrudify = require('mongoose-crudify');
 const helpers = require('../services/helpers');
+const crypto = require('../services/crypto');
 const Sticker = require('../models/Sticker');
 
 module.exports = function (server) {
@@ -45,7 +46,7 @@ module.exports = function (server) {
                                 })
                             })
 
-                            let newJson = {
+                            let data = {
                                 stickers: stickersArr,
                             }
 
@@ -58,15 +59,18 @@ module.exports = function (server) {
                                         }
                                     }
                                     
-                                    newJson = {
-                                        ...newJson,
+                                    data = {
+                                        ...data,
                                         count: docs
                                     }
-                                    
-                                    return res.json(newJson)
+                                    return res.json({
+                                        data: crypto.encrypt(JSON.stringify(data), process.env.CRYPTO_PASSPHRASE)
+                                    })
                                 })
                             } else {
-                                return res.json(newJson)
+                                return res.json({
+                                        data: crypto.encrypt(JSON.stringify(data), process.env.CRYPTO_PASSPHRASE)
+                                    })
                             }
                             
 
