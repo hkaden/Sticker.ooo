@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const UsersSchema = new Schema({
     uuid : { type: String, required: true, unique: true },
     username: { type: String, required: true },
     password: { type: String, required: true },
@@ -20,8 +20,8 @@ UsersSchema.methods.setPassword = function(password) {
   };
   
   UsersSchema.methods.validatePassword = function(password) {
-    const password = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
-    return this.password === password;
+    const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+    return this.password === hash;
   };
   
   UsersSchema.methods.generateJWT = function() {
@@ -46,4 +46,4 @@ UsersSchema.methods.setPassword = function(password) {
     };
   };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', UsersSchema);
