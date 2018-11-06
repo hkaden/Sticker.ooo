@@ -3,6 +3,7 @@
 const mongooseCrudify = require('mongoose-crudify');
 const helpers = require('../services/helpers');
 const Sticker = require('../models/Sticker');
+const crypto = require('../services/crypto');
 
 module.exports = function (server) {
     let selectFields = {__v: 0, tray: 0, _id: 0, create: 0};
@@ -40,7 +41,7 @@ module.exports = function (server) {
                                 preview: item.stickers.slice(0, 1).map(pack => pack.slice(0, 5)),
                             }));
 
-                        let newJson = {
+                        let data = {
                             stickers: stickersArr,
                         };
 
@@ -53,15 +54,19 @@ module.exports = function (server) {
                                     }
                                 }
 
-                                newJson = {
-                                    ...newJson,
-                                    count: docs,
+                                data = {
+                                    ...data,
+                                    count: docs
                                 };
 
-                                return res.json(newJson)
+                                return res.json({
+                                    data: crypto.encrypt(JSON.stringify(data), process.env.CRYPTO_PASSPHRASE)
+                                })
                             })
                         } else {
-                            return res.json(newJson)
+                            return res.json({
+                                data: crypto.encrypt(JSON.stringify(data), process.env.CRYPTO_PASSPHRASE)
+                            })
                         }
 
 

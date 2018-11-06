@@ -8,6 +8,7 @@ import Helmet from "react-helmet"
 import Wapper from "../components/Wapper/Wapper"
 import {Card, Col, Row, Button, Pagination} from "antd"
 import * as React from "react"
+import { decrypt } from '../server/services/crypto';
 
 class stickersList extends Component {
 
@@ -28,7 +29,9 @@ class stickersList extends Component {
     }
 
     async getStickersList(currentPage) {
-        const stickersList = await this.props.dispatch(reduxApi.actions.listSticker.get({ currentPage }));
+        const stickersList = await this.props.dispatch(reduxApi.actions.listSticker.get({currentPage}))
+        let stickers = JSON.parse(decrypt(stickersList.data))
+        
         this.setState({
             stickers: stickersList[0].stickers
         })
@@ -43,7 +46,7 @@ class stickersList extends Component {
     }
 
     componentDidMount() {
-        const { stickers, count } = this.props.stickersList.data[0];
+        const { stickers, count } = JSON.parse(decrypt(this.props.stickersList.data[0].data));
         let pageSize = 10;
         let limit = 5;
         let totalItems = Math.ceil((count/limit)*pageSize) || this.state.totalItems;
