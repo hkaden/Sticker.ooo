@@ -4,12 +4,14 @@ const mongooseCrudify = require('mongoose-crudify');
 const helpers = require('../services/helpers');
 const Sticker = require('../models/Sticker');
 const crypto = require('../services/crypto');
+const auth = require('../middleware/auth');
 
 module.exports = function (server) {
     let selectFields = {__v: 0, tray: 0, _id: 0, create: 0};
     let endResponseInAction = true;
     server.use(
         '/api/liststicker',
+        auth.optional,
         mongooseCrudify({
             Model: Sticker,
             identifyingKey: 'uuid',

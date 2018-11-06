@@ -5,12 +5,14 @@ const uuidv4 = require('uuid/v4');
 const helpers = require('../services/helpers');
 const User = require('../models/User');
 const fs = require('fs');
+const auth = require('../middleware/auth');
 
 module.exports = function (server) {
 
     // Docs: https://github.com/ryo718/mongoose-crudify
     server.use(
-        '/api/register',
+        '/api/login',
+        auth.optional,
         mongooseCrudify({
             Model: User,
             selectFields: '-__v', // Hide '__v' property

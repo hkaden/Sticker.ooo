@@ -4,12 +4,14 @@ const mongooseCrudify = require('mongoose-crudify');
 
 const helpers = require('../services/helpers');
 const Sticker = require('../models/Sticker');
+const auth = require('../middleware/auth');
 
 module.exports = function (server) {
 
     // Docs: https://github.com/ryo718/mongoose-crudify
     server.use(
         '/api/addtowhatsapp/',
+        auth.optional,
         mongooseCrudify({
             Model: Sticker,
             identifyingKey: 'uuid',

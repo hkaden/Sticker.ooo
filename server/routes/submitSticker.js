@@ -5,14 +5,14 @@ const uuidv4 = require('uuid/v4');
 const helpers = require('../services/helpers');
 const Sticker = require('../models/Sticker');
 const fs = require('fs');
-const jwtValidator = require('../middleware/jwtValidator');
+const auth = require('../middleware/auth');
 
 module.exports = function (server) {
 
     // Docs: https://github.com/ryo718/mongoose-crudify
     server.use(
         '/api/submitsticker',
-        jwtValidator,
+        auth.required,
         mongooseCrudify({
             Model: Sticker,
             selectFields: '-__v', // Hide '__v' property
