@@ -20,7 +20,7 @@ class stickersList extends Component {
     }
 
     constructor (props) {
-        super(props)
+        super(props);
         this.state = {
             stickers: [],
             currentPage: 1,
@@ -31,6 +31,7 @@ class stickersList extends Component {
     async getStickersList(currentPage) {
         const stickersList = await this.props.dispatch(reduxApi.actions.listSticker.get({currentPage}))
         let stickers = JSON.parse(decrypt(stickersList.data))
+        
         this.setState({
             stickers: stickersList[0].stickers
         })
@@ -49,7 +50,7 @@ class stickersList extends Component {
         let pageSize = 10;
         let limit = 5;
         let totalItems = Math.ceil((count/limit)*pageSize) || this.state.totalItems;
-        this.setState({ 
+        this.setState({
             stickers: stickers,
             totalItems: totalItems
         });
@@ -64,26 +65,26 @@ class stickersList extends Component {
     render () {
         var packList = this.renderLoader();
         if( this.state.stickers.length > 0) {
-            packList = this.state.stickers.map((sticker, itemIndex)=> 
-                <Card 
+            packList = this.state.stickers.map((sticker, itemIndex)=>
+                <Card
                     key={itemIndex}
-                    title={sticker.name} 
+                    title={sticker.name}
                     extra={
                         <Button type="primary" icon="plus" size='large' ghost href={'twesticker://json?urlString=' +config.BASE_URL+ '/api/addtowhatsapp/'+this.props.uuid+'?chunk='+itemIndex}>
                             Add to Whatsapp
                         </Button>
-                    }> 
+                    }>
                     {
                         sticker.preview[0].map((item, itemIndex) => {
                             return (
                                 <img key={itemIndex} src={item} width={'100px'}/>
                             );
                         })
-                    } 
+                    }
                 </Card>
             )
         }
-       
+
         return(
             <div>
                 <Helmet>
@@ -101,7 +102,6 @@ class stickersList extends Component {
                                   { packList }
                                   <Pagination current={this.state.currentPage} onChange={this.pageinationOnChange} total={this.state.totalItems} />,
                             </Card>
-                            
                         </Col>
                     </Row>
                 </Wapper>

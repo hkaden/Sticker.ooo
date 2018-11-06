@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const md5 = require('md5');
 
-function encrypt(content) {
+module.exports.encrypt = function (content) {
   let iv_length = 16;
   let iv = crypto.randomBytes(iv_length);
   let cipher = crypto.createCipheriv('AES-256-CBC', Buffer.from(md5(process.env.CRYPTO_PASSPHRASE)), iv);
@@ -10,7 +10,8 @@ function encrypt(content) {
   return iv.toString('hex') + ':' + encrypted.toString('hex');
 }
 
-function decrypt(content){
+module.exports.decrypt = function (content) {
+  console.log("[FIXME] Remove this line will fali..")
   let textParts = content.split(':');
   let iv = Buffer.from(textParts.shift(), 'HEX');
   let encryptedContent = Buffer.from(textParts.join(':'), 'HEX');
@@ -20,7 +21,3 @@ function decrypt(content){
   return decrypted.toString();
 }
 
-module.exports = {
-	encrypt,
-	decrypt
-}
