@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const glob = require('glob');
 const passport = require('passport');
-
+var compression = require('compression')
 const next = require('next')
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
@@ -26,6 +26,9 @@ app.prepare().then(() => {
 		res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 		next();
 	});
+
+	// Compression
+	server.use(compression());
 
 	// MongoDB
 	mongoose.Promise = Promise;
