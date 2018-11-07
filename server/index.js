@@ -4,6 +4,7 @@ const server = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const glob = require('glob');
+const passport = require('passport');
 
 const next = require('next')
 const dev = process.env.NODE_ENV !== 'production'
@@ -42,6 +43,12 @@ app.prepare().then(() => {
 		const mergedQuery = Object.assign({}, req.query, req.params);
 		app.render(req, res, page, mergedQuery);
 	};
+
+	// Passport
+	
+	require('./configs/passport.js')
+	server.use(passport.initialize());
+	server.use(passport.session());
 
 	// Routes
 	//server.get('/custom', customRequestHandler.bind(undefined, '/custom-page'));
