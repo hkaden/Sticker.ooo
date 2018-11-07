@@ -1,5 +1,7 @@
 require('dotenv').config({path: __dirname + '/.env'})
-const withCSS = require('@zeit/next-css')
-module.exports = withCSS({
-    cssModules: true
+const withLess = require('@zeit/next-less')
+module.exports = withLess({
+    lessLoaderOptions: {
+        javascriptEnabled: true
+    }
 })

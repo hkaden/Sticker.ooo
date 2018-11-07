@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styles from './Wapper.css'
+import styles from './Wapper.less'
 import {Layout, Row} from "antd";
 const { Header, Content, Footer, Sider } = Layout;
 

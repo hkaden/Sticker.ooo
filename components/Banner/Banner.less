@@ -1,0 +1,252 @@
+@import "../../static/app.less";
+
+@banner0: banner0;
+.@{banner0} {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  border-color: #666;
+  background-color: #fff;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  & &-text-wrapper {
+    display: inline-block;
+    position: absolute;
+    top: 20%;
+    margin: auto;
+    left: 0;
+    right: 0;
+    font-size: 14px;
+    color: #000;
+    > .queue-anim-leaving {
+      position: relative !important;
+    }
+  }
+  & &-title {
+    width: 350px;
+    left: 30px;
+    min-height: 60px;
+    margin: auto;
+    display: inline-block;
+    font-size: 40px;
+    position: relative;
+  }
+  & &-content {
+    margin-bottom: 20px;
+    word-wrap: break-word;
+    min-height: 24px;
+  }
+  & &-button {
+    border: 1px solid #fff;
+    color: #fff;
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+    line-height: 40px;
+    font-size: 16px;
+    height: 40px;
+    transition: background .45s @ease-out, box-shadow .45s @ease-out;
+    &:hover {
+      color: #fff;
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 10px rgba(50, 250, 255, 0.75);
+    }
+    &:focus {
+      color: #fff;
+      border-color: #fff;
+    }
+    &.queue-anim-leaving {
+      width: auto;
+    }
+  }
+  & &-icon {
+    bottom: 20px;
+    font-size: 24px;
+    position: absolute;
+    left: 50%;
+    margin-left: -12px;
+    color: @template-text-color-light;
+  }
+}
+
+.home-banner-content h1 {
+  font-size: 60px;
+  margin-bottom: 25px;
+}
+
+@media (max-width: 991.98px) {
+  .home-banner-content h1 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .home-banner-content h1 {
+    font-size: 35px;
+  }
+}
+
+@media (max-width: 767px) {
+  .home-banner-content h1 {
+    margin-top: 50px;
+  }
+}
+
+.home-banner-area {
+  //background: url(../img/home-banner-bg.jpg) center;
+  //background-size: cover;
+  }
+  .home-banner-area .banner-img {
+    text-align: right;
+  }
+  @media (max-width: 1440px) {
+    .home-banner-area .banner-img {
+      text-align: left;
+    }
+
+    .home-banner-area .banner-img img {
+      width: 60%;
+    }
+  }
+  @media (max-width: 991px) {
+    .home-banner-area .banner-img {
+      text-align: center;
+    }
+  }
+  @media (max-width: 767px) {
+    .home-banner-area .banner-img {
+      display: none;
+    }
+  }
+  @media (max-width: 991px) {
+    .home-banner-area .fullscreen {
+      height: 700px !important;
+    }
+  }
+
+
+  .home-banner-content p {
+    margin-bottom: 45px;
+    color: #777777;
+  }
+
+  .download-button {
+
+  }
+
+  @media (max-width: 991px) {
+    .download-button {
+      -webkit-box-direction: normal !important;
+      -webkit-box-orient: vertical !important;
+      -webkit-flex-direction: column !important;
+      -moz-flex-direction: column !important;
+      -ms-flex-direction: column !important;
+      flex-direction: column !important;
+    }
+  }
+
+  .buttons {
+    padding: 20px 24px 8px;
+    max-width: 225px;
+    margin-right: 10px;
+    border: 1px solid #dddddd;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background-color: #fff;
+    color: #000 !important;
+  }
+
+  @media (max-width: 991px) {
+    .buttons:first-child {
+      margin-bottom: 16px;
+    }
+  }
+
+  .buttons svg {
+    font-size: 80px;
+    padding-right: 20px;
+    color: #eeeeee;
+    margin-top: -8px;
+  }
+
+  .buttons:hover {
+    cursor: pointer;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.1);
+    background-color: @template-bg-color;
+    color: #fff !important;
+    border: 1px solid transparent;
+  }
+
+  .buttons:hover a {
+    color: #fff;
+  }
+
+  .buttons a {
+    color: #000;
+  }
+
+  .buttons p {
+    margin-bottom: 8px !important;
+    font-size: 14px;
+    line-height: 18px;
+    text-align: left;
+  }
+
+  .buttons p span {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+  }
+
+  .buttons.dark {
+    background-color: #000;
+    color: #fff !important;
+    border: 1px solid #000;
+  }
+
+  .buttons.dark i {
+    color: #fff;
+  }
+
+  .buttons.dark a {
+    color: #fff;
+  }
+
+  .buttons.dark:hover {
+    background-color: @template-bg-color;
+    border: 1px solid transparent;
+  }
+
+  .buttons.gray {
+    background-color: #393939;
+    color: #fff !important;
+    border: 1px solid #393939;
+  }
+
+  .buttons.gray i {
+    color: #fff;
+  }
+
+  .buttons.gray a {
+    color: #fff;
+  }
+
+  .buttons.gray:hover {
+    border: 1px solid transparent;
+  }
+
+  @media screen and (max-width: 767px) {
+    .@{banner0} {
+      background-attachment: inherit;
+      & &-text-wrapper {
+        width: 90%;
+      }
+      & &-title {
+        width: 90%;
+        left: 0;
+      }
+    }
+  }
