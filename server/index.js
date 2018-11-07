@@ -11,7 +11,7 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const defaultRequestHandler = app.getRequestHandler()
 
-const MONGODB_URI = config.MONGODB_URI
+const MONGODB_URI = config.MONGODB_URI;
 const PORT = process.env.PORT || 3001
 
 app.prepare().then(() => {
@@ -53,14 +53,10 @@ app.prepare().then(() => {
 	// Routes
 	//server.get('/custom', customRequestHandler.bind(undefined, '/custom-page'));
     server.get('/sticker/:uuid', (req, res) => {
-        const params = { uuid: req.params.uuid }
+        const params = { uuid: req.params.uuid };
         return app.render(req, res, '/sticker', params);
     });
 
-    server.get('/addtowhatsapp/:uuid/:chunk', (req, res) => {
-        const params = { uuid: req.params.uuid, chunk:req.params.chunk }
-        return app.render(req, res, '/addtowhatsapp', params);
-    });
 	server.get('/', customRequestHandler.bind(undefined, '/'));
 	server.get('*', defaultRequestHandler);
 
@@ -68,4 +64,4 @@ app.prepare().then(() => {
 		console.log(`App running on http://localhost:${PORT}/\nAPI running on http://localhost:${PORT}/api/`)
 	});
 
-})
+});

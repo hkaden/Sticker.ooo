@@ -6,11 +6,15 @@ const stickerSchema = new Schema({
     uuid : { type: String, required: true, unique: true },
     name: { type: String, required: true },
     publisher: { type: String, required: true },
-    tray: { type: Array, required: true },
+    trays: { type: Array, required: true },
     stickers: { type: Array, required: true },
-    create: {
+    createdAt: {
         type: Date,
-        "default": Date.now
+        default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
     }
 });
 

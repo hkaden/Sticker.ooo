@@ -60,17 +60,16 @@ class CForm extends React.Component {
                     emitter.on('load', resolve);
                 });
 
-                const formatter = url => url.replace('data:image/png;base64,', '')
-                const stickersData  = {
+                const stickersData = {
                     name: this.props.form.getFieldValue('Packname'),
                     publisher: this.props.form.getFieldValue('Publisher'),
-                    tray: trays,
-                    stickers: stickersInPack
-                }
+                    trays,
+                    stickers: stickersInPack,
+                };
 
 
-                console.log('post data:', stickersData)
-                cachios.post('/api/submitsticker', stickersData).then((resp) => {
+                console.log('post data:', stickersData);
+                cachios.post('/api/stickers', stickersData).then((resp) => {
                     console.log(resp.data.uuid)
                     if ( resp.status == 200 ){
                         this.setState({progress: 100, isSubmitting: false})
