@@ -49,14 +49,11 @@ Returns stickers, only the first 5 images of the first pack is returned.
 
 #### `GET /stickers/:uuid` Get stickers with UUID 
 
-*  **Query Params**
+*  **URL Params**
 
-    **Optional:**
+    **Required:**
     
-    `limit=[integer, max 20]`
-    
-    `offset=[integer]`
-    
+    `uuid=[string]`    
 
 * **Success Response:**
 
