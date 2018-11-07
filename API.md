@@ -1,8 +1,8 @@
-#API Documentation
+# API Documentation
 Endpoint: `https://stickerizdemo.hkaden.me/api`
 
-##Stickers
-####`GET /stickers` Get stickers with pagination
+## Stickers
+#### `GET /stickers` Get stickers with pagination
 Returns stickers, only the first 5 images of the first pack is returned. 
 
 *  **Query Params**
@@ -47,7 +47,7 @@ Returns stickers, only the first 5 images of the first pack is returned.
      }
      ```
 
-####`GET /stickers/:uuid` Get stickers with UUID 
+#### `GET /stickers/:uuid` Get stickers with UUID 
 
 *  **Query Params**
 
