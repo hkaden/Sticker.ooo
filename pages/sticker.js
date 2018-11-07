@@ -18,7 +18,7 @@ class StickerPage extends Component {
 
     static async getInitialProps({store, isServer, pathname, query, router, req}) {
         const uuid = query.uuid;
-        const stickersList = await store.dispatch(reduxApi.actions.fetchSticker.get({uuid: uuid}));
+        const stickersList = await store.dispatch(reduxApi.actions.sticker.get({uuid: uuid}));
         await store.dispatch(loadStickersList(stickersList));
         const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
         return { uuid, router, userAgent };
@@ -47,11 +47,6 @@ class StickerPage extends Component {
             <Card
                 key={index}
                 title={'Pack ' + index}
-                extra={
-                    <Button type="primary" icon="plus" size='large' ghost href={'twesticker://json?urlString=' +config.BASE_URL+ '/api/addtowhatsapp/'+this.props.uuid+'?chunk='+index}>
-                        Add to WhatsApp
-                    </Button>
-                }
             >
                 {
                     pack.map((item, itemIndex)=> <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width={'100px'}/>)
@@ -75,7 +70,12 @@ class StickerPage extends Component {
                     <Col lg={12}>
                         <Card title={stickersList[0].name
                         }
-                              extra={ 'Publisher: ' + stickersList[0].publisher}
+                              extra={ <span>
+                                  {'Publisher: ' + stickersList[0].publisher}
+                                  <Button style={{marginLeft: '10px'}} type="primary" icon="plus" size='large' ghost href={'twesticker://stickers/' + stickersList[0].uuid}>
+                                      Add to WhatsApp
+                                  </Button>
+                              </span>}
                               bordered={false}>
                             {packList}
 

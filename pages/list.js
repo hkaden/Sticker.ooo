@@ -11,22 +11,25 @@ import { decrypt } from '../server/services/crypto';
 import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
 import Head from 'next/head';
 
-const config = require('../config.js')
+const config = require('../config.js');
 
 class stickersList extends Component {
 
     converter = null;
 
     static async getInitialProps ({store, isServer, pathname, query, router, req}) {
-        const encryptedData = await store.dispatch(reduxApi.actions.listSticker.get({initList: true, currentPage: 1}));
+        const pageSize = 5;
+        const encryptedData = await store.dispatch(reduxApi.actions.stickers( { limit: pageSize } ));
         const userAgent = req ? req.headers['user-agent'] : navigator.userAgent;
-        return { userAgent, encryptedData };
+        const encryptResponse = process.env.ENCRYPT_RESPONSE === 'true';
+        return { userAgent, encryptedData, pageSize, encryptResponse };
     }
 
     constructor (props) {
         super(props);
         this.state = {
             currentPage: 1,
+            pageCount: 1,
         }
     }
 
@@ -35,8 +38,8 @@ class stickersList extends Component {
     }
 
     async getStickersList(currentPage) {
-        const encryptedData = await this.props.dispatch(reduxApi.actions.listSticker.get({currentPage}))
-        let stickersList = JSON.parse(decrypt(encryptedData[0].data)).stickers;
+        const encryptedData = await this.props.dispatch(reduxApi.actions.sticker({ limit: this.props.pageSize, offset: (currentPage - 1) * this.props.pageSize }));
+        const stickersList = (this.props.encryptResponse ? JSON.parse(decrypt(encryptedData[0].data)) : encryptedData[0]).data;
         await this.props.dispatch(loadStickersList(stickersList));
 
         if (!this.isWebpSupported()) {
@@ -57,14 +60,16 @@ class stickersList extends Component {
     }
 
     componentDidMount() {
-        const { stickers: stickersList, count } = JSON.parse(decrypt(this.props.encryptedData[0].data));
-        let pageSize = 10;
-        let limit = 5;
+        const { encryptedData } = this.props;
+        const { count, data: stickersList } = process.env.ENCRYPT_RESPONSE === 'true' ? JSON.parse(decrypt(encryptedData[0].data)) : encryptedData[0];
         this.setState({
-            totalItems: Math.ceil((count/limit)*pageSize)
+            itemCount: count,
+            pageCount: Math.ceil((count/this.props.pageSize))
         });
 
-        this.props.dispatch(loadStickersList(stickersList))
+        console.log(stickersList);
+
+        this.props.dispatch(loadStickersList(stickersList));
 
         if (!this.isWebpSupported()) {
             this.converter = new WhatsAppStickersConverter();
@@ -81,19 +86,20 @@ class stickersList extends Component {
     }
 
     render () {
-        var packList = this.renderLoader();
-        if( this.props.stickersList.length > 0) {
+        let packList;
+        if (this.props.stickersList.length > 0) {
             packList = this.props.stickersList.map((sticker, itemIndex)=>
                 <Card
                     key={itemIndex}
                     title={sticker.name}
                     extra={
-                        <Button type="primary" icon="plus" size='large' ghost href={'twesticker://json?urlString=' +config.BASE_URL+ '/api/addtowhatsapp/'+this.props.uuid+'?chunk='+itemIndex}>
+                        <Button type="primary" icon="plus" size='large' ghost href={'twesticker://stickers/' + sticker.uuid}>
                             Add to WhatsApp
                         </Button>
-                    }>
+                    }
+                >
                     {
-                        sticker.preview[0].map((item, itemIndex) => {
+                        sticker.stickers[0].slice(0,4).map((item, itemIndex) => {
                             return (
                                 <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width={'100px'}/>
                             );
@@ -116,9 +122,11 @@ class stickersList extends Component {
                     <Row type="flex" justify="center">
                         <Col lg={12}>
                             <Card title='Stickers List'
-                                  bordered={false}>
+                                  bordered={false}
+                            >
                                   { packList }
-                                  <Pagination current={this.state.currentPage} onChange={this.pageinationOnChange} total={this.state.totalItems} />,
+
+                                  <Pagination current={this.state.currentPage} onChange={this.pageinationOnChange} total={this.state.itemCount} pageSize={this.props.pageSize} />,
                             </Card>
                         </Col>
                     </Row>
