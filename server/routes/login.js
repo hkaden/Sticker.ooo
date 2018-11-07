@@ -6,6 +6,7 @@ const helpers = require('../services/helpers');
 const User = require('../models/User');
 const fs = require('fs');
 const auth = require('../middleware/auth');
+const passport = require('passport');
 
 module.exports = function (server) {
 
@@ -19,7 +20,7 @@ module.exports = function (server) {
             endResponseInAction: false,
 
             beforeActions: [{
-                middlewares: []
+                middlewares: [loginValidator]
             }],
             // actions: {}, // list (GET), create (POST), read (GET), update (PUT), delete (DELETE)
             afterActions: [
@@ -27,6 +28,40 @@ module.exports = function (server) {
             ],
         })
     );
+
+    function loginValidator(req, res, next) {
+        let username = req.body.username;
+        let password = req.body.password;
+
+        if(!username) {
+            return res.status(422).json({
+                error: 'Username is required'
+            })
+        }
+
+        if(!password) {
+            return res.status(422).json({
+                error: 'password is required'
+            })
+        }
+
+        return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+            if(err) {
+              return next(err);
+            }
+            
+            if(passportUser) {
+              const user = passportUser;
+              user.token = passportUser.generateJWT();
+
+              return res.json({ user: user.toAuthJSON() });
+            }
+
+            return res.status(400).json({
+                error: 'Failed to login'
+            });
+          })(req, res, next);
+    }
 
     function modifyQueryResult (req, res) {
 
