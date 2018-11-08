@@ -113,7 +113,7 @@ class CForm extends React.Component {
         );
         return (
 
-            <Form onSubmit={this.handleSubmit} hideRequiredMark={true} className="login-form">
+            <Form onSubmit={this.handleSubmit} hideRequiredMark={true} className="login-form" autoComplete="off">
                 <FormItem>
                     {getFieldDecorator('name', {
                         rules: [{required: true, message: 'Please input pack name!'}],
