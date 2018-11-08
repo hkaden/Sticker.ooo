@@ -40,7 +40,7 @@ module.exports = function (server) {
                         ...req.query,
                     };
                     options.limit = Math.min(maxLimit, parseInt(options.limit));
-                    options.offset = parseInt(options.offset)
+                    options.offset = parseInt(options.offset);
 
                     const findConditions = {};
 
