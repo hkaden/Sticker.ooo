@@ -36,53 +36,63 @@ class CForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        this.setState({
+            progress: 0,
+            errorMsg: '',
+        })
         this.props.form.validateFields(async (err, values) => {
             if (!err) {
                 this.setState({
                     progress: 0,
-                    errorMsg: '',
                     isSubmitting: true,
                 });
                 console.log(values);
-                let trayFile;
-                let stickersFiles;
-                if (values.uploadType === 'zip') {
-                    const unzipContent = await this.converter.unzip(values.zip[0].originFileObj);
-                    trayFile = unzipContent.trayFile;
-                    stickersFiles = unzipContent.stickersFiles;
-                } else {
-                    trayFile = values.tray[0].originFileObj;
-                    stickersFiles = values.stickers.map(sticker => sticker.originFileObj);
-                }
 
-                const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles);
-                let stickersLoaded = 0;
-                emitter.on('stickerLoad', () => {
-                    stickersLoaded += 1;
-                    this.setState({ progress: stickersLoaded / stickersFiles.length * 90 });
-                });
+                try {
+                    let trayFile;
+                    let stickersFiles;
+                    if (values.uploadType === 'zip') {
+                        const unzipContent = await this.converter.unzip(values.zip[0].originFileObj);
+                        trayFile = unzipContent.trayFile;
+                        stickersFiles = unzipContent.stickersFiles;
+                    } else {
+                        trayFile = values.tray[0].originFileObj;
+                        stickersFiles = values.stickers.map(sticker => sticker.originFileObj);
+                    }
 
-                const { trays, stickersInPack } = await new Promise((resolve, reject) => {
-                    emitter.on('error', reject);
-                    emitter.on('load', resolve);
-                });
+                    const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles);
+                    let stickersLoaded = 0;
+                    emitter.on('stickerLoad', () => {
+                        stickersLoaded += 1;
+                        this.setState({ progress: stickersLoaded / stickersFiles.length * 90 });
+                    });
 
-                const stickersData = {
-                    name: this.props.form.getFieldValue('name'),
-                    publisher: this.props.form.getFieldValue('publisher'),
-                    trays,
-                    stickers: stickersInPack,
-                };
+                    const { trays, stickersInPack } = await new Promise((resolve, reject) => {
+                        emitter.on('error', reject);
+                        emitter.on('load', resolve);
+                    });
+
+                    const stickersData = {
+                        name: this.props.form.getFieldValue('name'),
+                        publisher: this.props.form.getFieldValue('publisher'),
+                        trays,
+                        stickers: stickersInPack,
+                    };
 
 
-                console.log('post data:', stickersData);
-                cachios.post('/api/stickers', stickersData).then((resp) => {
+                    console.log('post data:', stickersData);
+                    const resp = await cachios.post('/api/stickers', stickersData)
                     console.log(resp.data.uuid);
-                    if ( resp.status === 200 ){
-                        this.setState({progress: 100, isSubmitting: false})
+                    if (resp.status === 200) {
+                        this.setState({ progress: 100 });
                         redirect({}, e, '/sticker/' + resp.data.uuid)
                     }
-                });
+                } catch (e) {
+                    this.setState({
+                        isSubmitting: false,
+                        errorMsg: e.message || e.toString(),
+                    })
+                }
             }
         });
     };
@@ -147,7 +157,13 @@ class CForm extends React.Component {
                         <div className="dropbox">
                             {getFieldDecorator('tray', {
                                 getValueFromEvent: this.normFile,
-                                rules: [{required: true, message: 'Please select tray icon!'}],
+                                rules: [
+                                    {required: true, message: 'Please select tray icon!'},
+                                    {validator: (rule, value, callback) => {
+                                            callback(value && value.length > 1 ? false: undefined);
+                                        }, message: 'Please select only 1 tray icon!'}
+                                ],
+
                             })(
                                 <Upload.Dragger accept="image/png,image/jpeg" name="tray" multiple={false} beforeUpload={this.beforeUpload} disabled={this.state.isSubmitting}>
                                     <p className="ant-upload-drag-icon">
@@ -165,9 +181,11 @@ class CForm extends React.Component {
                         <div className="dropbox">
                             {getFieldDecorator('stickers', {
                                 getValueFromEvent: this.normFile,
-                                rules: [{validator: (rule, value, callback) => {
+                                rules: [
+                                    {validator: (rule, value, callback) => {
                                         callback(value && value.length >= 3 ? undefined : false);
-                                    }, message: 'Please select 3 or more images!'}],
+                                    }, message: 'Please select 3 or more images!'}
+                                ],
                             })(
                                 <Upload.Dragger accept="image/png,image/jpeg" name="files" multiple={true} beforeUpload={this.beforeUpload} disabled={this.state.isSubmitting}>
                                     <p className="ant-upload-drag-icon">
@@ -205,6 +223,7 @@ class CForm extends React.Component {
                     </Button>
                 </FormItem>
                 <Progress percent={this.state.progress} hidden={!this.state.isSubmitting} showInfo={false} />
+                <p style={{color: '#ff4d4f'}}>{this.state.errorMsg}</p>
             </Form>
         );
     }
