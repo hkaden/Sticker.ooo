@@ -6,3 +6,4 @@ yarn-error.log
 .idea
 /static/imageStore/**/*.png
 /static/imageStore/**/*.webp
+access.log
