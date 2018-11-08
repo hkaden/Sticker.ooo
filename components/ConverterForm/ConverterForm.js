@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {
     Form, Button, Upload, Icon,
-    Input, Progress
+    Input, Progress, Radio
 } from 'antd';
 import {WrappedFormUtils} from 'antd/lib/form/Form';
 import { createStore, applyMiddleware, combineReducers } from 'redux'
@@ -13,19 +13,19 @@ import redirect from '../../lib/redirect'
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter'
 const FormItem = Form.Item;
 
-
-
 class CForm extends React.Component {
     converter = null;
 
     constructor (props) {
-        super(props)
+        super(props);
         this.state = {
             loading: false,
             trayFile: null,
             stickersFiles: null,
             progress: 0,
             isSubmitting: false,
+            uploadType: 'image',
+            errorMsg: ''
         };
     }
 
@@ -35,18 +35,25 @@ class CForm extends React.Component {
     }
 
     handleSubmit = (e) => {
-        this.setState({
-            progress: 0,
-            errorMsg: '',
-            isSubmitting: true,
-            disabledTrayUpload: false,
-        });
         e.preventDefault();
         this.props.form.validateFields(async (err, values) => {
             if (!err) {
+                this.setState({
+                    progress: 0,
+                    errorMsg: '',
+                    isSubmitting: true,
+                });
                 console.log(values);
-                const trayFile = values.Tray[0].originFileObj;
-                const stickersFiles = values.Stickers.map(sticker => sticker.originFileObj);
+                let trayFile;
+                let stickersFiles;
+                if (values.uploadType === 'zip') {
+                    const unzipContent = await this.converter.unzip(values.zip[0].originFileObj);
+                    trayFile = unzipContent.trayFile;
+                    stickersFiles = unzipContent.stickersFiles;
+                } else {
+                    trayFile = values.tray[0].originFileObj;
+                    stickersFiles = values.stickers.map(sticker => sticker.originFileObj);
+                }
 
                 const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles);
                 let stickersLoaded = 0;
@@ -61,8 +68,8 @@ class CForm extends React.Component {
                 });
 
                 const stickersData = {
-                    name: this.props.form.getFieldValue('Packname'),
-                    publisher: this.props.form.getFieldValue('Publisher'),
+                    name: this.props.form.getFieldValue('name'),
+                    publisher: this.props.form.getFieldValue('publisher'),
                     trays,
                     stickers: stickersInPack,
                 };
@@ -70,27 +77,31 @@ class CForm extends React.Component {
 
                 console.log('post data:', stickersData);
                 cachios.post('/api/stickers', stickersData).then((resp) => {
-                    console.log(resp.data.uuid)
-                    if ( resp.status == 200 ){
+                    console.log(resp.data.uuid);
+                    if ( resp.status === 200 ){
                         this.setState({progress: 100, isSubmitting: false})
                         redirect({}, e, '/sticker/' + resp.data.uuid)
                     }
                 });
             }
         });
+    };
 
-    }
+    handleUploadTypeChange = (e) => {
+        console.log('test');
+        this.setState({
+            uploadType: e.target.value,
+        })
+    };
 
-    trayToBase64 = () =>{
+    beforeUpload = () => {
         return false;
-    }
+    };
 
     normFile = (e, type) => {
         console.log('Upload event:', e.fileList);
         return e && e.fileList;
-    }
-
-
+    };
 
     render() {
         const {getFieldDecorator} = this.props.form;
@@ -102,57 +113,92 @@ class CForm extends React.Component {
         );
         return (
 
-            <Form onSubmit={this.handleSubmit} className="login-form">
+            <Form onSubmit={this.handleSubmit} hideRequiredMark={true} className="login-form">
                 <FormItem>
-                    {getFieldDecorator('Packname', {
+                    {getFieldDecorator('name', {
                         rules: [{required: true, message: 'Please input pack name!'}],
                     })(
-                        <Input prefix={<Icon type="file" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Pack Name"/>
+                        <Input prefix={<Icon type="file" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Pack Name" disabled={this.state.isSubmitting}/>
                     )}
                 </FormItem>
                 <FormItem>
-                    {getFieldDecorator('Publisher', {
+                    {getFieldDecorator('publisher', {
                         rules: [{required: true, message: 'Please input publisher!'}],
                     })(
-                        <Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Publisher"/>
+                        <Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Publisher" disabled={this.state.isSubmitting}/>
                     )}
                 </FormItem>
                 <FormItem
-                    label="Tray Icon"
+                    label="Upload Type"
                 >
-                    <div className="dropbox">
-                        {getFieldDecorator('Tray', {
-                            valuePropName: 'tray',
+                    {getFieldDecorator('uploadType', {
+                        initialValue: 'image'
+                    })(
+                        <Radio.Group onChange={this.handleUploadTypeChange} disabled={this.state.isSubmitting}>
+                            <Radio.Button value="image">Image Files</Radio.Button>
+                            <Radio.Button value="zip">Zip File</Radio.Button>
+                        </Radio.Group>
+                    )}
+                </FormItem>
+                {this.state.uploadType === 'image' ? (<div>
+                    <FormItem
+                        label="Tray Icon"
+                    >
+                        <div className="dropbox">
+                            {getFieldDecorator('tray', {
+                                getValueFromEvent: this.normFile,
+                                rules: [{required: true, message: 'Please select tray icon!'}],
+                            })(
+                                <Upload.Dragger accept="image/png,image/jpeg" name="tray" multiple={false} beforeUpload={this.beforeUpload} disabled={this.state.isSubmitting}>
+                                    <p className="ant-upload-drag-icon">
+                                        <Icon type="inbox"/>
+                                    </p>
+                                    <p className="ant-upload-text">Choose file or drag file to this area</p>
+                                    <p className="ant-upload-hint">Any resolution</p>
+                                </Upload.Dragger>
+                            )}
+                        </div>
+                    </FormItem>
+                    <FormItem
+                        label="Stickers (3 or more images)"
+                    >
+                        <div className="dropbox">
+                            {getFieldDecorator('stickers', {
+                                getValueFromEvent: this.normFile,
+                                rules: [{validator: (rule, value, callback) => {
+                                        callback(value && value.length >= 3 ? undefined : false);
+                                    }, message: 'Please select 3 or more images!'}],
+                            })(
+                                <Upload.Dragger accept="image/png,image/jpeg" name="files" multiple={true} beforeUpload={this.beforeUpload} disabled={this.state.isSubmitting}>
+                                    <p className="ant-upload-drag-icon">
+                                        <Icon type="inbox"/>
+                                    </p>
+                                    <p className="ant-upload-text">Choose files or drag files to this area</p>
+                                    <p className="ant-upload-hint">Any resolution</p>
+                                </Upload.Dragger>
+                            )}
+                        </div>
+                    </FormItem>
+                </div>) : (
+                    <FormItem
+                        label="Zip File"
+                    >
+                        <div className="dropbox">
+                        {getFieldDecorator('zip', {
                             getValueFromEvent: this.normFile,
+                            rules: [{required: true, message: 'Please select zip file!'}],
                         })(
-                            <Upload.Dragger accept="image/png" name="tray" multiple={false} beforeUpload={this.trayToBase64} disabled={this.state.disabledTrayUpload}>
+                            <Upload.Dragger accept=".zip" name="files" multiple={true} beforeUpload={this.beforeUpload} disabled={this.state.isSubmitting}>
                                 <p className="ant-upload-drag-icon">
                                     <Icon type="inbox"/>
                                 </p>
-                                <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                                <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+                                <p className="ant-upload-text">Choose file or drag file to this area</p>
+                                <p className="ant-upload-hint">Zip file with images of any resolution</p>
                             </Upload.Dragger>
                         )}
-                    </div>
-                </FormItem>
-                <FormItem
-                    label="Stickers (3 or more images)"
-                >
-                    <div className="dropbox">
-                        {getFieldDecorator('Stickers', {
-                            valuePropName: 'stickersList',
-                            getValueFromEvent: this.normFile,
-                        })(
-                            <Upload.Dragger accept="image/png" name="files" multiple={true} beforeUpload={this.trayToBase64}>
-                                <p className="ant-upload-drag-icon">
-                                    <Icon type="inbox"/>
-                                </p>
-                                <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                                <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-                            </Upload.Dragger>
-                        )}
-                    </div>
-                </FormItem>
+                        </div>
+                    </FormItem>
+                    )}
                 <FormItem>
                     <Button type="primary" htmlType="submit" className="login-form-button" style={{width: '100%'}}>
                         Upload
