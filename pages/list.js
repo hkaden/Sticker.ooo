@@ -30,6 +30,7 @@ class stickersList extends Component {
         this.state = {
             currentPage: 1,
             pageCount: 1,
+            isLoading: true
         }
     }
 
@@ -64,7 +65,8 @@ class stickersList extends Component {
         const { count, data: stickersList } = process.env.ENCRYPT_RESPONSE === 'true' ? JSON.parse(decrypt(encryptedData[0].data)) : encryptedData[0];
         this.setState({
             itemCount: count,
-            pageCount: Math.ceil((count/this.props.pageSize))
+            pageCount: Math.ceil((count/this.props.pageSize)),
+            isLoading: false
         });
 
         console.log(stickersList);
@@ -86,7 +88,8 @@ class stickersList extends Component {
     }
 
     render () {
-        let packList;
+        let packList = null;
+
         if (this.props.stickersList.length > 0) {
             packList = this.props.stickersList.map((sticker, itemIndex)=>
                 <Card
@@ -107,6 +110,11 @@ class stickersList extends Component {
                     }
                 </Card>
             )
+        } else {
+            packList =  
+                <Card>
+                    No Stickers
+                </Card>
         }
 
         return(
@@ -124,9 +132,19 @@ class stickersList extends Component {
                             <Card title='Stickers List'
                                   bordered={false}
                             >
-                                  { packList }
-
-                                  <Pagination current={this.state.currentPage} onChange={this.pageinationOnChange} total={this.state.itemCount} pageSize={this.props.pageSize} />,
+                                  
+                                  { this.state.isLoading && this.renderLoader() }
+                                  { !this.state.isLoading && this.props.stickersList.length > 0 && 
+                                      <div>
+                                      { packList }
+                                      <Pagination current={this.state.currentPage} onChange={this.pageinationOnChange} total={this.state.itemCount} pageSize={this.props.pageSize} />
+                                      </div>
+                                  } 
+                                  { !this.state.isLoading && this.props.stickersList.length == 0 && 
+                                      <div>
+                                        No Stickers
+                                      </div>
+                                  }
                             </Card>
                         </Col>
                     </Row>
