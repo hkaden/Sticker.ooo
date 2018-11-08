@@ -46,7 +46,7 @@ class StickerPage extends Component {
         const packList = stickersList[0].stickers.map((pack, index)=>
             <Card
                 key={index}
-                title={'Pack ' + index}
+                title={'Pack ' + (index + 1)}
             >
                 {
                     pack.map((item, itemIndex)=> <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width={'100px'}/>)
