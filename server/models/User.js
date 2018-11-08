@@ -12,12 +12,14 @@ const UsersSchema = new Schema({
     salt: { type: String },
     createdAt: {
         type: Date,
-        "default": Date.now
+        default: Date.now,
     },
     updatedAt: {
         type: Date,
-        "default": Date.now
-    }
+        default: Date.now,
+    },
+    createdBy: { type: String },
+    updatedBy: { type: String }
 });
 
 UsersSchema.methods.setPassword = function(password) {
@@ -40,7 +42,7 @@ UsersSchema.methods.setPassword = function(password) {
       id: this.uuid,
       exp: parseInt(expirationDate.getTime() / 1000, 10),
     }, process.env.JWT_SECRET);
-  }
+  };
 
   UsersSchema.methods.toAuthJSON = function() {
     return {
