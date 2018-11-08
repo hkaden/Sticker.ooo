@@ -2,15 +2,39 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = mongoose.model('User');
+const passportJWT = require("passport-jwt");
+const JWTStrategy   = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 
+
+/*
+ * First Login
+ */ 
 passport.use(new LocalStrategy(function(username, password, done) {
   User.findOne({ username })
     .then((user) => {
-    	console.log(username)
       if(!user || !user.validatePassword(password)) {
         return done(null, false, { errors: { 'username or password': 'is invalid' } });
       }
-
       return done(null, user);
     }).catch(done);
+}));
+
+/*
+ * Authenticate with JWT
+ */ 
+passport.use(new JWTStrategy({
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey   : process.env.JWT_SECRET
+},function(jwtPayload, done) {
+  User.findOne({ username: jwtPayload.username}, function(err, user) {
+    if (err) {
+      return done(err, false);
+    }
+    if (user) {
+      done(null, user);
+    } else {
+      done(null, false);
+    }
+  });
 }));
