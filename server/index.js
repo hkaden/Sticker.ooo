@@ -48,10 +48,7 @@ app.prepare().then(() => {
 	};
 
 	// Passport
-	
 	require('./configs/passport.js')
-	server.use(passport.initialize());
-	server.use(passport.session());
 
 	// Routes
 	//server.get('/custom', customRequestHandler.bind(undefined, '/custom-page'));
