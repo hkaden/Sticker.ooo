@@ -25,6 +25,7 @@ class CForm extends React.Component {
             progress: 0,
             isSubmitting: false,
             uploadType: 'image',
+            sharingType: 'public',
             errorMsg: ''
         };
     }
@@ -46,7 +47,6 @@ class CForm extends React.Component {
                     progress: 0,
                     isSubmitting: true,
                 });
-                console.log(values);
 
                 try {
                     let trayFile;
@@ -75,32 +75,31 @@ class CForm extends React.Component {
                     const stickersData = {
                         name: this.props.form.getFieldValue('name'),
                         publisher: this.props.form.getFieldValue('publisher'),
+                        sharingType: this.props.form.getFieldValue('sharingType'),
                         trays,
                         stickers: stickersInPack,
                     };
 
 
-                    console.log('post data:', stickersData);
                     const resp = await cachios.post('/api/stickers', stickersData)
-                    console.log(resp.data.uuid);
                     if (resp.status === 200) {
                         this.setState({ progress: 100 });
                         redirect({}, e, '/sticker/' + resp.data.uuid)
                     }
                 } catch (e) {
+                    const errorMsg = _.get(e, 'response.data.message', e.message || e.toString())
                     this.setState({
                         isSubmitting: false,
-                        errorMsg: e.message || e.toString(),
+                        errorMsg,
                     })
                 }
             }
         });
     };
 
-    handleUploadTypeChange = (e) => {
-        console.log('test');
+    handleFieldChange = (e) => {
         this.setState({
-            uploadType: e.target.value,
+            [e.target.name]: e.target.value,
         })
     };
 
@@ -109,7 +108,6 @@ class CForm extends React.Component {
     };
 
     normFile = (e, type) => {
-        console.log('Upload event:', e.fileList);
         return e && e.fileList;
     };
 
@@ -139,12 +137,25 @@ class CForm extends React.Component {
                     )}
                 </FormItem>
                 <FormItem
+                    label="Sharing"
+                    extra={{public: 'Your stickers will be publicly available', link: 'Your stickers can only be accessible by link'}[this.state.sharingType]}
+                >
+                    {getFieldDecorator('sharingType', {
+                        initialValue: 'public'
+                    })(
+                        <Radio.Group name="sharingType" onChange={this.handleFieldChange} disabled={this.state.isSubmitting}>
+                            <Radio.Button value="public">Public</Radio.Button>
+                            <Radio.Button value="link">Link only</Radio.Button>
+                        </Radio.Group>
+                    )}
+                </FormItem>
+                <FormItem
                     label="Upload Type"
                 >
                     {getFieldDecorator('uploadType', {
                         initialValue: 'image'
                     })(
-                        <Radio.Group onChange={this.handleUploadTypeChange} disabled={this.state.isSubmitting}>
+                        <Radio.Group name="uploadType" onChange={this.handleFieldChange} disabled={this.state.isSubmitting}>
                             <Radio.Button value="image">Image Files</Radio.Button>
                             <Radio.Button value="zip">Zip File</Radio.Button>
                         </Radio.Group>
@@ -233,6 +244,5 @@ const ConverterForm = Form.create({})(CForm);
 const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
 const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
 const mapStateToProps = (reduxState) => ({ sticker: reduxState.sticker }); // Use reduxApi endpoint names here
-
 
 export default ConverterForm

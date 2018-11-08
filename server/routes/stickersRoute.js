@@ -42,7 +42,12 @@ module.exports = function (server) {
                     options.limit = Math.min(maxLimit, parseInt(options.limit));
                     options.offset = parseInt(options.offset);
 
-                    const findConditions = {};
+                    const findConditions = {
+                        $or: [
+                            { sharingType: 'public' },
+                            { sharingType: { $exists: false }},
+                        ]
+                    };
 
                     try {
                         let docs = await Sticker.find(findConditions)
