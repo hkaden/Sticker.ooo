@@ -64,7 +64,7 @@ module.exports = function (server) {
                 error: 'email is required'
             })
         }
-        
+
         if(password !== confirmPassword) {
             return res.status(400).json({
                 error: 'Passwords do not match'
@@ -77,7 +77,9 @@ module.exports = function (server) {
                     const newUser = new User({
                         uuid,
                         username,
-                        email
+                        email,
+                        createdBy: username,
+                        updatedBy: username,
                     });
 
                     newUser.setPassword(password);
