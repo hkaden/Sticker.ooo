@@ -4,13 +4,14 @@ const server = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const glob = require('glob');
-const passport = require('passport');
-var compression = require('compression')
+const morgan  = require('morgan')
+const compression = require('compression')
 const next = require('next')
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const defaultRequestHandler = app.getRequestHandler()
-
+const fs = require('fs');
+const path = require('path');
 const MONGODB_URI = config.MONGODB_URI;
 const PORT = process.env.PORT || 3001
 
@@ -37,8 +38,12 @@ app.prepare().then(() => {
 	db.on('error', console.error.bind(console, 'connection error:'));
 
 	// API routes
-	const rootPath = require('path').normalize(__dirname + '/..');
-	glob.sync(rootPath + '/server/routes/*.js').forEach(controllerPath => require(controllerPath)(server));
+	const rootPath = path.normalize(__dirname + '/..');
+	glob.sync(path.join(rootPath, '/server/routes/*.js')).forEach(controllerPath => require(controllerPath)(server));
+
+	// Morgan
+	const accessLogStream = fs.createWriteStream(path.join(rootPath, 'access.log'), {flags: 'a'});
+	server.use(morgan('combined', {stream: accessLogStream}));
 
 	// Next.js request handling
 	const customRequestHandler = (page, req, res) => {
