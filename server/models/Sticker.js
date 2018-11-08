@@ -15,7 +15,9 @@ const stickerSchema = new Schema({
     updatedAt: {
         type: Date,
         default: Date.now,
-    }
+    },
+    createdBy: { type: String },
+    updatedBy: { type: String }
 });
 
 module.exports = mongoose.model('Sticker', stickerSchema);
