@@ -25,6 +25,7 @@ const stickerSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+        index: true
     },
     updatedAt: {
         type: Date,
