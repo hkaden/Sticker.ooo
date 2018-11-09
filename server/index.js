@@ -12,10 +12,14 @@ const app = next({ dev })
 const defaultRequestHandler = app.getRequestHandler()
 const fs = require('fs');
 const path = require('path');
+const helmet = require('helmet');
 const MONGODB_URI = config.MONGODB_URI;
 const PORT = process.env.PORT || 3001
 
 app.prepare().then(() => {
+
+	// Helmet
+	server.use(helmet());
 
 	// Parse application/x-www-form-urlencoded
 	server.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
