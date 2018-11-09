@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { arrayLengthValidator } = require('./validators');
+const { arrayLengthValidator } = require('../utils/validators');
 
 const Schema = mongoose.Schema;
 

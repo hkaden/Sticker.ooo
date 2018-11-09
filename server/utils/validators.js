@@ -15,6 +15,9 @@ const arrayLengthValidator = ({ minLength, maxLength }) => ({
         (maxLength != null ? `{PATH} must have length <= ${maxLength}.` : ''),
 });
 
+/*
+ * Following RFC 5322 Official Standard   
+ */
 const emailValidator = (email) => {
 	if(!email) {
 		return false;

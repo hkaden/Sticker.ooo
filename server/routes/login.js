@@ -2,7 +2,7 @@
 
 const mongooseCrudify = require('mongoose-crudify');
 const uuidv4 = require('uuid/v4');
-const helpers = require('../services/helpers');
+const helpers = require('../utils/helpers');
 const User = require('../models/User');
 const fs = require('fs');
 const auth = require('../middleware/auth');

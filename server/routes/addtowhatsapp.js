@@ -2,7 +2,7 @@
 
 const mongooseCrudify = require('mongoose-crudify');
 
-const helpers = require('../services/helpers');
+const helpers = require('../utils/helpers');
 const Sticker = require('../models/Sticker');
 const auth = require('../middleware/auth');
 

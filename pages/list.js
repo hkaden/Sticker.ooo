@@ -7,7 +7,7 @@ import withRedux from 'next-redux-wrapper';
 import reduxApi from '../lib/reduxApi';
 import Wapper from '../components/Wapper/Wapper'
 import { Button, Card, Col, Pagination, Row } from 'antd'
-import { decrypt } from '../server/services/crypto';
+import { decrypt } from '../server/utils/crypto';
 import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
 import Head from 'next/head';
 
