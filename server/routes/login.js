@@ -1,78 +1,52 @@
 'use strict';
 
-const mongooseCrudify = require('mongoose-crudify');
-const uuidv4 = require('uuid/v4');
-const helpers = require('../utils/helpers');
-const User = require('../models/User');
-const fs = require('fs');
 const auth = require('../middleware/auth');
 const brute = require('../middleware/brute');
 const passport = require('passport');
+const { body } = require('express-validator/check')
+const { sanitizeBody } = require('express-validator/filter');
+const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
 
 module.exports = function (server) {
 
     // Docs: https://github.com/ryo718/mongoose-crudify
-    server.use(
+    server.post(
         '/api/login',
         auth.optional,
         brute.globalBruteforce.prevent,
         brute.loginBruteforce.getMiddleware({
-            key: function(req, res, next) {
+            key: function (req, res, next) {
                 next(req.body.username);
-            }
+            },
         }),
-        mongooseCrudify({
-            Model: User,
-            selectFields: '-__v', // Hide '__v' property
-            endResponseInAction: false,
+        [
+            body('email').isEmail(),
+            body('password').isString(),
+            sanitizeBody('email').normalizeEmail(),
+            expressValidatorErrorHandler,
+        ],
+        (req, res, next) => {
+            const { email, password } = req.body;
 
-            beforeActions: [{
-                middlewares: [loginValidator]
-            }],
-            // actions: {}, // list (GET), create (POST), read (GET), update (PUT), delete (DELETE)
-            afterActions: [
-                { middlewares: [helpers.formatResponse, modifyQueryResult] },
-            ],
-        })
+            return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+                if (err) {
+                    return next(err);
+                }
+
+                if (passportUser) {
+                    const user = passportUser;
+                    user.token = passportUser.generateJWT();
+                    return req.brute.reset(() => {
+                        return res.json({ user: user.toAuthJSON() });
+                    });
+                }
+
+                return res.status(400).json({
+                    error: 'Failed to login',
+                });
+            })(req, res, next);
+        },
     );
 
-    function loginValidator(req, res, next) {
-        let email = req.body.email;
-        let password = req.body.password;
-
-        if(!email) {
-            return res.status(422).json({
-                error: 'Email is required'
-            })
-        }
-
-        if(!password) {
-            return res.status(422).json({
-                error: 'password is required'
-            })
-        }
-
-        return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
-            if(err) {
-              return next(err);
-            }
-            
-            if(passportUser) {
-              const user = passportUser;
-              user.token = passportUser.generateJWT();
-              return req.brute.reset(() => {
-                return res.json({ user: user.toAuthJSON() });
-              });
-            }
-
-            return res.status(400).json({
-                error: 'Failed to login'
-            });
-          })(req, res, next);
-    }
-
-    function modifyQueryResult (req, res) {
-
-    }
 
 };

@@ -15,12 +15,9 @@ const UsersSchema = new Schema({
         unique: true,
         minLength: 4,
         maxLength: 20,
-        lowercase: true,
-        match: /^[\w-.]+$/,
     },
-    displayName: { type: String, required: true, minLength: 1, maxLength: 20 },
     password: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true, lowerCase: true, minLength: 4, maxLength: 40 },
     salt: { type: String },
     createdAt: {
         type: Date,

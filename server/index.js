@@ -15,6 +15,7 @@ const path = require('path');
 const helmet = require('helmet');
 const MONGODB_URI = config.MONGODB_URI;
 const PORT = process.env.PORT || 3001
+const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
 
 app.prepare().then(() => {
 
@@ -44,6 +45,8 @@ app.prepare().then(() => {
 	// API routes
 	const rootPath = path.normalize(__dirname + '/..');
 	glob.sync(path.join(rootPath, '/server/routes/*.js')).forEach(controllerPath => require(controllerPath)(server));
+
+    server.use(defaultErrorHandler);
 
 	// Morgan
 	const accessLogStream = fs.createWriteStream(path.join(rootPath, 'access.log'), {flags: 'a'});
