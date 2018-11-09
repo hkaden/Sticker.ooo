@@ -1,3 +1,4 @@
+const restrictedUsernames = require('./restrictedUsernames');
 
 const arrayLengthValidator = ({ minLength, maxLength }) => ({
     validator: (value) => {
@@ -16,7 +17,7 @@ const arrayLengthValidator = ({ minLength, maxLength }) => ({
 });
 
 /*
- * Following RFC 5322 Official Standard   
+ * Following RFC 5322 Official Standard
  */
 const emailValidator = (email) => {
 	if(!email) {
@@ -28,9 +29,12 @@ const emailValidator = (email) => {
 }
 
 
-
+const usernameValidator = (value) => /^[\w-.]+$/.test(value);
+const usernameIsNotRestrictedValidator = (value) => restrictedUsernames.findIndex(restricted => restricted === value.toLowerCase() === -1);
 
 module.exports = {
 	arrayLengthValidator,
-	emailValidator
+	emailValidator,
+    usernameValidator,
+    usernameIsNotRestrictedValidator,
 }

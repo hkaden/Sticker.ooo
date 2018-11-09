@@ -1,12 +1,22 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const restrictedUsernames = require('../utils/restrictedUsernames');
 
 const Schema = mongoose.Schema;
 
 const UsersSchema = new Schema({
     uuid : { type: String, required: true, unique: true },
-    username: { type: String, required: true },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        minLength: 4,
+        maxLength: 20,
+        lowercase: true,
+        match: /^[\w-.]+$/,
+    },
+    displayName: { type: String, required: true, minLength: 1, maxLength: 20 },
     password: { type: String, required: true },
     email: { type: String, required: true },
     salt: { type: String },
