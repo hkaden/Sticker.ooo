@@ -24,7 +24,7 @@ module.exports = function (server) {
             }],
             // actions: {}, // list (GET), create (POST), read (GET), update (PUT), delete (DELETE)
             afterActions: [
-                { middlewares: [helpers.formatResponse, modifyQueryResult] },
+                { middlewares: [helpers.formatResponse] },
             ],
         })
     );
@@ -47,6 +47,8 @@ module.exports = function (server) {
                 error: 'Username is required'
             })
         }
+        const displayName = username;
+        username = username.toLowerCase();
 
         if(!password) {
             return res.status(422).json({
@@ -66,10 +68,16 @@ module.exports = function (server) {
             })
         }
 
+        if (validators.usernameValidator(username) || !validators.usernameIsNotRestrictedValidator(username)) {
+            return res.status(400).json({
+                error: 'Invalid username'
+            });
+        }
+
         if(!validators.emailValidator(email)){
             return res.status(400).json({
                 error: 'Invalid email'
-            })
+            });
         }
 
         if(password !== confirmPassword) {
@@ -84,6 +92,7 @@ module.exports = function (server) {
                     const newUser = new User({
                         uuid,
                         username,
+                        displayName,
                         email,
                         createdBy: username,
                         updatedBy: username,
@@ -98,11 +107,10 @@ module.exports = function (server) {
                 return res.status(400).json({
                     error: 'Failed to register'
                 })
+            }).catch((e) => {
+            return res.status(400).json({
+                error: 'Failed to register'
             })
+        })
     }
-
-    function modifyQueryResult (req, res) {
-
-    }
-
 };
