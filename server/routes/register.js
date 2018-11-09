@@ -3,6 +3,7 @@
 const mongooseCrudify = require('mongoose-crudify');
 const uuidv4 = require('uuid/v4');
 const helpers = require('../services/helpers');
+const validators = require('../services/validators');
 const User = require('../models/User');
 const fs = require('fs');
 const auth = require('../middleware/auth');
@@ -62,6 +63,12 @@ module.exports = function (server) {
         if(!email) {
             return res.status(422).json({
                 error: 'email is required'
+            })
+        }
+
+        if(!validators.emailValidator(email)){
+            return res.status(400).json({
+                error: 'Invalid email'
             })
         }
 
