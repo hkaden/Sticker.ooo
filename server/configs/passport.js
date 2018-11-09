@@ -9,9 +9,13 @@ const ExtractJWT = passportJWT.ExtractJwt;
 
 /*
  * First Login
- */ 
-passport.use(new LocalStrategy(function(username, password, done) {
-  User.findOne({ username })
+ */
+passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password',
+        session: false
+    }, function(email, password, done) {
+  User.findOne({ email })
     .then((user) => {
       if(!user || !user.validatePassword(password)) {
         return done(null, false, { errors: { 'username or password': 'is invalid' } });
@@ -22,7 +26,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
 
 /*
  * Authenticate with JWT
- */ 
+ */
 passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey   : process.env.JWT_SECRET
