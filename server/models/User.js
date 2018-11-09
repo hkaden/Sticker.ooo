@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const restrictedUsernames = require('../utils/restrictedUsernames');
+const patchHistory = require('mongoose-patch-history').default;
+const { pascalize } = require('humps');
 
 const Schema = mongoose.Schema;
 
@@ -62,5 +64,7 @@ UsersSchema.methods.setPassword = function(password) {
       token: this.generateJWT(),
     };
   };
+
+UsersSchema.plugin(patchHistory, { mongoose, name: 'usersPatches', transforms: [ pascalize, (v) => v] });
 
 module.exports = mongoose.model('User', UsersSchema);

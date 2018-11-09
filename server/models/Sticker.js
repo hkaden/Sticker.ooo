@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { arrayLengthValidator } = require('../utils/validators');
-
+const patchHistory = require('mongoose-patch-history').default;
+const { pascalize } = require('humps');
 const Schema = mongoose.Schema;
 
 const stickersValidators = [
@@ -22,6 +23,8 @@ const stickerSchema = new Schema({
     },
     trays: { type: [String], required: true, validate: arrayLengthValidator({ minLength: 1 }) },
     stickers: { type: [[String]], required: true, validate: stickersValidators },
+    userTags: { type: [String] },
+    adminTags: { type: [String] },
     createdAt: {
         type: Date,
         default: Date.now,
@@ -34,5 +37,7 @@ const stickerSchema = new Schema({
     createdBy: { type: String },
     updatedBy: { type: String }
 });
+
+stickerSchema.plugin(patchHistory, { mongoose, name: 'stickersPatches', transforms: [ pascalize, (v) => v] });
 
 module.exports = mongoose.model('Sticker', stickerSchema);
