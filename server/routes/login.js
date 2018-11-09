@@ -6,6 +6,7 @@ const helpers = require('../utils/helpers');
 const User = require('../models/User');
 const fs = require('fs');
 const auth = require('../middleware/auth');
+const brute = require('../middleware/brute');
 const passport = require('passport');
 
 module.exports = function (server) {
@@ -14,6 +15,12 @@ module.exports = function (server) {
     server.use(
         '/api/login',
         auth.optional,
+        brute.globalBruteforce.prevent,
+        brute.loginBruteforce.getMiddleware({
+            key: function(req, res, next) {
+                next(req.body.username);
+            }
+        }),
         mongooseCrudify({
             Model: User,
             selectFields: '-__v', // Hide '__v' property
@@ -53,8 +60,9 @@ module.exports = function (server) {
             if(passportUser) {
               const user = passportUser;
               user.token = passportUser.generateJWT();
-
-              return res.json({ user: user.toAuthJSON() });
+              return req.brute.reset(() => {
+                return res.json({ user: user.toAuthJSON() });
+              });
             }
 
             return res.status(400).json({
