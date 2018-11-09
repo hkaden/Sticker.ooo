@@ -29,6 +29,8 @@
 		"enquire-js": "^0.2.1",
 		"events": "^3.0.0",
 		"express": "^4.14.0",
+		"express-brute": "^1.0.1",
+		"express-brute-redis": "0.0.1",
 		"express-jwt": "^5.3.1",
 		"glob": "^7.1.2",
 		"helmet": "^3.15.0",
