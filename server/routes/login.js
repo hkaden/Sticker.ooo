@@ -37,12 +37,12 @@ module.exports = function (server) {
     );
 
     function loginValidator(req, res, next) {
-        let username = req.body.username;
+        let email = req.body.email;
         let password = req.body.password;
 
-        if(!username) {
+        if(!email) {
             return res.status(422).json({
-                error: 'Username is required'
+                error: 'Email is required'
             })
         }
 

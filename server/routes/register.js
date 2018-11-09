@@ -67,8 +67,8 @@ module.exports = function (server) {
                 error: 'email is required'
             })
         }
-
-        if (validators.usernameValidator(username) || !validators.usernameIsNotRestrictedValidator(username)) {
+        
+        if (!validators.usernameValidator(username) || !validators.usernameIsNotRestrictedValidator(username)) {
             return res.status(400).json({
                 error: 'Invalid username'
             });
@@ -86,7 +86,7 @@ module.exports = function (server) {
             })
         }
 
-        User.findOne( {username} )
+        User.findOne( {email} )
             .then( (user) => {
                 if(!user) {
                     const newUser = new User({
