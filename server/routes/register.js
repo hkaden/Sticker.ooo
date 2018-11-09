@@ -3,114 +3,57 @@
 const mongooseCrudify = require('mongoose-crudify');
 const uuidv4 = require('uuid/v4');
 const helpers = require('../utils/helpers');
+const { StatusError } = require('../errors');
 const validators = require('../utils/validators');
 const User = require('../models/User');
 const fs = require('fs');
 const auth = require('../middleware/auth');
+const { body } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
 
 module.exports = function (server) {
 
     // Docs: https://github.com/ryo718/mongoose-crudify
-    server.use(
+    server.post(
         '/api/register',
         auth.optional,
-        mongooseCrudify({
-            Model: User,
-            selectFields: '-__v', // Hide '__v' property
-            endResponseInAction: false,
+        [
+            body('username').isLength({ min: 4, max: 20 }).withMessage('must be within 4 to 20 characters'),
+            body('password').isLength({ min: 6 }).withMessage('must be at least 6 characters')
+                .custom(validators.usernameIsNotRestrictedValidator).withMessage('is not a valid username'),
+            body('confirmPassword').withMessage('is required'),
+            body('email').isEmail(),
+            body().custom(body => body.password === body.confirmPassword).withMessage('Passwords do not match'),
+            sanitizeBody('email').normalizeEmail(),
+            expressValidatorErrorHandler,
+        ],
+        async (req, res, next) => {
+            try {
+                const { username, password, email } = req.body;
+                const uuid = uuidv4();
 
-            beforeActions: [{
-                middlewares: [uuidGenerator, validateRegistration]
-            }],
-            // actions: {}, // list (GET), create (POST), read (GET), update (PUT), delete (DELETE)
-            afterActions: [
-                { middlewares: [helpers.formatResponse] },
-            ],
-        })
-    );
-
-    function uuidGenerator(req, res, next) {
-        var id = uuidv4();
-        req.body.uuid = id;
-        next();
-    }
-
-    function validateRegistration(req, res, next) {
-        let username = req.body.username;
-        let password = req.body.password;
-        let confirmPassword = req.body.confirmPassword;
-        let email = req.body.email;
-        let uuid = req.body.uuid;
-
-        if(!username) {
-            return res.status(422).json({
-                error: 'Username is required'
-            })
-        }
-        const displayName = username;
-        username = username.toLowerCase();
-
-        if(!password) {
-            return res.status(422).json({
-                error: 'password is required'
-            })
-        }
-
-        if(!confirmPassword) {
-            return res.status(422).json({
-                error: 'confirmPassword is required'
-            })
-        }
-
-        if(!email) {
-            return res.status(422).json({
-                error: 'email is required'
-            })
-        }
-        
-        if (!validators.usernameValidator(username) || !validators.usernameIsNotRestrictedValidator(username)) {
-            return res.status(400).json({
-                error: 'Invalid username'
-            });
-        }
-
-        if(!validators.emailValidator(email)){
-            return res.status(400).json({
-                error: 'Invalid email'
-            });
-        }
-
-        if(password !== confirmPassword) {
-            return res.status(400).json({
-                error: 'Passwords do not match'
-            })
-        }
-
-        User.findOne( {email} )
-            .then( (user) => {
-                if(!user) {
-                    const newUser = new User({
-                        uuid,
-                        username,
-                        displayName,
-                        email,
-                        createdBy: username,
-                        updatedBy: username,
-                    });
-
-                    newUser.setPassword(password);
-                    return newUser.save()
-                        .then(() => res.json({
-                            user: newUser.toAuthJSON()
-                        }))
+                const user = await User.findOne({ $or: [{email}, {username}] });
+                if (user) {
+                    throw new StatusError(400, 'Username or email already exists');
                 }
-                return res.status(400).json({
-                    error: 'Failed to register'
-                })
-            }).catch((e) => {
-            return res.status(400).json({
-                error: 'Failed to register'
-            })
-        })
-    }
+
+                const newUser = new User({
+                    uuid,
+                    username,
+                    email,
+                    createdBy: uuid,
+                    updatedBy: uuid,
+                });
+
+                newUser.setPassword(password);
+                await newUser.save();
+                res.json({
+                    user: newUser.toAuthJSON(),
+                });
+            } catch (e) {
+                next(e);
+            }
+        },
+    );
 };

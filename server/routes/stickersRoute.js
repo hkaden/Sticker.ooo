@@ -7,6 +7,19 @@ const Sticker = require('../models/Sticker');
 const crypto = require('../utils/crypto');
 const fs = require('fs');
 const auth = require('../middleware/auth');
+const { body } = require('express-validator/check')
+const { ValidationError } = require('../errors');
+const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
+
+const createStickerValidators = [
+    body('stickers').isArray().withMessage('must be an array'),
+    body('stickers.*').isArray().withMessage('must be an array'),
+    body('stickers.*.*').isString().matches(/^data:image\/webp;base64,/).withMessage('must be valid webp data url'),
+    body('trays').isArray().withMessage('must be an array'),
+    body('trays.*').isString().matches(/^data:image\/png;base64,/).withMessage('must be valid png data url'),
+    body().custom(body => body.trays.length === body.stickers.length).withMessage('Lengths of trays and stickers must match'),
+    expressValidatorErrorHandler,
+];
 
 module.exports = function (server) {
 
@@ -22,7 +35,7 @@ module.exports = function (server) {
             endResponseInAction: false,
 
             beforeActions: [{
-                middlewares: [generateStickersAndTrayImages],
+                middlewares: [...createStickerValidators, generateStickersAndTrayImages],
                 only: ['create']
             }],
             actions: {
@@ -113,14 +126,10 @@ module.exports = function (server) {
         let dataUrlRegex = /^data:image\/(\w+);base64,/;
 
         const execArray = dataUrlRegex.exec(image);
-        let extension = execArray[1];
         if (execArray == null) {
-            throw new Error('Invalid dataUrl');
-        } else {
-            if (type === 'stickers' && extension !== 'webp' || type === 'tray' && extension !== 'png') {
-                throw new Error('Invalid dataUrl');
-            }
+            throw new ValidationError('Invalid dataUrl');
         }
+        let extension = execArray[1];
 
         const path = `/static/imageStore/${type}/${id}`;
         const data = image.replace(dataUrlRegex, '');
@@ -131,7 +140,7 @@ module.exports = function (server) {
         const dbPath = path + file;
 
         if (buffer.length > 100 * 1024) {
-            throw new Error('Image should not be larger than 100kb')
+            throw new ValidationError('Image should not be larger than 100kb')
         }
 
         if (!fs.existsSync(local)) {
