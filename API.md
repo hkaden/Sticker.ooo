@@ -2,6 +2,39 @@
 Endpoint: `https://stickerizdemo.hkaden.me/api`
 
 ## Stickers
+### Sticker model
+```json5
+    {
+        "uuid": "2a2c5c58-d10b-4481-841b-b99a17037829",
+        "publisher": "asd",
+        "name": "asd",
+        "updatedAt": "2018-11-10T12:23:38.137Z",
+        "createdAt": "2018-11-10T12:23:38.137Z",
+        "sharingType": "public", // public or link
+        "adminTags": ["original"],
+        "userTags": ["Pet", "Dog"],
+        "tray": "/static/imageStore/tray/2a2c5c58-d10b-4481-841b-b99a17037829/88b90063-f432-4ede-bbeb-becade9eea1a.png",
+        "trays": [
+            "/static/imageStore/tray/2a2c5c58-d10b-4481-841b-b99a17037829/66628ed2-4701-4658-8c29-d9de962bebe5.png"
+        ],
+        "stickers": [
+            [
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/b40d38fe-5f0b-4860-9401-ec31543a1964.webp",
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/7f97de73-8f99-4c5f-b730-832fd1a63378.webp",
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/acf53661-edac-40a9-bcb4-a6625ec93700.webp",
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/1ebe0e46-b80b-4b08-884d-de3296a8ebed.webp",
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/a6938ec0-b460-49d7-9da9-d9019201effb.webp"
+            ],
+            [
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/b40d38fe-5f0b-4860-9401-ec31543a1964.webp",
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/7f97de73-8f99-4c5f-b730-832fd1a63378.webp",
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/acf53661-edac-40a9-bcb4-a6625ec93700.webp",
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/1ebe0e46-b80b-4b08-884d-de3296a8ebed.webp",
+                "/static/imageStore/stickers/2a2c5c58-d10b-4481-841b-b99a17037829/a6938ec0-b460-49d7-9da9-d9019201effb.webp"
+            ]
+        ]
+    }
+```
 #### `GET /stickers` Get stickers with pagination
 Returns stickers, only the first 5 images of the first pack is returned. 
 
@@ -18,31 +51,12 @@ Returns stickers, only the first 5 images of the first pack is returned.
 
     * **Code:** 200 <br />
     * **Content:** 
-     ```json
+     ```json5
      {
          "count": 6,
          "data": [
-             {
-                 "_id": "5bdfcc8fd1b8dc2baf99cba7",
-                 "uuid": "2abf7795-0f8a-45d0-9f77-3d4b4da2584f",
-                 "publisher": "asd",
-                 "name": "asd",
-                 "updatedAt": "2018-11-07T05:10:57.140Z",
-                 "createdAt": "2018-11-07T05:10:57.140Z",
-                 "trays": [
-                     "/static/imageStore/tray/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/418b7ae0-ea29-4bde-b2db-a07870508014.png"
-                 ],
-                 "stickers": [
-                     [
-                         "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/1c9b9afc-2d40-4e6a-8238-7af458dbf5b3.webp",
-                         "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/266a4322-9a83-4aff-8688-433b581c13e1.webp",
-                         "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/d715ebba-1df1-411e-97cb-ffabee8f8083.webp",
-                         "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/ca738720-3a5a-4232-a371-49ecb2520edf.webp",
-                         "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/ca738720-3a5a-4232-a371-49ecb2520edf.webp"
-                     ]
-                 ],
-             },
-             {...}
+            /* sticker model */,
+            /* sticker model */
          ]
      }
      ```
@@ -60,29 +74,7 @@ Returns stickers, only the first 5 images of the first pack is returned.
     * **Code:** 200 <br />
     * **Content:** 
      ```json
-     {
-         "_id": "5bdfcc8fd1b8dc2baf99cba7",
-         "uuid": "2abf7795-0f8a-45d0-9f77-3d4b4da2584f",
-         "publisher": "asd",
-         "name": "asd",
-         "trays": [
-             "/static/imageStore/tray/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/418b7ae0-ea29-4bde-b2db-a07870508014.png"
-         ],
-         "updatedAt": "2018-11-07T05:15:14.405Z",
-         "createdAt": "2018-11-07T05:15:14.405Z",
-         "stickers": [
-             [
-                 "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/1c9b9afc-2d40-4e6a-8238-7af458dbf5b3.webp",
-                 "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/266a4322-9a83-4aff-8688-433b581c13e1.webp",
-                 "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/d715ebba-1df1-411e-97cb-ffabee8f8083.webp",
-                 "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/ca738720-3a5a-4232-a371-49ecb2520edf.webp",
-                 "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/ca738720-3a5a-4232-a371-49ecb2520edf.webp",
-                 "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/ca738720-3a5a-4232-a371-49ecb2520edf.webp",
-                 "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/ca738720-3a5a-4232-a371-49ecb2520edf.webp",
-                 "/static/imageStore/stickers/2abf7795-0f8a-45d0-9f77-3d4b4da2584f/ca738720-3a5a-4232-a371-49ecb2520edf.webp"
-             ]
-         ]
-     }
+     /* sticker model */
      ```
 
 
