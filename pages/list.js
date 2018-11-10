@@ -101,7 +101,7 @@ class stickersList extends Component {
             key={itemIndex}
             title={sticker.name}
             extra={(
-              <Button type="primary" icon="plus" size="large" ghost href={`twesticker://stickers/${sticker.uuid}`}>
+              <Button type="primary" icon="plus" size="large" ghost href={`stickerooo://stickers/${sticker.uuid}`}>
                             Add to WhatsApp
               </Button>
 )}
