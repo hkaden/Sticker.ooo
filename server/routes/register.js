@@ -10,6 +10,7 @@ const { body } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
 const { sendVerificationMail } = require('../utils/nodeMailer');
+const { TYPES, MESSAGES } = require('../configs/constants');
 
 module.exports = function (server) {
 
@@ -18,12 +19,12 @@ module.exports = function (server) {
         '/api/register',
         auth.optional,
         [
-            body('username').isLength({ min: 4, max: 20 }).withMessage('must be within 4 to 20 characters'),
-            body('password').isLength({ min: 6 }).withMessage('must be at least 6 characters')
-                .custom(validators.usernameIsNotRestrictedValidator).withMessage('is not a valid username'),
-            body('confirmPassword').withMessage('is required'),
+            body('username').isLength({ min: 4, max: 20 }).withMessage(MESSAGES.VERIFY_USERNAME),
+            body('password').isLength({ min: 6 }).withMessage(MESSAGES.VERFIY_PASSWORD)
+                .custom(validators.usernameIsNotRestrictedValidator).withMessage(MESSAGES.IS_NOT_VALID_USERNAME),
+            body('confirmPassword').withMessage(MESSAGES.IS_REQUIRE),
             body('email').isEmail(),
-            body().custom(body => body.password === body.confirmPassword).withMessage('Passwords do not match'),
+            body().custom(body => body.password === body.confirmPassword).withMessage(MESSAGES.PASSWORD_NOT_MATCH),
             //sanitizeBody('email').normalizeEmail({ remove_dots: false }),
             expressValidatorErrorHandler,
         ],
@@ -31,11 +32,12 @@ module.exports = function (server) {
             try {
                 const { username, password, email } = req.body;
                 const uuid = uuidv4();
-                console.log("email=" + email)
+                
                 const user = await User.findOne({ $or: [{email}, {username}] });
                 if (user) {
                     return res.status(400).json({
-                        message: 'Username or email already exists'
+                        type: TYPES.USERNAME_OR_EMAIL_EXIST,
+                        message: MESSAGES.USERNAME_OR_EMAIL_EXIST
                     })
                 }
 
@@ -52,7 +54,8 @@ module.exports = function (server) {
                 return await newUser.save((err) => {
                     if(err) {
                         return res.status(500).send({
-                            message: 'Failed to register'
+                            type: TYPES.FAILED_TO_REGISTER,
+                            message: MESSAGES.FAILED_TO_REGISTER
                         })
                     }
 
@@ -65,7 +68,8 @@ module.exports = function (server) {
                     return token.save((err) => {
                         if(err) {
                             return res.status(500).json({
-                                message: err.message
+                                type: TYPES.FAILED_TO_SEND_TOKEN,
+                                message: MESSAGES.FAILED_TO_SEND_TOKEN
                             })
                         }
 

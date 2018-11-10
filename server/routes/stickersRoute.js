@@ -10,6 +10,7 @@ const auth = require('../middleware/auth');
 const { body } = require('express-validator/check')
 const { ValidationError } = require('../errors');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
+const { TYPES, MESSAGES } = require('../configs/constants');
 
 const createStickerValidators = [
     body('stickers').isArray().withMessage('must be an array'),
@@ -127,7 +128,7 @@ module.exports = function (server) {
 
         const execArray = dataUrlRegex.exec(image);
         if (execArray == null) {
-            throw new ValidationError('Invalid dataUrl');
+            throw new ValidationError(MESSAGES.INVALID_DATAURL);
         }
         let extension = execArray[1];
 
@@ -140,7 +141,7 @@ module.exports = function (server) {
         const dbPath = path + file;
 
         if (buffer.length > 100 * 1024) {
-            throw new ValidationError('Image should not be larger than 100kb')
+            throw new ValidationError(MESSAGES.VERIFY_IMAGE)
         }
 
         if (!fs.existsSync(local)) {
