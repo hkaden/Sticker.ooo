@@ -1,5 +1,3 @@
-
-
 const mongooseCrudify = require('mongoose-crudify');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
@@ -13,16 +11,16 @@ const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers'
 const { TYPES, MESSAGES } = require('../configs/constants');
 
 const createStickerValidators = [
-  body('stickers').isArray().withMessage('must be an array'),
-  body('stickers.*').isArray().withMessage('must be an array'),
-  body('stickers.*.*').isString().matches(/^data:image\/webp;base64,/).withMessage('must be valid webp data url'),
-  body('trays').isArray().withMessage('must be an array'),
-  body('trays.*').isString().matches(/^data:image\/png;base64,/).withMessage('must be valid png data url'),
-  body().custom(body => body.trays.length === body.stickers.length).withMessage('Lengths of trays and stickers must match'),
+  body('stickers').isArray().withMessage(MESSAGES.IS_ARRAY),
+  body('stickers.*').isArray().withMessage(MESSAGES.IS_ARRAY),
+  body('stickers.*.*').isString().matches(/^data:image\/webp;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
+  body('trays').isArray().withMessage(MESSAGES.IS_ARRAY),
+  body('trays.*').isString().matches(/^data:image\/png;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
+  body().custom(reqBody => reqBody.trays.length === reqBody.stickers.length).withMessage('Lengths of trays and stickers must match'),
   expressValidatorErrorHandler,
 ];
 
-module.exports = function (server) {
+module.exports = (server) => {
   // Docs: https://github.com/ryo718/mongoose-crudify
   const selectFields = '-__v';
   server.use(
