@@ -76,7 +76,7 @@ class StickerPage extends Component {
                   extra={(
                     <span>
                       {`Publisher: ${stickersList[0].publisher}`}
-                      <Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost href={`twesticker://stickers/${stickersList[0].uuid}`}>
+                      <Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost href={`stickerooo://stickers/${stickersList[0].uuid}`}>
                                       Add to WhatsApp
                       </Button>
                     </span>
