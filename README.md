@@ -25,9 +25,14 @@ GMAIL_PASSWORD=YOUR_GMAIL_PASSWORD
 2. Allow less secure apps in https://myaccount.google.com/lesssecureapps
 
 
-### Dev env
+### Run Dev 
 ```sh
 $ yarn run dev
+```
+
+### Run Lint Test
+```sh
+$ yarn run lint
 ```
 
 ### Build
