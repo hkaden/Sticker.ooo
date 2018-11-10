@@ -18,10 +18,10 @@ module.exports = function (server) {
     '/api/register',
     auth.optional,
     [
-      body('username').isLength({ min: 4, max: 20 }).withMessage(MESSAGES.VERIFY_USERNAME),
-      body('password').isLength({ min: 6 }).withMessage(MESSAGES.VERFIY_PASSWORD)
-        .custom(validators.usernameIsNotRestrictedValidator)
-        .withMessage(MESSAGES.IS_NOT_VALID_USERNAME),
+      body('username').isLength({ min: 4, max: 20 }).withMessage(MESSAGES.VERIFY_USERNAME)        
+      .custom(validators.usernameIsNotRestrictedValidator)
+      .withMessage(MESSAGES.IS_NOT_VALID_USERNAME),
+      body('password').isLength({ min: 6 }).withMessage(MESSAGES.VERFIY_PASSWORD),
       body('confirmPassword').withMessage(MESSAGES.IS_REQUIRE),
       body('email').isEmail(),
       body().custom(body => body.password === body.confirmPassword).withMessage(MESSAGES.PASSWORD_NOT_MATCH),
