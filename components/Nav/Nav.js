@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { findDOMNode } from 'react-dom';
-import { Menu } from 'antd';
+import * as React from 'react'
+import {findDOMNode} from 'react-dom';
+import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
 import styles from './Nav.less';
 
@@ -25,74 +25,56 @@ class Nav extends React.Component {
     };
 
     render() {
-      const { ...props } = this.props;
-      const { dataSource, isMobile } = props;
+      const {...props} = this.props;
+      const {dataSource, isMobile} = props;
       delete props.dataSource;
       delete props.isMobile;
-      const { menuHeight, phoneOpen } = this.state;
+      const {menuHeight, phoneOpen} = this.state;
       const navData = dataSource.Menu.children;
       const navChildren = Object.keys(navData).map((key, i) => (
-        <Item key={i.toString()} {...navData[key]}>
+        <li key={i.toString()} {...navData[key]} className="item">
           <a
             {...navData[key].a}
             href={navData[key].a.href}
             target={navData[key].a.target}
+            className="link"
           >
             {navData[key].a.children}
           </a>
-        </Item>
+        </li>
       ));
 
       return (
 
         <TweenOne
           component="header"
-          {...dataSource.wrapper}
+          className="header0 home-page-wrapper"
           {...props}
         >
           <style jsx>
-            { styles }
+            {styles}
           </style>
           <div
-            {...dataSource.page}
-            className={`${dataSource.page.className}${phoneOpen ? ' open' : ''}`}
+            className="home-page"
           >
             <TweenOne
               {...dataSource.logo}
             >
-              <img width="100%" src={dataSource.logo.children} alt="img" />
+              <img width="100%" src={dataSource.logo.children} alt="img"/>
             </TweenOne>
-            {isMobile && (
-            <div
-              {...dataSource.mobileMenu}
-              onClick={() => {
-                this.phoneClick();
-              }}
-            >
-              <em />
-              <em />
-              <em />
-            </div>
-            )}
-            <TweenOne
-              {...dataSource.Menu}
-              ref={(c) => {
-                this.menu = c;
-              }}
-              style={isMobile ? { height: menuHeight } : null}
-            >
-              <Menu
-                mode={isMobile ? 'inline' : 'horizontal'}
-                defaultSelectedKeys={['0']}
-                theme={isMobile ? 'dark' : 'default'}
-              >
+            <div className="link">
+              <ul className="nav">
                 {navChildren}
-              </Menu>
-            </TweenOne>
+              </ul>
+            </div>
+            <div className="buttonsList">
+              <Button type="primary" className="haveSticker" size="large">我要整一套屬於自己既Stickers!</Button>
+            </div>
           </div>
         </TweenOne>
       );
+
     }
 }
 
-export default Nav;
+export default Nav

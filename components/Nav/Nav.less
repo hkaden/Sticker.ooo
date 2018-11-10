@@ -2,24 +2,65 @@
 @import "~antd/lib/style/themes/default.less";
 @import "../../static/app.less";
 
-
 @header: header0;
 .@{header} {
-  background: @template-nav-bg-color;
+  background: #fff;
   width: 100%;
-  z-index: 1;
-  box-shadow: 0 5px 8px fade(#000, 15);
-  position: relative;
+  z-index: 20;
+  //box-shadow: 0 5px 8px fade(#000, 15);
+  position: fixed;
   top: 0;
+  left: 0;
+  box-sizing: border-box;
+  border-bottom: 1px solid #cdcdcd;
   .home-page {
     padding: 0 24px;
     max-width: 1200px;
     margin: auto;
   }
+
+  .link {
+    line-height: 1.5;
+  }
+
+  .nav {
+    box-sizing: border-box;
+    list-style: none;
+    margin: 10px 0 30px;
+    padding: 0;
+
+    .item {
+
+      position: relative;
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    .link {
+      color: #333;
+      display: inline-block;
+    }
+  }
+
+  .buttonsList {
+    position: absolute;
+    bottom: 15px;
+    right: 0;
+
+    .haveSticker {
+      border-color: @template-bg-color;
+      background-color: @template-nav-bg-color;
+      color: #000;
+      letter-spacing: 3px;
+
+    }
+  }
+
   &-logo {
-    display: inline-block;
+    //display: inline-block;
+
     position: relative;
-    width: 98px;
+    width: 120px;
     line-height: 64px;
     & img {
       vertical-align: middle;
@@ -31,7 +72,7 @@
   }
   &-menu {
     float: right;
-    >.ant-menu {
+    > .ant-menu {
       line-height: 62px;
       background: transparent;
       color: @template-text-color-light;
@@ -79,6 +120,11 @@
       & .ant-menu-submenu .ant-menu-sub {
         padding: 0 24px;
       }
+    }
+    .link {
+      display: block;
+      width: 100%;
+      height: 0;
     }
     &-mobile-menu {
       width: 16px;
@@ -133,7 +179,7 @@
           }
         }
       }
-      >.@{header}-menu {
+      > .@{header}-menu {
         opacity: 1;
         pointer-events: auto;
       }
