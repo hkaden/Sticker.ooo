@@ -4,6 +4,7 @@ config.js
 yarn.lock
 yarn-error.log
 .idea
+/static/libwebpjs.*
 /static/imageStore/**/*.png
 /static/imageStore/**/*.webp
 access.log
