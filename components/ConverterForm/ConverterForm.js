@@ -1,12 +1,9 @@
 import * as React from 'react';
 import {
-  Form, Button, Upload, Icon,
-  Input, Progress, Radio,
+  Button, Form, Icon, Input, InputNumber, Progress, Radio, Upload,
 } from 'antd';
-import { WrappedFormUtils } from 'antd/lib/form/Form';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import withRedux from 'next-redux-wrapper';
 import cachios from 'cachios';
 import reduxApi from '../../lib/reduxApi';
 import redirect from '../../lib/redirect';
@@ -59,7 +56,9 @@ class CForm extends React.Component {
               stickersFiles = values.stickers.map(sticker => sticker.originFileObj);
             }
 
-            const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles);
+            const packSize = this.props.form.getFieldValue('packSize');
+
+            const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles, packSize);
             let stickersLoaded = 0;
             emitter.on('stickerLoad', () => {
               stickersLoaded += 1;
@@ -79,7 +78,6 @@ class CForm extends React.Component {
               trays,
               stickers: stickersInPack,
             };
-
 
             const resp = await cachios.post('/api/stickers', stickersData);
             if (resp.status === 200) {
@@ -157,6 +155,18 @@ class CForm extends React.Component {
               </Radio.Group>,
             )}
           </FormItem>
+          <FormItem
+            label="Maximum number of stickers per pack"
+          >
+            {getFieldDecorator('packSize', {
+              initialValue: 30,
+            })(
+              <InputNumber
+                min={5}
+                max={30}
+              />,
+            )}
+          </FormItem>
           {this.state.uploadType === 'image' ? (
             <div>
               <FormItem
@@ -174,7 +184,6 @@ class CForm extends React.Component {
                         message: 'Please select only 1 tray icon!',
                       },
                     ],
-
                   })(
                     <Upload.Dragger accept="image/png,image/jpeg" name="tray" multiple={false} beforeUpload={this.beforeUpload} disabled={this.state.isSubmitting}>
                       <p className="ant-upload-drag-icon">
