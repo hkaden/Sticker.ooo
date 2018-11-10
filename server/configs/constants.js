@@ -16,6 +16,8 @@ const TYPES = {
 const MESSAGES = {
   USERNAME_OR_EMAIL_EXIST: 'Username or email already exists',
   IS_REQUIRE: 'is required',
+  IS_ARRAY: 'is an array',
+  IS_VALID_DATAURL: 'is a valid dataUrl',
   IS_NOT_VALID_USERNAME: 'is not a valid username',
   PASSWORD_NOT_MATCH: 'Passwords do not match',
   VERIFY_USERNAME: 'must be within 4 to 20 characters',

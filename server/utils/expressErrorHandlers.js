@@ -25,7 +25,7 @@ const defaultErrorHandler = (err, req, res, next) => {
   }
   res.status(status).json({
     status,
-    name: err.name !== 'StatusError' ? err.name : undefined,
+    type: err.name !== 'StatusError' ? err.name : undefined,
     message: err.message,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   });

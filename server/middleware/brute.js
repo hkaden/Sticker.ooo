@@ -1,3 +1,4 @@
+const { getRedisClient } = require('../utils/redis');
 const ExpressBrute = require('express-brute');
 const RedisStore = require('express-brute-redis');
 
@@ -8,8 +9,8 @@ if (process.env.NODE_ENV !== 'production') {
   store = new ExpressBrute.MemoryStore();
 } else {
   store = new RedisStore({
-    host: '127.0.0.1',
-    port: 6379,
+    client: getRedisClient(),
+    prefix: 'brute-',
   });
 }
 
