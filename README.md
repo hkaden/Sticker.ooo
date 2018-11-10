@@ -16,7 +16,16 @@ $ cp config.example.js config.js
 $ yarn install
 ```
 
-#### Dev env
+### node Mailer Setup
+1. update .env
+```
+GMAIL_USERNAME=YOUR_GMAIL_USERNAME
+GMAIL_PASSWORD=YOUR_GMAIL_PASSWORD
+```
+2. Allow less secure apps in https://myaccount.google.com/lesssecureapps
+
+
+### Dev env
 ```sh
 $ yarn run dev
 ```
