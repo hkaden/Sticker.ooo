@@ -3,6 +3,7 @@ module.exports = {
 	  "security"
 	],
 	"extends": [
+		"airbnb",
 	  "plugin:security/recommended"
 	],
 	"parser": "babel-eslint"
