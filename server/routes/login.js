@@ -26,17 +26,21 @@ module.exports = function (server) {
             expressValidatorErrorHandler,
         ],
         (req, res, next) => {
-            const { email, password } = req.body;
-
             return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
                 if (err) {
                     return next(err);
                 }
 
                 if (passportUser) {
-                    const user = passportUser;
-                    user.token = passportUser.generateJWT();
+                    const user = passportUser;                    
                     return req.brute.reset(() => {
+                        if(!user.isVerified) {
+                            return res.status(401).json({
+                                type: 'account-not-verified',
+                                error: 'Your account has not been verified'
+                            })
+                        }
+                        user.token = passportUser.generateJWT();
                         return res.json({ user: user.toAuthJSON() });
                     });
                 }

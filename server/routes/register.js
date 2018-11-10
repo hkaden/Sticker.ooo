@@ -1,16 +1,15 @@
 'use strict';
 
-const mongooseCrudify = require('mongoose-crudify');
 const uuidv4 = require('uuid/v4');
-const helpers = require('../utils/helpers');
 const { StatusError } = require('../errors');
 const validators = require('../utils/validators');
 const User = require('../models/User');
-const fs = require('fs');
+const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { body } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
+const { sendVerificationMail } = require('../utils/nodeMailer');
 
 module.exports = function (server) {
 
@@ -25,17 +24,19 @@ module.exports = function (server) {
             body('confirmPassword').withMessage('is required'),
             body('email').isEmail(),
             body().custom(body => body.password === body.confirmPassword).withMessage('Passwords do not match'),
-            sanitizeBody('email').normalizeEmail(),
+            //sanitizeBody('email').normalizeEmail({ remove_dots: false }),
             expressValidatorErrorHandler,
         ],
         async (req, res, next) => {
             try {
                 const { username, password, email } = req.body;
                 const uuid = uuidv4();
-
+                console.log("email=" + email)
                 const user = await User.findOne({ $or: [{email}, {username}] });
                 if (user) {
-                    throw new StatusError(400, 'Username or email already exists');
+                    return res.status(400).json({
+                        message: 'Username or email already exists'
+                    })
                 }
 
                 const newUser = new User({
@@ -47,9 +48,29 @@ module.exports = function (server) {
                 });
 
                 newUser.setPassword(password);
-                await newUser.save();
-                res.json({
-                    user: newUser.toAuthJSON(),
+                
+                return await newUser.save((err) => {
+                    if(err) {
+                        return res.status(500).send({
+                            message: 'Failed to register'
+                        })
+                    }
+
+                    const token = new Token({
+                        uuid
+                    })
+
+                    token.setToken(email);
+                    
+                    return token.save((err) => {
+                        if(err) {
+                            return res.status(500).json({
+                                message: err.message
+                            })
+                        }
+
+                        sendVerificationMail(email, token, req, res);
+                    });
                 });
             } catch (e) {
                 next(e);
