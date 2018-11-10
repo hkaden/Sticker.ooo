@@ -56,7 +56,7 @@ module.exports = function (server) {
 
               return res.status(200).json({
                 type: TYPES.ACCOUNT_VERIFIED,
-                message: MESSAGES.ALREADY_VERIFIED,
+                message: MESSAGES.ACCOUNT_ALREADY_VERIFIED,
               });
             });
           });
