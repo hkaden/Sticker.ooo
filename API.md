@@ -86,4 +86,80 @@ Returns stickers, only the first 5 images of the first pack is returned.
      ```
 
 
+## Authentication & Authorization
+#### `POST /register` Register a user
+Register a user and send an verification email to the given email address
 
+*  **Query Params**
+
+    **Required:**
+    
+    `username=[string, min: 4, max: 20, not in restrictedUsernames]`
+
+    `password=[string, min: 6]`
+
+    `confirmPassword=[string, min: 6]`
+
+    `email=[email]`
+    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "VERIFICATION_EMAIL_SENT",
+        "message": "A verification email has been sent to testUser@gmail.com"
+     }
+     ```
+
+#### `POST /verifyAccount` Verify an account
+Verify an account based on a given token
+
+*  **Query Params**
+
+    **Required:**
+    
+    `token=[string]`
+    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "ACCOUNT_VERIFIED",
+        "message": "The account has been verified"
+     }
+     ```
+
+#### `POST /login` 
+Only allow users who have already verified to login
+
+*  **Query Params**
+
+    **Required:**
+    
+    `email=[email]`
+
+    `password=[string, min: 6]`
+    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "LOGIN_SUCCESS",
+        "message": "Login Successfully",
+        "user": {
+            "uuid": "ce1f0b89-dd71-44f0-adf4-ed1d5c6aa273",
+            "username": "testUser",
+            "email": "testUser@gmail.com",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RVc2VyIiwiZW1haWwiOiJ3aW5na3dvbmcubWVAZ21haWwuY29tIiwiaWQiOiJjZTFmMGI4OS1kZDcxLTQ0ZjAtYWRmNC1lZDFkNWM2YWEyNzMiLCJleHAiOjE1NDcwMzM5MjUsImlhdCI6MTU0MTg0OTkyNX0.NKrWb-gfoi8IvZeQFhVJ2kiHzokFDmPKYmejBicRg2g"
+        }
+     }
+     ```
