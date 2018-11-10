@@ -1,79 +1,80 @@
-const config = require('../config.js')
 const express = require('express');
+
 const server = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const glob = require('glob');
-const morgan  = require('morgan')
-const compression = require('compression')
-const next = require('next')
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const defaultRequestHandler = app.getRequestHandler()
+const morgan = require('morgan');
+const compression = require('compression');
+const next = require('next');
+
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const defaultRequestHandler = app.getRequestHandler();
 const fs = require('fs');
 const path = require('path');
 const helmet = require('helmet');
+const config = require('../config.js');
+
 const MONGODB_URI = config.MONGODB_URI;
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001;
 const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
 
 app.prepare().then(() => {
+  // Helmet
+  server.use(helmet());
 
-	// Helmet
-	server.use(helmet());
+  // Parse application/x-www-form-urlencoded
+  server.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
+  // Parse application/json
+  server.use(bodyParser.json({ limit: '50mb' }));
+  // Allows for cross origin domain request:
+  server.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+  });
 
-	// Parse application/x-www-form-urlencoded
-	server.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
-	// Parse application/json
-	server.use(bodyParser.json({limit: '50mb'}));
-	// Allows for cross origin domain request:
-	server.use(function(req, res, next) {
-		res.header('Access-Control-Allow-Origin', '*');
-		res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-		next();
-	});
+  // Compression
+  server.use(compression());
 
-	// Compression
-	server.use(compression());
+  // MongoDB
+  mongoose.Promise = Promise;
+  mongoose.connect(MONGODB_URI, { useMongoClient: true });
+  const db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
 
-	// MongoDB
-	mongoose.Promise = Promise;
-	mongoose.connect(MONGODB_URI, { useMongoClient: true });
-	const db = mongoose.connection;
-	db.on('error', console.error.bind(console, 'connection error:'));
+  // API routes
+  const rootPath = path.normalize(`${__dirname}/..`);
+  glob.sync(path.join(rootPath, '/server/routes/*.js')).forEach(controllerPath => require(controllerPath)(server));
 
-	// API routes
-	const rootPath = path.normalize(__dirname + '/..');
-	glob.sync(path.join(rootPath, '/server/routes/*.js')).forEach(controllerPath => require(controllerPath)(server));
+  server.use(defaultErrorHandler);
 
-    server.use(defaultErrorHandler);
+  // Morgan
+  const accessLogStream = fs.createWriteStream(path.join(rootPath, 'access.log'), { flags: 'a' });
+  server.use(morgan('combined', { stream: accessLogStream }));
 
-	// Morgan
-	const accessLogStream = fs.createWriteStream(path.join(rootPath, 'access.log'), {flags: 'a'});
-	server.use(morgan('combined', {stream: accessLogStream}));
+  // Next.js request handling
+  const customRequestHandler = (page, req, res) => {
+    // Both query and params will be available in getInitialProps({query})
+    const mergedQuery = Object.assign({}, req.query, req.params);
+    app.render(req, res, page, mergedQuery);
+  };
 
-	// Next.js request handling
-	const customRequestHandler = (page, req, res) => {
-		// Both query and params will be available in getInitialProps({query})
-		const mergedQuery = Object.assign({}, req.query, req.params);
-		app.render(req, res, page, mergedQuery);
-	};
+  // Passport
+  require('./configs/passport.js');
 
-	// Passport
-	require('./configs/passport.js')
+  // Routes
+  // server.get('/custom', customRequestHandler.bind(undefined, '/custom-page'));
+  server.get('/sticker/:uuid', (req, res) => {
+    const params = { uuid: req.params.uuid };
+    return app.render(req, res, '/sticker', params);
+  });
 
-	// Routes
-	//server.get('/custom', customRequestHandler.bind(undefined, '/custom-page'));
-    server.get('/sticker/:uuid', (req, res) => {
-        const params = { uuid: req.params.uuid };
-        return app.render(req, res, '/sticker', params);
-    });
+  server.get('/', customRequestHandler.bind(undefined, '/'));
+  server.get('*', defaultRequestHandler);
 
-	server.get('/', customRequestHandler.bind(undefined, '/'));
-	server.get('*', defaultRequestHandler);
-
-	server.listen(PORT, function () {
-		console.log(`App running on http://localhost:${PORT}/\nAPI running on http://localhost:${PORT}/api/`)
-	});
-
+  server.listen(PORT, () => {
+    console.log(`App running on http://localhost:${PORT}/\nAPI running on http://localhost:${PORT}/api/`);
+  });
 });
