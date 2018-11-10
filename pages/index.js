@@ -1,8 +1,7 @@
 import {enquireScreen} from 'enquire-js';
-import Nav from '../components/Nav/Nav';
 import Banner from '../components/Banner/Banner';
 import Layout from '../components/Layout/Layout';
-import {Banner00DataSource, FactArea00DataSource, Nav00DataSource} from '../components/data.source.js';
+import {Banner00DataSource, FactArea00DataSource } from '../components/data.source.js';
 import FactArea from "../components/FactArea/FactArea"
 
 let isMobile;

@@ -2,10 +2,6 @@ import * as React from 'react'
 import Nav from '../Nav/Nav';
 import {Nav00DataSource} from '../data.source.js';
 import {enquireScreen} from "enquire-js"
-import Banner from "../Banner/Banner"
-import {Banner00DataSource, FactArea00DataSource} from "../data.source"
-import FactArea from "../FactArea/FactArea"
-
 
 let isMobile;
 enquireScreen((b) => {
