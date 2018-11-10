@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const { TYPES, MESSAGES } = require('../configs/constants');
 
 const sendVerificationMail = (email, token, req, res) => {
     var transporter = nodemailer.createTransport({ 
@@ -19,15 +20,15 @@ const sendVerificationMail = (email, token, req, res) => {
         
         if (err) { 
             return res.status(400).json({
-                type: 'failed-to-send-verification-email',
-                message: 'Failed to send an email'
+                type: TYPES.FAILED_TO_SEND_VERIFICATION_EMAIL,
+                message: MESSAGES.FAILED_TO_SEND_VERIFICATION_EMAIL
             })
         }
         
         console.log("success cb")
         return res.status(200).json({
-            type: 'verification-email-sent',
-            message: 'A verification email has been sent to ' + email + '.'
+            type: TYPES.VERIFICATION_EMAIL_SENT,
+            message: MESSAGES.VERIFICATION_EMAIL_SENT_SUCCESS + email
         })
     });
 }

@@ -6,6 +6,7 @@ const passport = require('passport');
 const { body } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
+const { TYPES, MESSAGES } = require('../configs/constants');
 
 module.exports = function (server) {
 
@@ -36,17 +37,22 @@ module.exports = function (server) {
                     return req.brute.reset(() => {
                         if(!user.isVerified) {
                             return res.status(401).json({
-                                type: 'account-not-verified',
-                                error: 'Your account has not been verified'
+                                type: TYPES.ACCOUNT_NOT_VERIFIED,
+                                message: MESSAGES.ACCOUNT_NOT_VERIFIED
                             })
                         }
                         user.token = passportUser.generateJWT();
-                        return res.json({ user: user.toAuthJSON() });
+                        return res.status(200).json({ 
+                            type: TYPES.LOGIN_SUCCESS,
+                            message: MESSAGES.LOGIN_SUCCESS,
+                            user: user.toAuthJSON() 
+                        });
                     });
                 }
 
                 return res.status(400).json({
-                    error: 'Failed to login',
+                    type: TYPES.FAILED_TO_LOGIN,
+                    message: MESSAGES.FAILED_TO_LOGIN,
                 });
             })(req, res, next);
         },
