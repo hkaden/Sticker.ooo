@@ -21,8 +21,6 @@ class CForm extends React.Component {
       super(props);
       this.state = {
         loading: false,
-        trayFile: null,
-        stickersFiles: null,
         progress: 0,
         isSubmitting: false,
         uploadType: 'image',
@@ -68,7 +66,7 @@ class CForm extends React.Component {
               this.setState({ progress: stickersLoaded / stickersFiles.length * 90 });
             });
 
-            const { trays, stickersInPack } = await new Promise((resolve, reject) => {
+            const { tray, trays, stickersInPack } = await new Promise((resolve, reject) => {
               emitter.on('error', reject);
               emitter.on('load', resolve);
             });
@@ -77,6 +75,7 @@ class CForm extends React.Component {
               name: this.props.form.getFieldValue('name'),
               publisher: this.props.form.getFieldValue('publisher'),
               sharingType: this.props.form.getFieldValue('sharingType'),
+              tray,
               trays,
               stickers: stickersInPack,
             };
