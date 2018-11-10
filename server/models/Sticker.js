@@ -29,6 +29,7 @@ const stickerSchema = new Schema({
     default: 'public',
     enum: ['public', 'private', 'link'], // link: accessible by link, private: for logged in users to view their own stickers
   },
+  tray: { type: String, required: true },
   trays: { type: [String], required: true, validate: arrayLengthValidator({ minLength: 1 }) },
   stickers: { type: [[String]], required: true, validate: stickersValidators },
   userTags: { type: [String] },
