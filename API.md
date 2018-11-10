@@ -3,7 +3,7 @@ Endpoint: `https://stickerizdemo.hkaden.me/api`
 
 ## Stickers
 ### Sticker model
-```json
+```json5
     {
         "uuid": "2a2c5c58-d10b-4481-841b-b99a17037829",
         "publisher": "asd",
@@ -51,7 +51,7 @@ Returns stickers, only the first 5 images of the first pack is returned.
 
     * **Code:** 200 <br />
     * **Content:** 
-     ```json
+     ```json5
      {
          "count": 6,
          "data": [
