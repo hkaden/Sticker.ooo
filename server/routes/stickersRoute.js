@@ -101,26 +101,9 @@ module.exports = function (server) {
   }
 
   /**
-     * Generate sticker and tray images
-     * and set uuid before inserting into db
-     */
-  function generateStickersAndTrayImages(req, res, next) {
-    const id = uuidv4();
-
-    try {
-      req.body.stickers = req.body.stickers.map(pack => pack.map(image => downloadBase64Image(image, 'stickers', id)));
-      req.body.trays = req.body.trays.map(image => downloadBase64Image(image, 'tray', id));
-      req.body.uuid = id;
-      next();
-    } catch (e) {
-      next(e);
-    }
-  }
-
-  /**
-     * Download Images to target path from a base64 string
-     * and return its relative path
-     */
+   * Download Images to target path from a base64 string
+   * and return its relative path
+   */
   function downloadBase64Image(image, type, id) {
     const dataUrlRegex = /^data:image\/(\w+);base64,/;
 
@@ -148,5 +131,23 @@ module.exports = function (server) {
 
     fs.writeFile(localPath, buffer, () => {});
     return dbPath;
+  }
+
+  /**
+     * Generate sticker and tray images
+     * and set uuid before inserting into db
+     */
+  function generateStickersAndTrayImages(req, res, next) {
+    const id = uuidv4();
+
+    try {
+      req.body.stickers = req.body.stickers.map(pack => pack.map(image => downloadBase64Image(image, 'stickers', id)));
+      req.body.trays = req.body.trays.map(image => downloadBase64Image(image, 'tray', id));
+      req.body.tray = downloadBase64Image(req.body.tray, 'tray', id);
+      req.body.uuid = id;
+      next();
+    } catch (e) {
+      next(e);
+    }
   }
 };
