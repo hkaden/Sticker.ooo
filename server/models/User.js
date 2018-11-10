@@ -55,7 +55,7 @@ UsersSchema.methods.setPassword = function(password) {
 
   UsersSchema.methods.toAuthJSON = function() {
     return {
-      _id: this.uuid,
+      uuid: this.uuid,
       username: this.username,
       email: this.email,
       token: this.generateJWT(),
