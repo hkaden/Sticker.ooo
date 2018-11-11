@@ -14,7 +14,8 @@ const defaultRequestHandler = app.getRequestHandler();
 const fs = require('fs');
 const path = require('path');
 const helmet = require('helmet');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const { infoLogger, errorLogger } = require('./configs/winston');
 const config = require('../config.js');
 
 const MONGODB_URI = config.MONGODB_URI;
@@ -55,8 +56,8 @@ app.prepare().then(() => {
   server.use(defaultErrorHandler);
 
   // Morgan
-  const accessLogStream = fs.createWriteStream(path.join(rootPath, 'access.log'), { flags: 'a' });
-  server.use(morgan('combined', { stream: accessLogStream }));
+  server.use(morgan('combined', { stream: infoLogger.stream }));
+  server.use(morgan('combined', { stream: errorLogger.stream }));
 
   // Next.js request handling
   const customRequestHandler = (page, req, res) => {
