@@ -34,6 +34,18 @@ const stickerSchema = new Schema({
   stickers: { type: [[String]], required: true, validate: stickersValidators },
   userTags: { type: [String] },
   adminTags: { type: [String] },
+  stats: {
+    packs: { type: Number, default: 0 },
+    stickers: { type: Number, default: 0 },
+    dailyViews: { type: Number, default: 0 },
+    weeklyViews: { type: Number, default: 0 },
+    monthlyViews: { type: Number, default: 0 },
+    yearlyViews: { type: Number, default: 0 },
+    dailyDownloads: { type: Number, default: 0 },
+    weeklyDownloads: { type: Number, default: 0 },
+    monthlyDownloads: { type: Number, default: 0 },
+    yearlyDownloads: { type: Number, default: 0 },
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -45,6 +57,12 @@ const stickerSchema = new Schema({
   },
   createdBy: { type: String },
   updatedBy: { type: String },
+});
+
+stickerSchema.pre('save', function (next) {
+  this.stats.packs = this.stickers.length;
+  this.stats.stickers = this.stickers.reduce((previousValue, currentValue) => previousValue + currentValue.length, 0);
+  next();
 });
 
 stickerSchema.plugin(patchHistory, { mongoose, name: 'stickersPatches', transforms: [pascalize, v => v] });

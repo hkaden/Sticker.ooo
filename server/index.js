@@ -17,6 +17,7 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { infoLogger, errorLogger } = require('./configs/winston');
 const config = require('../config.js');
+const statisticsHelper = require('./utils/statisticsHelper');
 
 const MONGODB_URI = config.MONGODB_URI;
 const PORT = process.env.PORT || 3001;
@@ -68,6 +69,7 @@ app.prepare().then(() => {
 
   // Passport
   require('./configs/passport.js');
+  statisticsHelper.init().catch(console.error);
 
   // Routes
   // server.get('/custom', customRequestHandler.bind(undefined, '/custom-page'));

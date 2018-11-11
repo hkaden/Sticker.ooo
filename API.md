@@ -13,6 +13,18 @@ Endpoint: `https://stickerizdemo.hkaden.me/api`
         "sharingType": "public", // public or link
         "adminTags": ["original"],
         "userTags": ["Pet", "Dog"],
+        "stats": {
+            "yearlyDownloads": 15,
+            "monthlyDownloads": 15,
+            "weeklyDownloads": 15,
+            "dailyDownloads": 15,
+            "yearlyViews": 1,
+            "monthlyViews": 1,
+            "weeklyViews": 1,
+            "dailyViews": 1,
+            "stickers": 28,
+            "packs": 1
+        },
         "tray": "/static/imageStore/tray/2a2c5c58-d10b-4481-841b-b99a17037829/88b90063-f432-4ede-bbeb-becade9eea1a.png",
         "trays": [
             "/static/imageStore/tray/2a2c5c58-d10b-4481-841b-b99a17037829/66628ed2-4701-4658-8c29-d9de962bebe5.png"
@@ -77,6 +89,41 @@ Returns stickers, only the first 5 images of the first pack is returned.
      /* sticker model */
      ```
 
+## Stickers Statistics
+#### `GET /statistics/` Get stickers statistics 
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json5
+     {
+         "public": {
+             "packs": 5,
+             "stickers": 48
+         },
+         "link": {
+             "packs": 0,
+             "stickers": 0
+         },
+         "private": {
+             "packs": 0,
+             "stickers": 0
+         }
+     }
+     ```
+
+#### `POST /statistics/stickers/:uuid/download` Increment download count for sticker 
+
+*  **URL Params**
+
+    **Required:**
+    
+    `uuid=[string]`    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
 
 ## Authentication & Authorization
 #### `POST /register` Register a user

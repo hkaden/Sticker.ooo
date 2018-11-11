@@ -19,6 +19,7 @@ const MESSAGES = {
   IS_REQUIRE: 'is required',
   IS_ARRAY: 'is an array',
   IS_VALID_DATAURL: 'is a valid dataUrl',
+  IS_UUID: 'is a valid UUID',
   IS_NOT_VALID_USERNAME: 'is not a valid username',
   PASSWORD_NOT_MATCH: 'Passwords do not match',
   VERIFY_USERNAME: 'must be within 4 to 20 characters',

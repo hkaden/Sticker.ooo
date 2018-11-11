@@ -3,6 +3,7 @@ const uuidv4 = require('uuid/v4');
 const fs = require('fs');
 const { body } = require('express-validator/check');
 const helpers = require('../utils/helpers');
+const { incrementSiteStats, incrementStickerStats } = require('../utils/statisticsHelper');
 const Sticker = require('../models/Sticker');
 const crypto = require('../utils/crypto');
 const auth = require('../middleware/auth');
@@ -32,14 +33,20 @@ module.exports = (server) => {
       selectFields, // Hide '__v' property
       endResponseInAction: false,
 
-      beforeActions: [{
-        middlewares: [...createStickerValidators, generateStickersAndTrayImages],
-        only: ['create'],
-      }],
+      beforeActions: [
+        {
+          middlewares: [...createStickerValidators, generateStickersAndTrayImages],
+          only: ['create'],
+        },
+      ],
       actions: {
         // disable update and delete
-        update: (req, res) => { res.sendStatus(405); },
-        delete: (req, res) => { res.sendStatus(405); },
+        update: (req, res) => {
+          res.sendStatus(405);
+        },
+        delete: (req, res) => {
+          res.sendStatus(405);
+        },
         list: async (req, res, next) => {
           const listDefaults = {
             limit: 10,
@@ -83,6 +90,8 @@ module.exports = (server) => {
         },
       }, // list (GET), create (POST), read (GET), update (PUT), delete (DELETE)
       afterActions: [
+        { middlewares: [addToSiteStats], only: ['create'] },
+        { middlewares: [addToStickerStats], only: ['read'] },
         { middlewares: [encryptResponse], only: ['create', 'list'] },
         { middlewares: [helpers.formatResponse] },
       ],
@@ -96,6 +105,30 @@ module.exports = (server) => {
       };
     }
     next();
+  }
+
+  async function addToSiteStats(req, res, next) {
+    try {
+      const sticker = req.crudify.result;
+      if (sticker.sharingType) {
+        const { packs, stickers } = sticker.stats;
+        await incrementSiteStats(req.body.sharingType, 'packs', packs);
+        await incrementSiteStats(req.body.sharingType, 'stickers', stickers);
+      }
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async function addToStickerStats(req, res, next) {
+    try {
+      const sticker = req.crudify.result;
+      await incrementStickerStats(sticker.uuid, 'views');
+      next();
+    } catch (e) {
+      next(e);
+    }
   }
 
   /**
