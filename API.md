@@ -155,3 +155,25 @@ Only allow users who have already verified to login
         }
      }
      ```
+
+#### `POST /logout` 
+Only allow users who have already logged in to logout
+
+*  **Query Params**
+
+    **Required:**
+    
+    `jwtToken=[String] in cookie`
+    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "LOGGED_OUT_SUCCESS",
+        "message": "Logged out Successfully"
+        }
+     }
+     ```
