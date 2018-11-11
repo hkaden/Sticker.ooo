@@ -39,11 +39,18 @@ module.exports = function (server) {
               message: MESSAGES.ACCOUNT_NOT_VERIFIED,
             });
           }
-          user.token = passportUser.generateJWT();
+          
+          const userAuthJson = user.toAuthJSON();
+
+          const cookie = req.cookies.jwtToken;
+
+          if(cookie !== undefined || cookie !== null) {
+            res.cookie('jwtToken', userAuthJson.token, { maxAge: 900000, httpOnly: true });
+          } 
           return res.status(200).json({
             type: TYPES.LOGIN_SUCCESS,
             message: MESSAGES.LOGIN_SUCCESS,
-            user: user.toAuthJSON(),
+            user: userAuthJson,
           });
         });
       }
