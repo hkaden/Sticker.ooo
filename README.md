@@ -4,6 +4,7 @@
 
 * NodeJS, npm / yarn
 * MongoDB
+* Redis
 * nodemon
 
 ### Installation
