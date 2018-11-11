@@ -14,6 +14,7 @@ const defaultRequestHandler = app.getRequestHandler();
 const fs = require('fs');
 const path = require('path');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser')
 const config = require('../config.js');
 
 const MONGODB_URI = config.MONGODB_URI;
@@ -23,6 +24,9 @@ const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
 app.prepare().then(() => {
   // Helmet
   server.use(helmet());
+
+  // Cookie Parser
+  server.use(cookieParser());
 
   // Parse application/x-www-form-urlencoded
   server.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
