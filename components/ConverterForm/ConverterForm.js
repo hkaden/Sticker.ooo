@@ -1,11 +1,12 @@
 import * as React from 'react'
 import {Button, Card, Col, Form, Icon, Input, Progress, Radio, Row, Switch, Upload} from 'antd';
-import {applyMiddleware, combineReducers, createStore} from 'redux'
+import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import reduxApi from '../../lib/reduxApi';
 import cachios from 'cachios';
-import redirect from '../../lib/redirect'
-import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter'
+import redirect from '../../lib/redirect';
+import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
+import styles from './ConverterForm.less';
 
 const FormItem = Form.Item;
 
@@ -117,6 +118,9 @@ class CForm extends React.Component {
     );
     return (
       <div className="ConverterWrapper">
+        <style jsx>
+          {styles}
+        </style>
         <Row type="flex" justify="start" align="middle" >
           <Col span={24}>
             <Card title="Submit your Stickers" bordered={true} className="ConverterCard">
