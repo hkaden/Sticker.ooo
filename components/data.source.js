@@ -48,3 +48,9 @@ export const FactArea00DataSource = {
   },
 
 };
+
+export const FooterDataSource = {
+  logo: {
+    children: '/static/images/logo.png'
+  }
+}
