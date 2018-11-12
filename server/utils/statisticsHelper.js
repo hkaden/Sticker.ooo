@@ -166,6 +166,7 @@ const init = async () => {
 
 module.exports = {
   init,
+  siteStatsFields,
   getSiteStats,
   incrementSiteStats,
   getStickerStatsGrouped,

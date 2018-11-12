@@ -1,7 +1,7 @@
 const mongooseCrudify = require('mongoose-crudify');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
-const { body } = require('express-validator/check');
+const { body, query } = require('express-validator/check');
 const helpers = require('../utils/helpers');
 const { incrementSiteStats, incrementStickerStats } = require('../utils/statisticsHelper');
 const Sticker = require('../models/Sticker');
@@ -10,14 +10,30 @@ const auth = require('../middleware/auth');
 const { ValidationError } = require('../errors');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
 const { TYPES, MESSAGES } = require('../configs/constants');
+const { siteStatsFields } = require('../utils/statisticsHelper');
 
 const createStickerValidators = [
   body('stickers').isArray().withMessage(MESSAGES.IS_ARRAY),
   body('stickers.*').isArray().withMessage(MESSAGES.IS_ARRAY),
   body('stickers.*.*').isString().matches(/^data:image\/webp;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
+  body('tray').isString().matches(/^data:image\/png;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
   body('trays').isArray().withMessage(MESSAGES.IS_ARRAY),
   body('trays.*').isString().matches(/^data:image\/png;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
   body().custom(reqBody => reqBody.trays.length === reqBody.stickers.length).withMessage('Lengths of trays and stickers must match'),
+  expressValidatorErrorHandler,
+];
+
+const listStickerValidators = [
+  query('limit').optional().toInt().custom(v => v >= 1 && v <= 20)
+    .withMessage(MESSAGES.VERIFY_QUERY_LIMIT),
+  query('offset').optional().toInt().custom(v => v >= 0)
+    .withMessage(MESSAGES.VERIFY_QUERY_OFFSET),
+  query('sort').optional().isString()
+    .isIn([...siteStatsFields, 'popular', 'createdAt'])
+    .withMessage(MESSAGES.VERIFY_QUERY_SORT),
+  query('order').optional().isString().customSanitizer(v => v.toLowerCase())
+    .isIn(['asc', 'desc'])
+    .withMessage(MESSAGES.VERIFY_QUERY_ORDER),
   expressValidatorErrorHandler,
 ];
 
@@ -38,6 +54,10 @@ module.exports = (server) => {
           middlewares: [...createStickerValidators, generateStickersAndTrayImages],
           only: ['create'],
         },
+        {
+          middlewares: [...listStickerValidators],
+          only: ['list'],
+        },
       ],
       actions: {
         // disable update and delete
@@ -51,14 +71,16 @@ module.exports = (server) => {
           const listDefaults = {
             limit: 10,
             offset: 0,
+            sort: 'createdAt',
+            order: 'desc',
           };
-          const maxLimit = 20;
           const options = {
             ...listDefaults,
             ...req.query,
           };
-          options.limit = Math.min(maxLimit, parseInt(options.limit));
-          options.offset = parseInt(options.offset);
+
+          options.sort = siteStatsFields.includes(options.sort) ? `stats.${options.sort}` : options.sort;
+          options.sort = options.sort === 'popular' ? 'stats.weeklyDownloads' : options.sort;
 
           const findConditions = {
             $or: [
@@ -68,11 +90,14 @@ module.exports = (server) => {
           };
 
           try {
-            let docs = await Sticker.find(findConditions)
+            let query = Sticker.find(findConditions)
               .limit(options.limit)
               .skip(options.offset)
-              .sort({ createdAt: -1 })
+              .sort({ [options.sort]: (options.order === 'asc' ? 1 : -1) })
               .select(selectFields);
+
+            let docs = await query;
+
             docs = docs.map(item => ({
               ...item.toJSON(),
               trays: item.trays.slice(0, 1),

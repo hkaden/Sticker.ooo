@@ -58,6 +58,13 @@ Returns stickers, only the first 5 images of the first pack is returned.
     
     `offset=[integer]`
     
+    `sort=['createdAt', 'popular', 'packs', 'stickers',
+            'dailyViews', 'weeklyViews', 'monthlyViews', 'yearlyViews',
+            'dailyDownloads', 'weeklyDownloads', 'monthlyDownloads', 'yearlyDownloads',
+          ]`
+    
+    `order=['asc', 'desc']`
+    
 
 * **Success Response:**
 

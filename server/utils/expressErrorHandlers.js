@@ -1,4 +1,5 @@
 const { validationResult } = require('express-validator/check');
+const { matchedData } = require('express-validator/filter');
 const { ValidationError } = require('../errors');
 
 const statusMap = {
@@ -18,6 +19,13 @@ const expressValidatorErrorHandler = (req, res, next) => {
   }
 };
 
+const expressValidatorSanitizer = (req, res, next) => {
+  req.body = matchedData(req, { locations: ['body'] });
+  req.params = matchedData(req, { locations: ['params'] });
+  req.query = matchedData(req, { locations: ['query'] });
+  next();
+};
+
 const defaultErrorHandler = (err, req, res, next) => {
   const status = err.status || statusMap[err.name] || 500;
   if (status === 500) {
@@ -33,5 +41,6 @@ const defaultErrorHandler = (err, req, res, next) => {
 
 module.exports = {
   expressValidatorErrorHandler,
+  expressValidatorSanitizer,
   defaultErrorHandler,
 };
