@@ -1,0 +1,33 @@
+@import "../../static/app.less";
+
+.Wrapper {
+  width: 100%;
+  min-height: 70vh;
+  padding: 15px;
+  position: relative;
+  background-color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.ConverterCard{
+  width: 100%;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+
+  .ant-upload.ant-upload-drag:not(.ant-upload-disabled):hover{
+    border-color:  @template-bg-color
+  }
+  .ant-upload.ant-upload-drag p.ant-upload-drag-icon .anticon {
+    color:  @template-bg-color
+  }
+
+  .ant-radio-button-wrapper-checked:first-child{
+    border-color: @template-bg-color;
+    color:  @template-bg-color;
+
+  }
+}

@@ -1,7 +1,7 @@
 import {enquireScreen} from 'enquire-js';
 import Banner from '../components/Banner/Banner';
 import Layout from '../components/Layout/Layout';
-import {Banner00DataSource, FactArea00DataSource } from '../components/data.source.js';
+import {Banner00DataSource, FactArea00DataSource} from '../components/data.source.js';
 import FactArea from "../components/FactArea/FactArea"
 
 let isMobile;
@@ -39,9 +39,9 @@ export default class Home extends React.Component {
       />
     ];
     return (
-        <Layout>
+      <Layout>
         {children}
-        </Layout>
+      </Layout>
 
     );
   }
