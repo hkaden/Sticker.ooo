@@ -1,7 +1,18 @@
 const winston = require('winston');
 require('winston-daily-rotate-file');
 
+const formatError = winston.format((_info) => {
+  let info = _info;
+  if (info instanceof Error) {
+    info = JSON.stringify(err, Object.getOwnPropertyNames(err))
+  }
+  return info;
+})
+
 const consoleFormat = winston.format.printf((info) => {
+  if (info instanceof Error) {
+    console.log('iserror');
+  }
   return `${info.timestamp} ${info.level}: ${info.message}`;
 });
 
@@ -49,6 +60,7 @@ const defaultLogger = winston.createLogger({
     errorTransport,
   ],
   exitOnError: false,
+  format: formatError(),
 });
 
 defaultLogger.infoStream = {
