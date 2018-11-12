@@ -90,27 +90,51 @@ Returns stickers, only the first 5 images of the first pack is returned.
      ```
 
 ## Stickers Statistics
-#### `GET /statistics/` Get stickers statistics 
+#### `GET /statistics/stickers` Get stickers statistics 
 
 * **Success Response:**
 
     * **Code:** 200 <br />
     * **Content:** 
      ```json5
-     {
-         "public": {
-             "packs": 5,
-             "stickers": 48
-         },
-         "link": {
-             "packs": 0,
-             "stickers": 0
-         },
-         "private": {
-             "packs": 0,
-             "stickers": 0
-         }
-     }
+    {
+      "public": {
+        "packs": 5,
+        "stickers": 48,
+        "dailyViews": 25,
+        "weeklyViews": 25,
+        "monthlyViews": 25,
+        "yearlyViews": 25,
+        "dailyDownloads": 15,
+        "weeklyDownloads": 15,
+        "monthlyDownloads": 15,
+        "yearlyDownloads": 15
+      },
+      "link": {
+        "packs": 0,
+        "stickers": 0,
+        "dailyViews": 25,
+        "weeklyViews": 25,
+        "monthlyViews": 25,
+        "yearlyViews": 25,
+        "dailyDownloads": 15,
+        "weeklyDownloads": 15,
+        "monthlyDownloads": 15,
+        "yearlyDownloads": 15
+      },
+      "private": {
+        "packs": 0,
+        "stickers": 0,
+        "dailyViews": 25,
+        "weeklyViews": 25,
+        "monthlyViews": 25,
+        "yearlyViews": 25,
+        "dailyDownloads": 15,
+        "weeklyDownloads": 15,
+        "monthlyDownloads": 15,
+        "yearlyDownloads": 15
+      }
+    }
      ```
 
 #### `POST /statistics/stickers/:uuid/download` Increment download count for sticker 
