@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Button, Form, Icon, Input, Progress, Radio, Upload} from 'antd';
+import {Button, Form, Icon, Input, Progress, Radio, Upload, Switch} from 'antd';
 import {applyMiddleware, combineReducers, createStore} from 'redux'
 import thunkMiddleware from 'redux-thunk';
 import reduxApi from '../../lib/reduxApi';
@@ -159,7 +159,7 @@ class CForm extends React.Component {
               <Radio.Group name="uploadType" onChange={this.handleFieldChange} disabled={this.state.isSubmitting}>
                 <Radio.Button value="image">Image Files</Radio.Button>
                 <Radio.Button value="zip">Zip File</Radio.Button>
-              </Radio.Group>
+              </Radio.Group>,
             )}
           </FormItem>
           {this.state.uploadType === 'image' ? (<div>
@@ -236,6 +236,21 @@ class CForm extends React.Component {
               </div>
             </FormItem>
           )}
+          <FormItem>
+            <div>
+              {getFieldDecorator('agreeTnC', {
+                rules: [{
+                  validator: (rule, value, callback) => callback(value === true ? undefined : false),
+                  message: 'Please agree to the Terms & Conditions',
+                }],
+              })(
+                  <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />
+              )}
+              <span className="ant-form-text">
+                  By submitting my stickers to Stickers.ooo, I agree to the Terms & Conditions of Sticker.ooo
+                </span>
+            </div>
+          </FormItem>
           <FormItem>
             <Button type="primary" htmlType="submit" className="login-form-button" style={{width: '100%'}}>
                         Upload
