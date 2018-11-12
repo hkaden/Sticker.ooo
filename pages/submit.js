@@ -7,8 +7,8 @@ import Wapper from '../components/Wapper/Wapper';
 const Converter = ({ content }) => (
   <div>
     <Head>
-      <title>Submit page</title>
-      <meta name="description" content="Converter page description" />
+      <title>Stickers Submission</title>
+      <meta name="description" content="Stickers Submission" />
       <meta charSet="utf-8" />
       <meta httpEquiv="content-language" content="en" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -20,7 +20,7 @@ const Converter = ({ content }) => (
 
       <Row type="flex" justify="center">
         <Col lg={10}>
-          <Card title="WhatsApp Stickers Converter" bordered={false}>
+          <Card title="Submit your Stickers" bordered={false}>
             <ConverterForm />
           </Card>
         </Col>
