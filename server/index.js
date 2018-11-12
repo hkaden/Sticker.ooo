@@ -57,8 +57,8 @@ app.prepare().then(() => {
   server.use(defaultErrorHandler);
 
   // Morgan
-  server.use(morgan('combined', { stream: infoLogger.stream }));
-  server.use(morgan('combined', { stream: errorLogger.stream }));
+  // server.use(morgan('combined', { stream: infoLogger.stream }));
+  // server.use(morgan('combined', { stream: errorLogger.stream }));
 
   // Next.js request handling
   const customRequestHandler = (page, req, res) => {
