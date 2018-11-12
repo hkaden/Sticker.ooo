@@ -1,10 +1,14 @@
 const winston = require('winston');
 require('winston-daily-rotate-file');
 
-var options = {
+const consoleFormat = winston.format.printf((info) => {
+  return `${info.timestamp} ${info.level}: ${info.message}`;
+});
+
+const options = {
   infoFile: {
     level: 'info',
-    filename: `./logs/info/info-%DATE%.log`,
+    filename: './logs/info/info-%DATE%.log',
     zippedArchive: true,
     datePattern: 'YYYY-MM-DD',
     handleExceptions: true,
@@ -15,7 +19,7 @@ var options = {
   errorFile: {
     level: 'error',
     name: 'file.error',
-    filename: `./logs/error/error-%DATE%.log`,
+    filename: './logs/error/error-%DATE%.log',
     zippedArchive: true,
     datePattern: 'YYYY-MM-DD',
     handleExceptions: true,
@@ -26,44 +30,61 @@ var options = {
   console: {
     level: 'debug',
     handleExceptions: true,
-    json: false,
-    colorize: true,
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.timestamp(),
+      consoleFormat,
+    ),
   },
 };
 
-let consoleTransport =  new winston.transports.Console(options.console);
-let inforTransport = new winston.transports.DailyRotateFile(options.infoFile);
-let errorTransport = new winston.transports.DailyRotateFile(options.errorFile);
+const consoleTransport = new winston.transports.Console(options.console);
+const infoTransport = new winston.transports.DailyRotateFile(options.infoFile);
+const errorTransport = new winston.transports.DailyRotateFile(options.errorFile);
 
-let infoLogger =  winston.createLogger({
+const defaultLogger = winston.createLogger({
   transports: [
     consoleTransport,
-    inforTransport
+    infoTransport,
+    errorTransport,
   ],
-  exitOnError: false, 
+  exitOnError: false,
 });
 
-infoLogger.stream = {
-  write: function(message, encoding) {
-    infoLogger.info(message);
+defaultLogger.infoStream = {
+  write(message, encoding) {
+    defaultLogger.info(message);
   },
 };
 
-let errorLogger =  winston.createLogger({
-    transports: [
-        consoleTransport,
-        errorTransport,
-    ],
-    exitOnError: false, 
-  });
-  
-  errorLogger.stream = {
-    write: function(message, encoding) {
-        errorLogger.error(message);
-    },
-  };
+defaultLogger.errorStream = {
+  write(message, encoding) {
+    defaultLogger.error(message);
+  },
+};
+
+
+const httpLogger = winston.createLogger({
+  transports: [
+    infoTransport,
+    errorTransport,
+  ],
+  exitOnError: false,
+});
+
+httpLogger.infoStream = {
+  write(message, encoding) {
+    httpLogger.info(message);
+  },
+};
+
+httpLogger.errorStream = {
+  write(message, encoding) {
+    httpLogger.error(message);
+  },
+};
 
 module.exports = {
-    infoLogger,
-    errorLogger
+  logger: defaultLogger,
+  httpLogger,
 };
