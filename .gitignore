@@ -7,3 +7,4 @@ yarn-error.log
 /static/imageStore/**/*.png
 /static/imageStore/**/*.webp
 /logs/
+access.log
