@@ -15,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-const { infoLogger, errorLogger } = require('./configs/winston');
+const { logger, httpLogger } = require('./configs/winston');
 const config = require('../config.js');
 const statisticsHelper = require('./utils/statisticsHelper');
 
@@ -56,9 +56,16 @@ app.prepare().then(() => {
 
   server.use(defaultErrorHandler);
 
+
   // Morgan
-  server.use(morgan('combined', { stream: infoLogger.stream }));
-  server.use(morgan('combined', { stream: errorLogger.stream }));
+  server.use(morgan('combined', {
+    skip: (req, res) => res.statusCode >= 400,
+    stream: httpLogger.infoStream,
+  }));
+  server.use(morgan('combined', {
+    skip: (req, res) => res.statusCode < 400,
+    stream: httpLogger.errorStream,
+  }));
 
   // Next.js request handling
   const customRequestHandler = (page, req, res) => {
@@ -82,6 +89,7 @@ app.prepare().then(() => {
   server.get('*', defaultRequestHandler);
 
   server.listen(PORT, () => {
-    console.log(`App running on http://localhost:${PORT}/\nAPI running on http://localhost:${PORT}/api/`);
+    logger.info(`App running on http://localhost:${PORT}/`)
+    logger.info(`API running on http://localhost:${PORT}/api/`);
   });
 });
