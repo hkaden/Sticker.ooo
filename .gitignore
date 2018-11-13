@@ -8,3 +8,4 @@ yarn-error.log
 /static/imageStore/**/*.webp
 /logs/
 access.log
+.env
