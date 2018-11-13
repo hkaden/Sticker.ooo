@@ -4,6 +4,7 @@ import {Form, Input, Button, message, Row, Col} from 'antd';
 import _ from 'lodash';
 import redirect from '../../lib/redirect';
 import styles from './LoginForm.less';
+import Loader from '../Loader/Loader';
 
 const FormItem = Form.Item;
 
@@ -12,7 +13,15 @@ class Login extends React.Component {
     super(props);
     this.state = {
       isSubmitting: false,
+      isLoading: true
     };
+  }
+
+
+  componentDidMount() {
+    this.setState({
+      isLoading: false
+    })
   }
 
   handleSubmit = (e) => {
@@ -56,6 +65,13 @@ class Login extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
+
+    if(this.state.isLoading) {
+      return (
+        <Loader/>
+      )
+    }
+
     return (
       <div className="Wrapper">
         <Row type="flex" justify="center" align="middle" className="LoginFormWrapper">
