@@ -12,6 +12,7 @@ const TYPES = {
   ACCOUNT_NOT_MATCH_TOKEN: 'ACCOUNT_NOT_MATCH_TOKEN',
   ACCOUNT_ALREADY_BEEN_VERIFIED: 'ACCOUNT_ALREADY_BEEN_VERIFIED',
   INVALID_TOKEN: 'INVALID_TOKEN',
+  INVALID_USER: 'INVALID_USER',
 };
 
 const MESSAGES = {
@@ -38,6 +39,7 @@ const MESSAGES = {
   FAILED_TO_SEND_VERIFICATION_EMAIL: 'Failed to send a verification email',
   INVALID_TOKEN: 'Invalid Token',
   INVALID_DATAURL: 'Invalid dataUrl',
+  INVALID_USER: 'Invalid user',
   ACCOUNT_ALREADY_VERIFIED: 'The account has been verified',
   ACCOUNT_ALREADY_BEEN_VERIFIED: 'The account has already been verified',
   ACCOUNT_NOT_VERIFIED: 'Your account has not been verified',
