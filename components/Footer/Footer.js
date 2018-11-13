@@ -12,9 +12,6 @@ class Footer extends React.Component {
             component="footer"
             className="footer"
           >
-            <style jsx>
-              {styles}
-            </style>
               <div className="footerWrapper">
                 <img width="100%" src={dataSource.logo.children} alt="img" style={{width:'150px'}}/>
               </div>

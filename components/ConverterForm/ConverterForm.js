@@ -118,9 +118,6 @@ class CForm extends React.Component {
     );
     return (
       <div className="ConverterWrapper">
-        <style jsx>
-          {styles}
-        </style>
         <Row type="flex" justify="start" align="middle" >
           <Col span={24}>
             <Card title="Submit your Stickers" bordered={true} className="ConverterCard">
