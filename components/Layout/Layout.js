@@ -39,7 +39,9 @@ class Layout extends React.Component {
           dataSource={Nav00DataSource}
           isMobile={this.state.isMobile}
         />
-        {this.props.children}
+        <div className="MainContent">
+          {this.props.children}
+        </div>
         <Footer
           dataSource={FooterDataSource}
         />

@@ -2,3 +2,13 @@
   display:flex;
   flex-direction: column;
 }
+
+.MainContent {
+  min-height: calc(100vh - 250px);
+
+  &:after {
+    display: block;
+    content: " ";
+  }
+}
+
