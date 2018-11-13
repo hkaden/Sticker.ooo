@@ -46,7 +46,9 @@ module.exports = function (server) {
 
           if(cookie !== undefined || cookie !== null) {
             res.cookie('jwtToken', userAuthJson.token, { maxAge: 900000, httpOnly: true });
-          } 
+          } else {
+            //TODO: validate jwtToken
+          }
           return res.status(200).json({
             type: TYPES.LOGIN_SUCCESS,
             message: MESSAGES.LOGIN_SUCCESS,
