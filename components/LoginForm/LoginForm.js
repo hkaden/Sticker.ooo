@@ -23,16 +23,15 @@ class Login extends React.Component {
             password: values.password
           }
 
-          const resp = await cachios.post('/api/login', credential)
-          
+          const resp = await cachios.post('/api/login', credential);
+
           if (resp.status === 200) {
-            redirect({}, e, '/list/')
+            redirect({}, e, '/list')
           } else {
-            // TODO: 
-          }
+            // TODO:
+          } 
 
-
-        } catch(e) {
+        } catch (e) {
           const errorMsg = _.get(e, 'response.data.message', e.message || e.toString())
           this.setState({
             isSubmitting: false,
@@ -55,6 +54,7 @@ class Login extends React.Component {
 					</span>
               <FormItem className="inputWrapper">
               {getFieldDecorator('email', {
+                validateTrigger: 'onBlur',
                     rules: [{
                       type: 'email', message: 'The input is not valid E-mail!',
                     },

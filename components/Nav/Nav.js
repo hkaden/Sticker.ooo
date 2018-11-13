@@ -51,9 +51,6 @@ class Nav extends React.Component {
           className="header0 home-page-wrapper"
           {...props}
         >
-          <style jsx>
-            {styles}
-          </style>
           <div
             className="home-page"
           >

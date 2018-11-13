@@ -33,9 +33,6 @@ class Layout extends React.Component {
           this.dom = d;
         }}
       >
-        <style jsx>
-          {styles}
-        </style>
         <Nav
           id="Nav0_0"
           key="Nav0_0"
