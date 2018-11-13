@@ -106,7 +106,8 @@ class Login extends React.Component {
                         loading={this.state.isSubmitting}>
                   Log in
                 </Button>
-                Or <a href="/register">register now!</a>
+                Or <a href="/register">Register now!</a><br/>
+                Or <a href="/forget">Forget password</a>
               </FormItem>
             </Form>
           </Col>
