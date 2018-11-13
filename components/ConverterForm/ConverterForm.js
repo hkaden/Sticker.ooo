@@ -33,7 +33,7 @@ class CForm extends React.Component {
     this.converter = new WhatsAppStickersConverter();
     this.converter.init().catch(e => console.log(e));
 
-    return this.setState({
+    this.setState({
       isLoading: false
     })
   }
