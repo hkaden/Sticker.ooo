@@ -2,8 +2,8 @@ import * as React from 'react'
 import cachios from 'cachios';
 import {Form, Input, Button, message, Row, Col} from 'antd';
 import _ from 'lodash';
-import redirect from '../../lib/redirect'
-import styles from "../LoginForm/LoginForm.less"
+import redirect from '../../lib/redirect';
+import styles from './LoginForm.less';
 
 const FormItem = Form.Item;
 
@@ -33,7 +33,7 @@ class Login extends React.Component {
           const resp = await cachios.post('/api/login', credential);
 
           if (resp.status === 200) {
-            redirect({}, e, '/list/')
+            redirect({}, e, '/list')
           } else {
             // TODO:
           }
@@ -44,12 +44,11 @@ class Login extends React.Component {
           message.error(errorMsg);
           this.setState({
             isSubmitting: false,
-            errorMsg,
-          })
+          });
           this.props.form.setFieldsValue({
             email: '',
-            password: ''
-          })
+            password: '',
+          });
         }
       }
     });
