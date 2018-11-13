@@ -74,6 +74,16 @@ app.prepare().then(() => {
     app.render(req, res, page, mergedQuery);
   };
 
+
+  const validateJwtTokenBeforeRender = (req, res) => {
+    const cookies = req.cookies.jwtToken;
+    if(cookies == undefined || cookies == null) {
+      return res.redirect('/login')
+    } else {
+      return app.render(req, res, req.path);
+    }
+  }
+
   // Passport
   require('./configs/passport.js');
   statisticsHelper.init().catch(console.error);
@@ -84,6 +94,8 @@ app.prepare().then(() => {
     const params = { uuid: req.params.uuid };
     return app.render(req, res, '/sticker', params);
   });
+
+  server.get('/submit', validateJwtTokenBeforeRender);
 
   server.get('/', customRequestHandler.bind(undefined, '/'));
   server.get('*', defaultRequestHandler);
