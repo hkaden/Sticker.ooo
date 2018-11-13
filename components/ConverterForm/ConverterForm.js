@@ -7,6 +7,7 @@ import cachios from 'cachios';
 import redirect from '../../lib/redirect';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
 import styles from './ConverterForm.less';
+import Loader from '../Loader/Loader';
 
 const FormItem = Form.Item;
 
@@ -23,13 +24,18 @@ class CForm extends React.Component {
       isSubmitting: false,
       uploadType: 'image',
       sharingType: 'public',
-      errorMsg: ''
+      errorMsg: '',
+      isLoading: true
     };
   }
 
   componentDidMount() {
     this.converter = new WhatsAppStickersConverter();
     this.converter.init().catch(e => console.log(e));
+    
+    return this.setState({
+      isLoading: false
+    })
   }
 
   handleSubmit = (e) => {
@@ -116,9 +122,16 @@ class CForm extends React.Component {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
+
+    if(this.state.isLoading) {
+      return (
+        <Loader/>
+      )
+    }
+    
     return (
-      <div className="ConverterWrapper">
-        <Row type="flex" justify="start" align="middle" >
+        <div className="ConverterWrapper">
+          <Row type="flex" justify="start" align="middle" >
           <Col span={24}>
             <Card title="Submit your Stickers" bordered={true} className="ConverterCard">
               <Form onSubmit={this.handleSubmit} hideRequiredMark={true} className="login-form" autoComplete="off">
