@@ -75,11 +75,22 @@ app.prepare().then(() => {
   };
 
 
+  const redirectIfLoggedIn = (req, res) => {
+    const cookies = req.cookies.jwtToken;
+    if(cookies != undefined && cookies != null) {
+      return res.redirect('/list')
+    } else {
+      //TODO: validate cookie first
+      return app.render(req, res, req.path);
+    }
+  }
+
   const validateJwtTokenBeforeRender = (req, res) => {
     const cookies = req.cookies.jwtToken;
     if(cookies == undefined || cookies == null) {
       return res.redirect('/login')
     } else {
+      //TODO: validate cookie first
       return app.render(req, res, req.path);
     }
   }
@@ -95,6 +106,7 @@ app.prepare().then(() => {
     return app.render(req, res, '/sticker', params);
   });
 
+  server.get('/login', redirectIfLoggedIn);
   server.get('/submit', validateJwtTokenBeforeRender);
 
   server.get('/', customRequestHandler.bind(undefined, '/'));
