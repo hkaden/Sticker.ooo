@@ -32,7 +32,7 @@ class CForm extends React.Component {
   componentDidMount() {
     this.converter = new WhatsAppStickersConverter();
     this.converter.init().catch(e => console.log(e));
-    
+
     return this.setState({
       isLoading: false
     })
@@ -70,7 +70,7 @@ class CForm extends React.Component {
             this.setState({progress: stickersLoaded / stickersFiles.length * 90});
           });
 
-          const {trays, stickersInPack} = await new Promise((resolve, reject) => {
+          const { tray, trays, stickersInPack } = await new Promise((resolve, reject) => {
             emitter.on('error', reject);
             emitter.on('load', resolve);
           });
@@ -79,6 +79,7 @@ class CForm extends React.Component {
             name: this.props.form.getFieldValue('name'),
             publisher: this.props.form.getFieldValue('publisher'),
             sharingType: this.props.form.getFieldValue('sharingType'),
+            tray,
             trays,
             stickers: stickersInPack,
           };
@@ -128,7 +129,7 @@ class CForm extends React.Component {
         <Loader/>
       )
     }
-    
+
     return (
         <div className="ConverterWrapper">
           <Row type="flex" justify="start" align="middle" >

@@ -13,6 +13,7 @@ const { TYPES, MESSAGES } = require('../configs/constants');
 const { siteStatsFields } = require('../utils/statisticsHelper');
 
 const createStickerValidators = [
+  auth.required,
   body('stickers').isArray().withMessage(MESSAGES.IS_ARRAY),
   body('stickers.*').isArray().withMessage(MESSAGES.IS_ARRAY),
   body('stickers.*.*').isString().matches(/^data:image\/webp;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
