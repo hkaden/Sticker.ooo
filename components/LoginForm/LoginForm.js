@@ -29,7 +29,7 @@ class Login extends React.Component {
             redirect({}, e, '/list')
           } else {
             // TODO:
-          }
+          } 
 
         } catch (e) {
           const errorMsg = _.get(e, 'response.data.message', e.message || e.toString())
@@ -54,6 +54,7 @@ class Login extends React.Component {
 					</span>
               <FormItem className="inputWrapper">
               {getFieldDecorator('email', {
+                validateTrigger: 'onBlur',
                     rules: [{
                       type: 'email', message: 'The input is not valid E-mail!',
                     },
