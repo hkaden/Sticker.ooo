@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const failCallback = (req, res, next, nextValidRequestDate) => res.status(401).json({
-  error: 'You\'ve made too many failed attempts in a short period of time',
+  message: 'You\'ve made too many failed attempts in a short period of time',
 });
 
 const handleStoreError = (error) => {

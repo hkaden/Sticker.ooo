@@ -62,8 +62,12 @@
       width: 100%;
       height: 40px;
       padding: 0 35px 0 35px;
+      border: 1px solid #d9d9d9;
+      &:focus {
+        border-color: @template-bg-color;
+        box-shadow: 0 0 0 2px rgb(@template-bg-color, 0.2);
+      }
     }
-
 
   }
 
@@ -90,10 +94,15 @@
   -moz-transition: all 0.4s;
   transition: all 0.4s;
 
-
   &:hover {
     color: #fff;
     border-color: #000;
     background: #000;
+  }
+
+  &:focus {
+    background-color: @template-bg-color;
+    color: #000;
+    border-color: #fff;
   }
 }
