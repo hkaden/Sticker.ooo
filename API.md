@@ -199,10 +199,31 @@ Verify an account based on a given token
     * **Code:** 200 <br />
     * **Content:** 
      ```json
-     {
-        "type": "ACCOUNT_VERIFIED",
-        "message": "The account has been verified"
-     }
+    {
+        "type": "VERIFICATION_EMAIL_SENT",
+        "message": "A verification email has been sent to user@gmail.com"
+    }
+     ```
+
+#### `POST /resendVerificationEmail` Resend verification email 
+Resend verification email 
+
+*  **Query Params**
+
+    **Required:**
+    
+    `email=[email]`
+    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+    {
+        "type": "VERIFICATION_EMAIL_SENT",
+        "message": "A verification email has been sent to user@gmail.com"
+    }
      ```
 
 #### `POST /login` 
