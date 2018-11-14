@@ -8,6 +8,7 @@ import redirect from '../../lib/redirect';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
 import styles from './ConverterForm.less';
 import Loader from '../Loader/Loader';
+import Link from 'next/link';
 
 const FormItem = Form.Item;
 
@@ -250,7 +251,7 @@ class CForm extends React.Component {
                   <div>
 
                     <span className="ant-form-text">
-                  By submitting my stickers to Stickers.ooo, I agree to the Terms & Conditions of Sticker.ooo
+                      By submitting my stickers to Stickers.ooo, I agree to the <Link href="/tnc">Terms & Conditions</Link> of Sticker.ooo
                 </span>
                     {getFieldDecorator('agreeTnC', {
                       rules: [{
