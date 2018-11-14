@@ -1,4 +1,5 @@
 const jwt = require('express-jwt');
+const _ = require('lodash');
 
 // const getTokenFromHeaders = (req) => {
 //   const { headers: { authorization } } = req;
@@ -10,9 +11,9 @@ const jwt = require('express-jwt');
 
 const getTokenFromCookies = (req) => {
   const cookie = req.cookies.jwtToken;
-  if(cookie != undefined || cookie != null) {
+  if (cookie != null) {
     return cookie;
-  } 
+  }
   return null;
 };
 
@@ -28,6 +29,7 @@ const auth = {
     getToken: getTokenFromCookies,
     credentialsRequired: false,
   }),
+  getUserUUID: req => _.get(req, 'payload.uuid', null),
 };
 
 module.exports = auth;
