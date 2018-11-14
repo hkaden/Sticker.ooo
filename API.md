@@ -206,14 +206,12 @@ Verify an account based on a given token
      ```
 
 #### `POST /resendVerificationEmail` Resend verification email 
-Resend verification email 
 
 *  **Query Params**
 
     **Required:**
     
     `email=[email]`
-    
 
 * **Success Response:**
 
@@ -223,6 +221,25 @@ Resend verification email
     {
         "type": "VERIFICATION_EMAIL_SENT",
         "message": "A verification email has been sent to user@gmail.com"
+    }
+     ```
+
+#### `POST /forgetPassword` Sending a reset password link to given email
+
+*  **Query Params**
+
+    **Required:**
+    
+    `email=[email]`
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+    {
+        "type": "RESET_PASSWORD_EMAIL_SENT",
+        "message": "A reset password email has been sent to user@gmail.com"
     }
      ```
 

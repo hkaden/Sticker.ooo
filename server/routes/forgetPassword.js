@@ -12,7 +12,7 @@ const { TYPES, MESSAGES } = require('../configs/constants');
 module.exports = function (server) {
   // Docs: https://github.com/ryo718/mongoose-crudify
   server.post(
-    '/api/resendVerificationEmail',
+    '/api/forgetPassword',
     auth.optional,
     [
       body('email').withMessage(MESSAGES.IS_REQUIRE),
@@ -24,40 +24,30 @@ module.exports = function (server) {
       try {
         const { email } = req.body;
         await User.findOne({ email }, (err, user) => {
-          if (!user || user.isVerified) {
+          if (!user || !user.isVerified) {
             return res.status(400).json({
               type: TYPES.INVALID_USER,
-              message: MESSAGES.INVALID_USER,
+              message: MESSAGES.FAILED_TO_MATCH_USER,
             });
           }
-
           const token = new Token({
             uuid: user.uuid,
-            type: TYPES.RESEND_VERIFICATION
-          })
+            type: TYPES.FORGET_PASSWORD
+          });
 
           token.setToken(email);
 
-          return token.save((err) => {
-            if (err) {
-              return res.status(500).json({
-                type: TYPES.FAILED_TO_SEND_TOKEN,
-                message: MESSAGES.FAILED_TO_SEND_TOKEN,
-              });
-            }
-
-            let subject = 'Sticker.ooo Email Verification';
-            let content = `${'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/'}${req.headers.host}\/verifyAccount\/${token.token}.\n`;
-            let successReturn = {
-              type: TYPES.VERIFICATION_EMAIL_SENT,
-              message: MESSAGES.VERIFICATION_EMAIL_SENT_SUCCESS + email
-            };
-            let failedReturn = {
-              type: TYPES.FAILED_TO_SEND_VERIFICATION_EMAIL,
-              message: MESSAGES.FAILED_TO_SEND_VERIFICATION_EMAIL,
-            };
-            sendEmail(email, subject, content, req, res, successReturn, failedReturn);
-          });
+          let subject = 'Forget Password';
+          let content = `${'Hello,\n\n' + 'You recently have requested to reset password. Please do it by clicking the link: \nhttp:\/\/'}${req.headers.host}\/resetPassword\/${token.token}.\n`;
+          let successReturn = {
+            type: TYPES.RESET_PASSWORD_EMAIL_SENT,
+            message: MESSAGES.RESET_PASSWORD_EMAIL_SENT_SUCCESS + email
+          };
+          let failedReturn = {
+            type: TYPES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
+            message: MESSAGES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
+          };
+          sendEmail(email, subject, content, req, res, successReturn, failedReturn);
         });
       } catch (e) {
         next(e);
