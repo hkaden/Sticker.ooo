@@ -39,13 +39,13 @@ module.exports = function (server) {
               message: MESSAGES.ACCOUNT_NOT_VERIFIED,
             });
           }
-          
+
           const userAuthJson = user.toAuthJSON();
 
           const cookie = req.cookies.jwtToken;
 
-          if(cookie !== undefined || cookie !== null) {
-            res.cookie('jwtToken', userAuthJson.token, { maxAge: 900000, httpOnly: true });
+          if (cookie !== undefined || cookie !== null) {
+            res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
           } else {
             //TODO: validate jwtToken
           }
