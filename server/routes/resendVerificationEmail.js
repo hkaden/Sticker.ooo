@@ -6,7 +6,7 @@ const User = require('../models/User');
 const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
-const { sendVerificationMail } = require('../utils/nodeMailer');
+const { sendEmail } = require('../utils/nodeMailer');
 const { TYPES, MESSAGES } = require('../configs/constants');
 
 module.exports = function (server) {
@@ -32,7 +32,8 @@ module.exports = function (server) {
           }
 
           const token = new Token({
-            uuid: user.uuid
+            uuid: user.uuid,
+            type: TYPES.RESEND_VERIFICATION
           })
 
           token.setToken(email);
@@ -45,7 +46,17 @@ module.exports = function (server) {
               });
             }
 
-            sendVerificationMail(email, token, req, res);
+            let subject = 'Account Verification Token';
+            let content = `${'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/'}${req.headers.host}\/verifyAccount\/${token.token}.\n`;
+            let successReturn = {
+              type: TYPES.VERIFICATION_EMAIL_SENT,
+              message: MESSAGES.VERIFICATION_EMAIL_SENT_SUCCESS + email
+            };
+            let failedReturn = {
+              type: TYPES.FAILED_TO_SEND_VERIFICATION_EMAIL,
+              message: MESSAGES.FAILED_TO_SEND_VERIFICATION_EMAIL,
+            };
+            sendEmail(email, subject, content, req, res, successReturn, failedReturn);
           });
         });
       } catch (e) {
