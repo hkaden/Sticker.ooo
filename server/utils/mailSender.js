@@ -3,7 +3,7 @@ const { TYPES, MESSAGES } = require('../configs/constants');
 
 const sendVerificationMail = (email, token, req, res) => {
   const mailOptions = {
-    from: 'Sticker.ooo <account@stickeroo.com>',
+    from: 'Sticker.ooo <account@sticker.ooo>',
     to: email,
     subject: 'Sticker.ooo Email Verification',
     text: `${'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/'}${req.headers.host}\/verifyAccount\/${token.token}.\n`,
