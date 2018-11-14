@@ -17,13 +17,11 @@ $ cp config.example.js config.js
 $ yarn install
 ```
 
-### node Mailer Setup
+### mailgun Setup
 1. update .env
 ```
-GMAIL_USERNAME=YOUR_GMAIL_USERNAME
-GMAIL_PASSWORD=YOUR_GMAIL_PASSWORD
+MAILGUN_API_KEY=apikey
 ```
-2. Allow less secure apps in https://myaccount.google.com/lesssecureapps
 
 
 ### Run Dev 
