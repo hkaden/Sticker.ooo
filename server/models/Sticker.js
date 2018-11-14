@@ -74,7 +74,11 @@ function populateCreatedUser() {
 }
 
 function setPublisher(docs, next) {
-  const fn = doc => doc._publisher = doc.createdByUser && doc.createdByUser.username ? doc.createdByUser.username : 'Deleted User';
+  const fn = doc => {
+    if (doc) {
+      doc._publisher = doc.createdByUser && doc.createdByUser.username ? doc.createdByUser.username : 'Deleted User';
+    }
+  };
   if (Array.isArray(docs)) {
     docs.map(fn);
   } else {
