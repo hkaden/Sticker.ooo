@@ -9,7 +9,7 @@ const User = require('../models/User');
 const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
-const { sendVerificationMail } = require('../utils/nodeMailer');
+const { sendVerificationMail } = require('../utils/mailSender');
 const { TYPES, MESSAGES } = require('../configs/constants');
 
 module.exports = function (server) {
@@ -18,7 +18,7 @@ module.exports = function (server) {
     '/api/register',
     auth.optional,
     [
-      body('username').isLength({ min: 4, max: 20 }).withMessage(MESSAGES.VERIFY_USERNAME)        
+      body('username').isLength({ min: 4, max: 20 }).withMessage(MESSAGES.VERIFY_USERNAME)
       .custom(validators.usernameIsNotRestrictedValidator)
       .withMessage(MESSAGES.IS_NOT_VALID_USERNAME),
       body('password').isLength({ min: 6 }).withMessage(MESSAGES.VERFIY_PASSWORD),
