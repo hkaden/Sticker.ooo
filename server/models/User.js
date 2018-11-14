@@ -44,15 +44,13 @@ UsersSchema.methods.validatePassword = function (password) {
 };
 
 UsersSchema.methods.generateJWT = function () {
-  const today = new Date();
-  const expirationDate = new Date(today);
-  expirationDate.setDate(today.getDate() + 60);
   return jwt.sign({
     username: this.username,
     email: this.email,
-    id: this.uuid,
-    exp: parseInt(expirationDate.getTime() / 1000, 10),
-  }, process.env.JWT_SECRET);
+    uuid: this.uuid,
+  }, process.env.JWT_SECRET, {
+    expiresIn: '60 days',
+  });
 };
 
 UsersSchema.methods.toAuthJSON = function () {

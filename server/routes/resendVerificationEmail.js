@@ -6,7 +6,7 @@ const User = require('../models/User');
 const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
-const { sendEmail } = require('../utils/nodeMailer');
+const { sendEmail } = require('../utils/mailSender');
 const { TYPES, MESSAGES } = require('../configs/constants');
 
 module.exports = function (server) {
@@ -46,7 +46,7 @@ module.exports = function (server) {
               });
             }
 
-            let subject = 'Account Verification Token';
+            let subject = 'Sticker.ooo Email Verification';
             let content = `${'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/'}${req.headers.host}\/verifyAccount\/${token.token}.\n`;
             let successReturn = {
               type: TYPES.VERIFICATION_EMAIL_SENT,

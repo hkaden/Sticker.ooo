@@ -6,7 +6,7 @@ const User = require('../models/User');
 const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
-const { sendEmail } = require('../utils/nodeMailer');
+const { sendEmail } = require('../utils/mailSender');
 const { TYPES, MESSAGES } = require('../configs/constants');
 
 module.exports = function (server) {

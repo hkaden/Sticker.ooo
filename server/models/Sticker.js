@@ -23,7 +23,6 @@ const stickerSchema = new Schema({
   name: {
     type: String, required: true, minLength: 1, maxLength: 128,
   },
-  publisher: { type: String, required: true },
   sharingType: {
     type: String,
     default: 'public',
@@ -57,13 +56,43 @@ const stickerSchema = new Schema({
   },
   createdBy: { type: String },
   updatedBy: { type: String },
+}, { toJSON: { virtuals: true, getters: true } });
+
+stickerSchema.virtual('createdByUser', {
+  ref: 'User',
+  localField: 'createdBy',
+  foreignField: 'uuid',
+  justOne: true,
 });
+
+stickerSchema.virtual('publisher').get(function () {
+  return this._publisher;
+});
+
+function populateCreatedUser() {
+  this.populate({ path: 'createdByUser', select: 'username uuid -_id' });
+}
+
+function setPublisher(docs, next) {
+  const fn = doc => doc._publisher = doc.createdByUser && doc.createdByUser.username ? doc.createdByUser.username : 'Deleted User';
+  if (Array.isArray(docs)) {
+    docs.map(fn);
+  } else {
+    fn(docs);
+  }
+  next();
+}
 
 stickerSchema.pre('save', function (next) {
   this.stats.packs = this.stickers.length;
   this.stats.stickers = this.stickers.reduce((previousValue, currentValue) => previousValue + currentValue.length, 0);
   next();
 });
+
+stickerSchema.pre('find', populateCreatedUser);
+stickerSchema.pre('findOne', populateCreatedUser);
+stickerSchema.post('find', setPublisher);
+stickerSchema.post('findOne', setPublisher);
 
 stickerSchema.plugin(patchHistory, { mongoose, name: 'stickersPatches', transforms: [pascalize, v => v] });
 
