@@ -77,7 +77,6 @@ class CForm extends React.Component {
 
           const stickersData = {
             name: this.props.form.getFieldValue('name'),
-            publisher: this.props.form.getFieldValue('publisher'),
             sharingType: this.props.form.getFieldValue('sharingType'),
             tray,
             trays,
@@ -141,14 +140,6 @@ class CForm extends React.Component {
                     rules: [{required: true, message: 'Please input pack name!'}],
                   })(
                     <Input prefix={<Icon type="file" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Pack Name"
-                           disabled={this.state.isSubmitting}/>
-                  )}
-                </FormItem>
-                <FormItem>
-                  {getFieldDecorator('publisher', {
-                    rules: [{required: true, message: 'Please input publisher!'}],
-                  })(
-                    <Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Publisher"
                            disabled={this.state.isSubmitting}/>
                   )}
                 </FormItem>

@@ -5,22 +5,29 @@ const { body, query } = require('express-validator/check');
 const helpers = require('../utils/helpers');
 const { incrementSiteStats, incrementStickerStats } = require('../utils/statisticsHelper');
 const Sticker = require('../models/Sticker');
+const User = require('../models/User');
 const crypto = require('../utils/crypto');
 const auth = require('../middleware/auth');
 const { ValidationError } = require('../errors');
-const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
+const { expressValidatorErrorHandler, expressValidatorSanitizer } = require('../utils/expressErrorHandlers');
 const { TYPES, MESSAGES } = require('../configs/constants');
 const { siteStatsFields } = require('../utils/statisticsHelper');
 
+
 const createStickerValidators = [
   auth.required,
+  body('name').isString().isLength({ min: 1, max: 128 }),
+  body('sharingType').isString().withMessage(MESSAGES.IS_STRING),
   body('stickers').isArray().withMessage(MESSAGES.IS_ARRAY),
   body('stickers.*').isArray().withMessage(MESSAGES.IS_ARRAY),
   body('stickers.*.*').isString().matches(/^data:image\/webp;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
   body('tray').isString().matches(/^data:image\/png;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
   body('trays').isArray().withMessage(MESSAGES.IS_ARRAY),
   body('trays.*').isString().matches(/^data:image\/png;base64,/).withMessage(MESSAGES.IS_VALID_DATAURL),
+  body('userTags').optional().isArray().withMessage(MESSAGES.IS_ARRAY),
+  body('userTags.*').isString().withMessage(MESSAGES.IS_STRING),
   body().custom(reqBody => reqBody.trays.length === reqBody.stickers.length).withMessage('Lengths of trays and stickers must match'),
+  expressValidatorSanitizer,
   expressValidatorErrorHandler,
 ];
 
@@ -51,6 +58,10 @@ module.exports = (server) => {
       endResponseInAction: false,
 
       beforeActions: [
+        {
+          middlewares: [...helpers.populateAuditFields],
+          only: ['create', 'update'],
+        },
         {
           middlewares: [...createStickerValidators, generateStickersAndTrayImages],
           only: ['create'],
@@ -95,7 +106,8 @@ module.exports = (server) => {
               .limit(options.limit)
               .skip(options.offset)
               .sort({ [options.sort]: (options.order === 'asc' ? 1 : -1) })
-              .select(selectFields);
+              .select(selectFields)
+              // .populate({path: 'createdByUser', select: 'username uuid'});
 
             let docs = await query;
 
@@ -104,6 +116,8 @@ module.exports = (server) => {
               trays: item.trays.slice(0, 1),
               stickers: item.stickers.slice(0, 1).map(pack => pack.slice(0, 5)),
             }));
+
+
 
             const totalCount = await Sticker.count(findConditions);
 

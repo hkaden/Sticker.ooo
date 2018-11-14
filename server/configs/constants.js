@@ -19,6 +19,7 @@ const MESSAGES = {
   USERNAME_OR_EMAIL_EXIST: 'Username or email already exists',
   IS_REQUIRE: 'is required',
   IS_ARRAY: 'is an array',
+  IS_STRING: 'is a string',
   IS_NUMBER: 'is a number',
   IS_VALID_DATAURL: 'is a valid dataUrl',
   IS_UUID: 'is a valid UUID',
