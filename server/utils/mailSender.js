@@ -3,7 +3,7 @@ const { TYPES, MESSAGES } = require('../configs/constants');
 
 const sendEmail = (email, subject, content, req, res, successReturn, failedReturn) => {
   const mailOptions = {
-    from: 'Sticker.ooo <account@stickeroo.com>',
+    from: 'Sticker.ooo <account@sticker.ooo>',
     to: email,
     subject: subject,
     text: content,
