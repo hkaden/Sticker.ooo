@@ -24,7 +24,7 @@ module.exports = function (server) {
       try {
         const { email } = req.body;
         await User.findOne({ email }, (err, user) => {
-          if (!user) {
+          if (!user || user.isVerified) {
             return res.status(400).json({
               type: TYPES.INVALID_USER,
               message: MESSAGES.INVALID_USER,
