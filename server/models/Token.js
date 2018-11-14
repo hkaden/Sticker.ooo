@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const TokenSchema = new Schema({
   uuid: { type: String, required: true, ref: 'User' },
   token: { type: String, required: true },
+  type: { type: String, required: true },
   createdAt: {
     type: Date, required: true, default: Date.now, expires: 43200,
   },
