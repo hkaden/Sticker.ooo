@@ -24,14 +24,12 @@ module.exports = function (server) {
       try {
         const { email } = req.body;
         await User.findOne({ email }, (err, user) => {
-          console.log("hrer")
           if (!user || !user.isVerified) {
             return res.status(400).json({
               type: TYPES.INVALID_USER,
               message: MESSAGES.FAILED_TO_MATCH_USER,
             });
           }
-          console.log("hrer2")
           const token = new Token({
             uuid: user.uuid,
             type: TYPES.FORGET_PASSWORD
@@ -49,9 +47,7 @@ module.exports = function (server) {
             type: TYPES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
             message: MESSAGES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
           };
-          console.log("hrer222")
           sendEmail(email, subject, content, req, res, successReturn, failedReturn);
-          console.log("hrer3")
         });
       } catch (e) {
         next(e);
