@@ -7,6 +7,7 @@ const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
 const { TYPES, MESSAGES } = require('../configs/constants');
+const { requestParameterValidator } = require('../utils/validators');
 
 module.exports = function (server) {
   // Docs: https://github.com/ryo718/mongoose-crudify
@@ -22,7 +23,7 @@ module.exports = function (server) {
     async (req, res, next) => {
       try {
         // const { token } = req.body;
-        let token = req.path.substr(req.path.lastIndexOf('/') + 1);
+        let token = requestParameterValidator(req.path.substr(req.path.lastIndexOf('/') + 1));
         await Token.findOne({ token }, (err, token) => {
           if (!token) {
             return res.status(400).json({
