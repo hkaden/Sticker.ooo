@@ -78,7 +78,8 @@ app.prepare().then(() => {
   const redirectIfLoggedIn = (req, res) => {
     const cookies = req.cookies.jwtToken;
     if(cookies != undefined && cookies != null) {
-      return res.redirect('/list')
+      // return res.redirect('/list')
+      return res.redirect('/submit')
     } else {
       //TODO: validate cookie first
       return app.render(req, res, req.path);

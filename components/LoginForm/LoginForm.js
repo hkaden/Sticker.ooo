@@ -42,7 +42,8 @@ class Login extends React.Component {
           const resp = await cachios.post('/api/login', credential);
 
           if (resp.status === 200) {
-            redirect({}, e, '/list')
+            // redirect({}, e, '/list')
+            redirect({}, e, '/submit')
           } else {
             // TODO:
           }
