@@ -83,6 +83,7 @@ module.exports = (server) => {
               image_data: imageData,
             })),
           };
+          await incrementStickerStats(sticker.uuid, 'downloads');
           return res.json(json);
         }
       }
