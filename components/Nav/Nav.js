@@ -3,6 +3,7 @@ import {findDOMNode} from 'react-dom';
 import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
 import styles from './Nav.less';
+import Link from 'next/link'
 
 const Item = Menu.Item;
 
