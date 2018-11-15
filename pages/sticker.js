@@ -1,4 +1,3 @@
-
 import { Component } from 'react';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunkMiddleware from 'redux-thunk';
@@ -13,7 +12,8 @@ import {
   decodeWebp, loadStickersList, stickersListReducer,
 } from '../lib/customReducers';
 import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
-
+import saveAs from 'file-saver';
+import Router from 'next/router';
 
 class StickerPage extends Component {
     converter = null;
@@ -51,6 +51,17 @@ class StickerPage extends Component {
         <Card
           key={index}
           title={`Pack ${index + 1}`}
+          extra={<Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost onClick={() => {
+            let url = `/api/stickers/${this.props.uuid}/packs/${index + 1}.json`;
+            if (this.props.userAgent.includes('iPhone')) {
+              Router.push(url);
+            } else {
+              saveAs(url, `${stickersList[0].name}_${index + 1}.json`, {type: 'application/json'});
+            }
+
+          }} >
+            Download JSON
+          </Button>}
         >
           {
                     pack.map((item, itemIndex) => <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width="100px" />)
@@ -73,14 +84,9 @@ class StickerPage extends Component {
                 <Card
                   title={stickersList[0].name
                         }
-                  extra={(
-                    <span>
-                      {`Publisher: ${stickersList[0].publisher}`}
-                      <Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost href={`stickerooo://stickers/${stickersList[0].uuid}`}>
-                                      Add to WhatsApp
-                      </Button>
-                    </span>
-                  )}
+                  extra={
+                    `Publisher: ${stickersList[0].publisher}`
+                  }
                   bordered={false}
                 >
                   {packList}

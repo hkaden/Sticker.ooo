@@ -1,7 +1,9 @@
 const mongooseCrudify = require('mongoose-crudify');
 const uuidv4 = require('uuid/v4');
 const fs = require('fs');
-const { body, query } = require('express-validator/check');
+const util = require('util');
+const _ = require('lodash');
+const { body, query, param } = require('express-validator/check');
 const helpers = require('../utils/helpers');
 const { incrementSiteStats, incrementStickerStats } = require('../utils/statisticsHelper');
 const Sticker = require('../models/Sticker');
@@ -13,6 +15,10 @@ const { expressValidatorErrorHandler, expressValidatorSanitizer } = require('../
 const { TYPES, MESSAGES } = require('../configs/constants');
 const { siteStatsFields } = require('../utils/statisticsHelper');
 
+const getStickerJsonValidators = [
+  param('uuid').isUUID().withMessage(MESSAGES.IS_UUID),
+  param('packId').isInt().withMessage(MESSAGES.IS_UUID).toInt(),
+];
 
 const createStickerValidators = [
   auth.required,
@@ -48,6 +54,46 @@ const listStickerValidators = [
 module.exports = (server) => {
   // Docs: https://github.com/ryo718/mongoose-crudify
   const selectFields = '-__v';
+  server.get('/api/stickers/:uuid/packs/:packId.json', getStickerJsonValidators, async (req, res, next) => {
+    try {
+      // packId starts from 1
+      const { uuid, packId } = req.params;
+      const sticker = (await Sticker.findOne({uuid})).toJSON();
+
+      if (sticker) {
+        const packs = sticker.stats.packs;
+        if (packId >= 1 && packId <= packs) {
+          const trayFile = sticker.trays[packId - 1];
+          const stickersFiles = sticker.stickers[packId - 1];
+
+          const base64s = await Promise.all([trayFile, ...stickersFiles].map(file => {
+            const localPath = `${__dirname}/../..${file}`;
+            return util.promisify(fs.readFile)(localPath).then(buffer => Promise.resolve(buffer.toString('base64')));
+          }));
+
+          const tray = base64s[0];
+          const stickers = base64s.slice(1);
+
+          const json = {
+            identifier: `${sticker.uuid}_${packId}`,
+            name: `${sticker.name}${packId === 1 ? '' : ` (${packId})`}`,
+            publisher: sticker.publisher,
+            tray_image: tray,
+            stickers: stickers.map(imageData => ({
+              image_data: imageData,
+            })),
+          };
+          return res.json(json);
+        }
+      }
+    } catch (e) {
+      return res.status(500).json({
+        type: TYPES.FAILED_TO_GENERATE_JSON,
+        message: MESSAGES.FAILED_TO_GENERATE_JSON,
+      });
+    }
+    next();
+  });
   server.use(
     '/api/stickers',
     auth.optional,
@@ -185,12 +231,13 @@ module.exports = (server) => {
     const extension = execArray[1];
 
     const path = `/static/imageStore/${type}/${id}`;
-    const data = image.replace(dataUrlRegex, '');
-    const buffer = Buffer.from(data, 'base64');
     const local = `${__dirname}/../..${path}`;
     const file = `/${uuidv4()}.${extension}`;
     const localPath = local + file;
     const dbPath = path + file;
+
+    const data = image.replace(dataUrlRegex, '');
+    const buffer = Buffer.from(data, 'base64');
 
     if (buffer.length > 100 * 1024) {
       throw new ValidationError(MESSAGES.VERIFY_IMAGE);
