@@ -2,6 +2,7 @@ import * as React from 'react'
 import {findDOMNode} from 'react-dom';
 import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
+import Link from 'next/link'
 import styles from './Nav.less';
 
 const Item = Menu.Item;
@@ -65,7 +66,9 @@ class Nav extends React.Component {
               </ul>
             </div>
             <div className="buttonsList">
-              <Button type="primary" className="haveSticker" size="large">我要整一套屬於自己既Stickers!</Button>
+              <Link href="/submit">
+                <Button type="primary" className="haveSticker" size="large">我要整一套屬於自己既Stickers!</Button>
+              </Link>
             </div>
           </div>
         </TweenOne>
