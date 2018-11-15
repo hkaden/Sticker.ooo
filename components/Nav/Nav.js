@@ -58,7 +58,9 @@ class Nav extends React.Component {
             <TweenOne
               {...dataSource.logo}
             >
+              <a href='/'>
               <img width="100%" src={dataSource.logo.children} alt="img"/>
+              </a>
             </TweenOne>
             <div className="link">
               <ul className="nav">
