@@ -16,10 +16,9 @@ const path = require('path');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { logger, httpLogger } = require('./configs/winston');
-const config = require('../config.js');
 const statisticsHelper = require('./utils/statisticsHelper');
 
-const MONGODB_URI = config.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3001;
 const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
 
