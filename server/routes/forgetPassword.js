@@ -38,7 +38,7 @@ module.exports = function (server) {
           token.setToken(email);
 
           let subject = 'Forget Password';
-          let content = `${'Hello,\n\n' + 'You recently have requested to reset password. Please do it by clicking the link: \nhttp:\/\/'}${req.headers.host}\/resetPassword\/${token.token}.\n`;
+          let content = `${'Hello,\n\n' + 'You recently have requested to reset password. Please do it by clicking the link: \nhttp:\/\/'}${req.headers.host}\/api\/resetPassword\/${token.token}.\n`;
           let successReturn = {
             type: TYPES.RESET_PASSWORD_EMAIL_SENT,
             message: MESSAGES.RESET_PASSWORD_EMAIL_SENT_SUCCESS + email

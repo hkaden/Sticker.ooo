@@ -75,7 +75,7 @@ module.exports = function (server) {
             }
             
             let subject = 'Sticker.ooo Email Verification';
-            let content = `${'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/'}${req.headers.host}\/verifyAccount\/${token.token}.\n`;
+            let content = `${'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/'}${req.headers.host}\/api\/verifyAccount\/${token.token}.\n`;
             let successReturn = {
               type: TYPES.VERIFICATION_EMAIL_SENT,
               message: MESSAGES.VERIFICATION_EMAIL_SENT_SUCCESS + email
