@@ -7,21 +7,23 @@ const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
 const { TYPES, MESSAGES } = require('../configs/constants');
+const { requestParameterValidator } = require('../utils/validators');
 
 module.exports = function (server) {
   // Docs: https://github.com/ryo718/mongoose-crudify
-  server.post(
-    '/api/verifyAccount',
+  server.get(
+    '/api/verifyAccount/*',
     auth.optional,
     [
-      body('token').withMessage(MESSAGES.IS_REQUIRE),
+      //body('token').withMessage(MESSAGES.IS_REQUIRE),
       // body('email').isEmail(),
       // sanitizeBody('email').normalizeEmail({ remove_dots: false }),
       expressValidatorErrorHandler,
     ],
     async (req, res, next) => {
       try {
-        const { token } = req.body;
+        // const { token } = req.body;
+        let token = requestParameterValidator(req.path.substr(req.path.lastIndexOf('/') + 1));
         await Token.findOne({ token }, (err, token) => {
           if (!token) {
             return res.status(400).json({
@@ -54,10 +56,12 @@ module.exports = function (server) {
                 });
               }
 
-              return res.status(200).json({
-                type: TYPES.ACCOUNT_VERIFIED,
-                message: MESSAGES.ACCOUNT_ALREADY_VERIFIED,
-              });
+              // return res.status(200).json({
+              //   type: TYPES.ACCOUNT_VERIFIED,
+              //   message: MESSAGES.ACCOUNT_ALREADY_VERIFIED,
+              // });
+
+              return res.redirect('/login')
             });
           });
         });
