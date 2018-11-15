@@ -25,7 +25,7 @@ module.exports = function (server) {
 
         // override read
         read: (req, res) => {
-          console.log(req.query.chunk);
+          //console.log(req.query.chunk);
           const newJson = {
             identifier: `${req.crudify.sticker.uuid}_chunk${[req.query.chunk]}`,
             name: req.crudify.sticker.name,

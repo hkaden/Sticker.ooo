@@ -24,7 +24,7 @@ class appToWhatsapp extends Component {
 
   constructor(props) {
     super(props);
-    console.log(this.props.res);
+    //console.log(this.props.res);
   }
 
 

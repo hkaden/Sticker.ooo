@@ -23,7 +23,6 @@ module.exports = function (server) {
       try {
         // const { token } = req.body;
         let token = req.path.substr(req.path.lastIndexOf('/') + 1);
-        console.log(token)
         await Token.findOne({ token }, (err, token) => {
           if (!token) {
             return res.status(400).json({
