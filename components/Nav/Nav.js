@@ -57,7 +57,9 @@ class Nav extends React.Component {
             <TweenOne
               {...dataSource.logo}
             >
-              <img width="100%" src={dataSource.logo.children} alt="img"/>
+              <a href="/">
+                <img width="100%" src={dataSource.logo.children} alt="img"/>
+              </a>
             </TweenOne>
             <div className="link">
               <ul className="nav">
@@ -65,7 +67,7 @@ class Nav extends React.Component {
               </ul>
             </div>
             <div className="buttonsList">
-              <Button type="primary" className="haveSticker" size="large">我要整一套屬於自己既Stickers!</Button>
+              <Button type="primary" className="haveSticker" size="large" href="/submit">我要整一套屬於自己既Stickers!</Button>
             </div>
           </div>
         </TweenOne>
