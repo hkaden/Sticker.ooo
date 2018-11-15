@@ -24,7 +24,7 @@ class CForm extends React.Component {
       progress: 0,
       isSubmitting: false,
       uploadType: 'image',
-      sharingType: 'public',
+      // sharingType: 'public',
       errorMsg: '',
       isLoading: true
     };
@@ -78,14 +78,15 @@ class CForm extends React.Component {
 
           const stickersData = {
             name: this.props.form.getFieldValue('name'),
-            sharingType: this.props.form.getFieldValue('sharingType'),
+            // sharingType: this.props.form.getFieldValue('sharingType'),
+            sharingType: 'link',
             tray,
             trays,
             stickers: stickersInPack,
           };
 
 
-          const resp = await cachios.post('/api/stickers', stickersData)
+          const resp = await cachios.post('/api/stickers', stickersData);
           if (resp.status === 200) {
             this.setState({progress: 100});
             redirect({}, e, '/sticker/' + resp.data.uuid)
@@ -144,7 +145,7 @@ class CForm extends React.Component {
                            disabled={this.state.isSubmitting}/>
                   )}
                 </FormItem>
-                <FormItem
+                {/*<FormItem
                   label="Sharing"
                   extra={{
                     public: 'Your stickers will be publicly available',
@@ -160,7 +161,7 @@ class CForm extends React.Component {
                       <Radio.Button value="link">Link only</Radio.Button>
                     </Radio.Group>
                   )}
-                </FormItem>
+                </FormItem>*/}
                 <FormItem
                   label="Upload Type"
                 >
@@ -233,9 +234,16 @@ class CForm extends React.Component {
                     <div className="dropbox">
                       {getFieldDecorator('zip', {
                         getValueFromEvent: this.normFile,
-                        rules: [{required: true, message: 'Please select zip file!'}],
+                        rules: [
+                          {required: true, message: 'Please select zip file!'},
+                          {
+                            validator: (rule, value, callback) => {
+                              callback(value && value.length > 1 ? false : undefined);
+                            }, message: 'Please select only 1 zip file!'
+                          }
+                        ],
                       })(
-                        <Upload.Dragger accept=".zip" name="files" multiple={true} beforeUpload={this.beforeUpload}
+                        <Upload.Dragger accept=".zip" name="files" beforeUpload={this.beforeUpload}
                                         disabled={this.state.isSubmitting}>
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
@@ -264,7 +272,7 @@ class CForm extends React.Component {
                   </div>
                 </FormItem>
                 <FormItem>
-                  <Button type="primary" htmlType="submit" style={{width: '100%'}}>
+                  <Button type="primary" htmlType="submit" style={{width: '100%'}} loading={this.state.isSubmitting}>
                     Upload
                   </Button>
                 </FormItem>
