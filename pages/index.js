@@ -1,6 +1,7 @@
 import {enquireScreen} from 'enquire-js';
 import Banner from '../components/Banner/Banner';
 import Layout from '../components/Layout/Layout';
+import StickerList from '../components/StickerList/StickerList';
 import {Banner00DataSource, FactArea00DataSource} from '../components/data.source.js';
 import FactArea from "../components/FactArea/FactArea"
 
@@ -36,7 +37,8 @@ export default class Home extends React.Component {
         key="FactArea0_0"
         dataSource={FactArea00DataSource}
         isMobile={this.state.isMobile}
-      />
+      />,
+      {/*<StickerList/>*/}
     ];
     return (
       <Layout>
