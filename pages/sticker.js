@@ -73,7 +73,7 @@ class StickerPage extends Component {
       return (
         <div>
           <Head>
-            <title>Submit page</title>
+            <title>{`${stickersList[0].name} - Sticker.ooo`}</title>
             <meta name="description" content="Converter page description" />
             <script src="../static/libwebpjs.out.js" />
           </Head>
