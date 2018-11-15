@@ -14,6 +14,7 @@ import {
 import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
 import saveAs from 'file-saver';
 import Router from 'next/router';
+import Layout from '../components/Layout/Layout'
 
 class StickerPage extends Component {
     converter = null;
@@ -78,22 +79,25 @@ class StickerPage extends Component {
             <script src="../static/libwebpjs.out.js" />
           </Head>
 
-          <Wapper>
-            <Row type="flex" justify="center">
-              <Col lg={12}>
-                <Card
-                  title={stickersList[0].name
-                        }
-                  extra={
-                    `Publisher: ${stickersList[0].publisher}`
-                  }
-                  bordered={false}
-                >
-                  {packList}
-                </Card>
-              </Col>
-            </Row>
-          </Wapper>
+
+          <Layout>
+            <Wapper>
+              <Row type="flex" justify="center">
+                <Col lg={12}>
+                  <Card
+                    title={stickersList[0].name
+                    }
+                    extra={
+                      `Publisher: ${stickersList[0].publisher}`
+                    }
+                    bordered={false}
+                  >
+                    {packList}
+                  </Card>
+                </Col>
+              </Row>
+            </Wapper>
+          </Layout>
         </div>
       );
     }
