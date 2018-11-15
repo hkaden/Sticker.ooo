@@ -16,10 +16,9 @@ const path = require('path');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { logger, httpLogger } = require('./configs/winston');
-const config = require('../config.js');
 const statisticsHelper = require('./utils/statisticsHelper');
 
-const MONGODB_URI = config.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3001;
 const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
 
@@ -78,7 +77,8 @@ app.prepare().then(() => {
   const redirectIfLoggedIn = (req, res) => {
     const cookies = req.cookies.jwtToken;
     if(cookies != undefined && cookies != null) {
-      return res.redirect('/list')
+      // return res.redirect('/list')
+      return res.redirect('/submit')
     } else {
       //TODO: validate cookie first
       return app.render(req, res, req.path);

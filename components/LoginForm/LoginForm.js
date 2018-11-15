@@ -28,7 +28,7 @@ class Login extends React.Component {
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        //console.log('Received values of form: ', values);
         this.setState({
           isSubmitting: true,
         });
@@ -42,7 +42,8 @@ class Login extends React.Component {
           const resp = await cachios.post('/api/login', credential);
 
           if (resp.status === 200) {
-            redirect({}, e, '/list')
+            // redirect({}, e, '/list')
+            redirect({}, e, '/submit')
           } else {
             // TODO:
           }
