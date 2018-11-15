@@ -17,7 +17,21 @@ const arrayLengthValidator = ({ minLength, maxLength }) => ({
 
 const usernameIsNotRestrictedValidator = value => restrictedUsernames.findIndex(restricted => restricted === value.toLowerCase() === -1);
 
+const requestParameterValidator = (string) => {
+  const escape = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    "/": '&#x2F;',
+  };
+  const reg = /[&<>"'/]/ig;
+  return string.replace(reg, (match)=>(escape[match]));
+}
+
 module.exports = {
   arrayLengthValidator,
   usernameIsNotRestrictedValidator,
+  requestParameterValidator
 };
