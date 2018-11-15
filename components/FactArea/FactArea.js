@@ -1,28 +1,33 @@
 import * as React from 'react'
 import styles from "../FactArea/FactArea.less"
-import QueueAnim from 'rc-queue-anim';
 import {Row, Col} from 'antd';
-import OverPack from 'rc-scroll-anim/lib/ScrollOverPack';
+import Loader from '../Loader/Loader';
+import cachios from 'cachios';
+import numeral from 'numeral';
 
 class FactArea extends React.Component {
 
-  getBlockChildren = (data) =>
-    data.map((item, i) => {
-      const children = item.children;
-      return (
-        <Col key={i.toString()} {...item}>
-          <div {...children.icon}>
-            <img src={children.icon.children} width="100%" alt="img"/>
-          </div>
-          <h3 {...children.title}>{children.title.children}</h3>
-          <p {...children.content}>{children.content.children}</p>
-        </Col>
-      );
-    });
-
   constructor(props) {
     super(props);
+    this.state = {
+      isLoading: true,
+      data: {}
+    }
+  }
 
+  componentDidMount() {
+    cachios.get("/api/statistics/stickers").then((resp) => {
+      const respData = resp.data;
+      this.setState({
+        data: {
+          totalPack: numeral(respData.public.packs + respData.link.packs + respData.private.packs).format('0,0'),
+          totalWeeklyDownloads: numeral(respData.public.weeklyDownloads + respData.link.weeklyDownloads + respData.private.weeklyDownloads).format('0,0'),
+          totalMonthlyDownloads: numeral(respData.public.monthlyDownloads + respData.link.monthlyDownloads + respData.private.monthlyDownloads).format('0,0'),
+          totalYearlyDownloads: numeral(respData.public.yearlyDownloads + respData.link.yearlyDownloads + respData.private.yearlyDownloads).format('0,0')
+        },
+        isLoading: false,
+      })
+    });
   }
 
 
@@ -31,29 +36,33 @@ class FactArea extends React.Component {
     const {dataSource} = props;
     delete props.dataSource;
     delete props.isMobile;
-    const listChildren = this.getBlockChildren(dataSource.block.children);
+    if (this.state.isLoading) {
+      return (
+        <Loader/>
+      )
+    }
     return (
+
       <div {...props} {...dataSource.wrapper}>
         <div {...dataSource.page}>
-
           <div className='fact-box'>
             <div className='block-wrapper'>
               <Row type='flex' align="middle" justify="center">
                 <Col className='single-fact'>
-                  <h2>100K+</h2>
-                  <p>Total Downloads</p>
+                  <h2>{this.state.data.totalPack}</h2>
+                  <p>Total Packs</p>
                 </Col>
                 <Col className='single-fact'>
-                  <h2>100K+</h2>
-                  <p>Total Downloads</p>
+                  <h2>{this.state.data.totalWeeklyDownloads}</h2>
+                  <p>Total Weekly Downloads</p>
                 </Col>
                 <Col className='single-fact'>
-                  <h2>100K+</h2>
-                  <p>Total Downloads</p>
+                  <h2>{this.state.data.totalMonthlyDownloads}</h2>
+                  <p>Total Monthly Downloads</p>
                 </Col>
                 <Col className='single-fact'>
-                  <h2>100K+</h2>
-                  <p>Total Downloads</p>
+                  <h2>{this.state.data.totalYearlyDownloads}</h2>
+                  <p>Total Yearly Downloads</p>
                 </Col>
               </Row>
             </div>
