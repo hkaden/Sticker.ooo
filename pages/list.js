@@ -7,6 +7,7 @@ import {
   Button, Card, Col, Pagination, Row,
 } from 'antd';
 import Head from 'next/head';
+import Link from 'next/link';
 import reduxApi from '../lib/reduxApi';
 import Wapper from '../components/Wapper/Wapper';
 import { decrypt } from '../server/utils/crypto';
@@ -74,8 +75,6 @@ class stickersList extends Component {
         isLoading: false,
       });
 
-      console.log(stickersList);
-
       this.props.dispatch(loadStickersList(stickersList));
 
       if (!this.isWebpSupported()) {
@@ -99,18 +98,22 @@ class stickersList extends Component {
         packList = this.props.stickersList.map((sticker, itemIndex) => (
           <Card
             key={itemIndex}
-            title={sticker.name}
+            title={<div><div>{sticker.name}</div><div><i>by {sticker.publisher}</i></div></div>}
             extra={(
-              <Button type="primary" icon="plus" size="large" ghost href={`stickerooo://stickers/${sticker.uuid}`}>
-                            Add to WhatsApp
-              </Button>
-)}
+              <div>
+                <Link href={{ pathname: '/sticker', query: {uuid: sticker.uuid}}} as={`/sticker/${sticker.uuid}`}>
+                  <Button style={{ marginLeft: '10px' }} type="primary" size="large" ghost>
+                    View more
+                  </Button>
+                </Link>
+              </div>
+            )}
           >
             {
-                        sticker.stickers[0].slice(0, 4).map((item, itemIndex) => (
-                          <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width="100px" />
-                        ))
-                    }
+              sticker.stickers[0].slice(0, 4).map((item, itemIndex) => (
+                <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width="100px" />
+              ))
+            }
           </Card>
         ));
       } else {
