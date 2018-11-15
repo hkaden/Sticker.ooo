@@ -38,7 +38,7 @@ export default class Home extends React.Component {
         dataSource={FactArea00DataSource}
         isMobile={this.state.isMobile}
       />,
-      {/*<StickerList/>*/}
+      //<StickerList/>
     ];
     return (
       <Layout>
