@@ -108,6 +108,7 @@ app.prepare().then(() => {
 
   server.get('/login', redirectIfLoggedIn);
   server.get('/submit', validateJwtTokenBeforeRender);
+  server.get('/', (req, res) => res.redirect('/submit'))
 
   server.get('/', customRequestHandler.bind(undefined, '/'));
   server.get('*', defaultRequestHandler);
