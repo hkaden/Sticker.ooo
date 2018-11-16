@@ -3,7 +3,6 @@ import {findDOMNode} from 'react-dom';
 import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
 import styles from './Nav.less';
-import Link from 'next/link'
 
 const Item = Menu.Item;
 
@@ -24,6 +23,10 @@ class Nav extends React.Component {
         menuHeight: phoneOpen ? menu.scrollHeight : 0,
       });
     };
+
+    handleButtonClick = () => {
+      location.href = "/login"
+    }
 
     render() {
       const {...props} = this.props;
@@ -58,9 +61,7 @@ class Nav extends React.Component {
             <TweenOne
               {...dataSource.logo}
             >
-              <a href='/'>
               <img width="100%" src={dataSource.logo.children} alt="img"/>
-              </a>
             </TweenOne>
             <div className="link">
               <ul className="nav">
@@ -68,9 +69,7 @@ class Nav extends React.Component {
               </ul>
             </div>
             <div className="buttonsList">
-              <Link href="/submit">
-                <Button type="primary" className="haveSticker" size="large">我要整一套屬於自己既Stickers!</Button>
-              </Link>
+              <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>我要整一套屬於自己既Stickers!</Button>
             </div>
           </div>
         </TweenOne>
