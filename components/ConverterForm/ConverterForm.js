@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Button, Card, Col, Form, Icon, Input, Progress, Radio, Row, Switch, Upload} from 'antd';
+import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload} from 'antd';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import reduxApi from '../../lib/reduxApi';
@@ -64,12 +64,14 @@ class CForm extends React.Component {
             stickersFiles = values.stickers.map(sticker => sticker.originFileObj);
           }
 
-          const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles);
-          let stickersLoaded = 0;
-          emitter.on('stickerLoad', () => {
-            stickersLoaded += 1;
-            this.setState({progress: stickersLoaded / stickersFiles.length * 90});
-          });
+            const packSize = this.props.form.getFieldValue('packSize');
+
+            const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles, packSize);
+            let stickersLoaded = 0;
+            emitter.on('stickerLoad', () => {
+              stickersLoaded += 1;
+              this.setState({ progress: stickersLoaded / stickersFiles.length * 90 });
+            });
 
           const { tray, trays, stickersInPack } = await new Promise((resolve, reject) => {
             emitter.on('error', reject);
@@ -162,6 +164,19 @@ class CForm extends React.Component {
                     </Radio.Group>
                   )}
                 </FormItem>*/}
+                <FormItem
+                  label="Maximum number of stickers per pack"
+                >
+                  {getFieldDecorator('packSize', {
+                    initialValue: 30,
+                  })(
+                    <InputNumber
+                      disabled={this.state.isSubmitting}
+                      min={5}
+                      max={30}
+                    />,
+                  )}
+                </FormItem>
                 <FormItem
                   label="Upload Type"
                 >
