@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const patchHistory = require('mongoose-patch-history').default;
 const { pascalize } = require('humps');
+const fs = require('fs');
 
 const Schema = mongoose.Schema;
 
@@ -44,14 +45,24 @@ UsersSchema.methods.validatePassword = function (password) {
 };
 
 UsersSchema.methods.generateJWT = function () {
+  const cert = fs.readFileSync(`${__dirname}/../private.pem`);
   return jwt.sign({
     username: this.username,
     email: this.email,
     uuid: this.uuid,
-  }, process.env.JWT_SECRET, {
+  }, cert, {
+    algorithm: 'RS256',
     expiresIn: '60 days',
   });
 };
+
+UsersSchema.methods.verifyJWT = function (token) {
+  const cert = fs.readFileSync(`${__dirname}/../public.pem`);
+  return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
+    return err ? false : true;
+  });
+
+}
 
 UsersSchema.methods.toAuthJSON = function () {
   return {
