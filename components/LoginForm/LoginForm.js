@@ -108,7 +108,7 @@ class Login extends React.Component {
                   Log in
                 </Button>
                 Or <a href="/register">Register now!</a><br/>
-                Or <a href="/forget">Forget password</a>
+                {/* Or <a href="/forget">Forget password</a> */}
               </FormItem>
             </Form>
           </Col>
