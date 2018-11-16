@@ -57,10 +57,6 @@ class Tnc extends React.Component {
       Sticker.ooo不會承擔任何因使用本站或程式所引致的任何損失或損害（包括但不限於電腦病毒、系統故障、資料損失）。
       本網站不會作出任何默示的擔保。
 
-
-
-
-
       你了解Sticker.ooo並未針對使用者上傳的貼圖事先加以審查，但Sticker.ooo及其指定人有權 (但無義務) 依其自行之考量，拒絕和移除可經由本服務提供之任何使用者上傳的貼圖。
       在不限制前開規定之前提下，Sticker.ooo及其指定人有權將違反本服務條款和令人厭惡之任何使用者上傳的貼圖加以移除。當你上傳及使用任何貼圖時，你同意必須自行加以評估並承擔所有風險。
       Sticker.ooo是以即時上載貼圖的方式運作，Sticker.ooo對所有貼圖的真實性、完整性及立場等，不負任何法律責任。由於Sticker.ooo受到「即時上載貼圖」運作方式所規限，故不能完全監察所有貼圖，如您發現任何有違反這些使用條款或你認為有問題的貼圖，請聯絡我們info@sticker.ooo
@@ -77,8 +73,6 @@ class Tnc extends React.Component {
    
       本網站所持有的全部個人資料，除法律上有需要外，均屬保密，並只供本網站內部使用。
       除了個人資料外，任何由登記會員，以及訪客在此網頁提出的帖文、留言或其他資料皆被視為非保密性的。 本網站保留使用、複製、公開、出版、廣播及或張貼非保密性資料於任何地方的權利。
-
-
 
       *All uploaded files are copyright © to their respective owners. We are not responsible for the content of any uploaded files, nor is it in affiliation with any entities that may be represented in the uploaded files.
       `
