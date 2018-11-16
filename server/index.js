@@ -21,6 +21,8 @@ const statisticsHelper = require('./utils/statisticsHelper');
 const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3001;
 const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
+const jwt = require('jsonwebtoken');
+const cert = fs.readFileSync(`${__dirname}/public.pem`);
 
 app.prepare().then(() => {
   // Helmet
@@ -75,23 +77,30 @@ app.prepare().then(() => {
 
 
   const redirectIfLoggedIn = (req, res) => {
-    const cookies = req.cookies.jwtToken;
-    if(cookies != undefined && cookies != null) {
-      // return res.redirect('/list')
-      return res.redirect('/submit')
+    const token = req.cookies.jwtToken;
+    if(token != undefined && token != null) {
+      return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
+        if(err) {
+          return app.render(req, res, req.path);
+        }
+        return res.redirect('/list');
+      });
     } else {
-      //TODO: validate cookie first
       return app.render(req, res, req.path);
-    }
+    } 
   }
 
   const validateJwtTokenBeforeRender = (req, res) => {
-    const cookies = req.cookies.jwtToken;
-    if(cookies == undefined || cookies == null) {
+    const token = req.cookies.jwtToken;
+    if(token == undefined || token == null) {
       return res.redirect('/login')
     } else {
-      //TODO: validate cookie first
-      return app.render(req, res, req.path);
+      return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
+        if(err) {
+          return res.redirect('/login')
+        }
+        return app.render(req, res, req.path);
+      });
     }
   }
 
