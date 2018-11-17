@@ -48,19 +48,19 @@ class FactArea extends React.Component {
           <div className='fact-box'>
             <div className='block-wrapper'>
               <Row type='flex' align="middle" justify="center">
-                <Col className='single-fact'>
+                <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalPack}</h2>
                   <p>Total Packs</p>
                 </Col>
-                <Col className='single-fact'>
+                <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalWeeklyDownloads}</h2>
                   <p>Total Weekly Downloads</p>
                 </Col>
-                <Col className='single-fact'>
+                <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalMonthlyDownloads}</h2>
                   <p>Total Monthly Downloads</p>
                 </Col>
-                <Col className='single-fact'>
+                <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalYearlyDownloads}</h2>
                   <p>Total Yearly Downloads</p>
                 </Col>

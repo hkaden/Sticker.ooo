@@ -135,7 +135,7 @@ class stickersList extends Component {
 
           <Wapper>
             <Row type="flex" justify="center">
-              <Col lg={12}>
+              <Col xs={24} lg={12}>
                 <Card
                   title="Stickers List"
                   bordered={false}
