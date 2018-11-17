@@ -2,11 +2,22 @@ import * as React from 'react'
 import {findDOMNode} from 'react-dom';
 import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
+import withRedux from 'next-redux-wrapper';
+import thunkMiddleware from 'redux-thunk';
+import {connect} from "react-redux";
+import reduxApi from '../../lib/reduxApi';
 import styles from './Nav.less';
 
 const Item = Menu.Item;
 
 class Nav extends React.Component {
+  static async getInitialProps({
+    store, query, router, req,
+  }) {
+   console.log(store)
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +25,11 @@ class Nav extends React.Component {
       menuHeight: 0,
     };
   }
+
+  componentDidMount() {
+    console.log(this.props)
+  }
+
 
     phoneClick = () => {
       const menu = findDOMNode(this.menu);
@@ -30,6 +46,10 @@ class Nav extends React.Component {
 
     handleLogoClick = () => {
       location.href = "/"
+    }
+
+    renderLoginLogOutButton = () => {
+      
     }
 
     render() {
@@ -69,6 +89,7 @@ class Nav extends React.Component {
             </TweenOne>
             <div className="buttonsList">
               <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>我要整一套屬於自己既Stickers!</Button>
+              { this.renderLoginLogOutButton() }
             </div>
           </div>
         </TweenOne>
@@ -77,4 +98,23 @@ class Nav extends React.Component {
     }
 }
 
-export default Nav
+const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
+const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(
+  combineReducers({
+    ...reduxApi.reducers,
+    isLoggedIn: authReducer,
+  }),
+  reduxState,
+);
+const mapStateToProps = reduxState => ({
+  isLoggedIn: reduxState.isLoggedIn,
+}); 
+
+const mapDispatchToProps = dispatch => ({
+  
+});
+
+export default connect(
+  (state) => state,
+)(Nav);
+
