@@ -12,7 +12,7 @@ module.exports = function (server) {
   // Docs: https://github.com/ryo718/mongoose-crudify
   server.post(
     '/api/login',
-    auth.optional,
+    // auth.optional,
     brute.globalBruteforce.prevent,
     brute.loginBruteforce.getMiddleware({
       key(req, res, next) {
@@ -42,13 +42,7 @@ module.exports = function (server) {
 
           const userAuthJson = user.toAuthJSON();
 
-          const cookie = req.cookies.jwtToken;
-
-          if (cookie !== undefined || cookie !== null) {
-            res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
-          } else {
-            //TODO: validate jwtToken
-          }
+          res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
           return res.status(200).json({
             type: TYPES.LOGIN_SUCCESS,
             message: MESSAGES.LOGIN_SUCCESS,
