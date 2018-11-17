@@ -63,11 +63,6 @@ class Nav extends React.Component {
             >
               <img width="100%" src={dataSource.logo.children} alt="img"/>
             </TweenOne>
-            <div className="link">
-              <ul className="nav">
-                {navChildren}
-              </ul>
-            </div>
             <div className="buttonsList">
               <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>我要整一套屬於自己既Stickers!</Button>
             </div>

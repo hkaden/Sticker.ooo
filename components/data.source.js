@@ -49,5 +49,12 @@ export const FactArea00DataSource = {
 export const FooterDataSource = {
   logo: {
     children: '/static/images/logo.png'
-  }
+  },
+  Menu: {
+    className: 'header0-menu',
+    children: [
+      {name: 'item0', a: {children: '服務條款', href: '/tnc'}}
+    ],
+  },
+  mobileMenu: {className: 'header0-mobile-menu'},
 }
