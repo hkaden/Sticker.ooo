@@ -19,6 +19,7 @@ export const en = {
     forgetPasswordLinkLabel: 'Forget Password',
     loginNowLabel: 'Login now!',
     register: 'Register',
+    registerButton: 'REGISTER',
     username: 'Username',
     stickerListLabel: 'Stickers List',
     noStickers: 'No Sticker',
@@ -43,5 +44,12 @@ export const en = {
     pleaseSelectOnlyOneTrayIcon: 'Please select only 1 tray icon',
     pleaseSelectOnlyOneZipFile: 'Please select only 1 zip file!',
     pleaseAgreeTnc: 'Please agree to the Terms & Conditions',
-    pleaseSelectThreeOrMoreImages: 'Please select 3 or more images!'
+    pleaseSelectThreeOrMoreImages: 'Please select 3 or more images!',
+    pleaseInputUsername: 'Please input username!',
+    pleaseInputPassword: 'Please input password!',
+    pleaseInputEmail: 'Please input E-mail address!',
+    usernameValidationMessage: 'Your username must be between 4 and 20 characters long',
+    passwordNotMatch: 'Those passwords didn\'t match. Try again. ',
+    passwordValidationMessage: 'Your password must be more than 6 characters',
+    emailValidationMessage: 'The input is not valid E-mail!',
 }
