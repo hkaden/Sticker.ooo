@@ -13,7 +13,7 @@ module.exports = function (server) {
   // Docs: https://github.com/ryo718/mongoose-crudify
   server.post(
     '/api/login',
-    auth.optional,
+    // auth.optional,
     brute.globalBruteforce.prevent,
     brute.loginBruteforce.getMiddleware({
       key(req, res, next) {
@@ -42,19 +42,20 @@ module.exports = function (server) {
           }
 
           const userAuthJson = user.toAuthJSON();
+          res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
 
-          const cookie = req.cookies.jwtToken;
-          if (cookie == undefined) {
-            res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
-          } else {
-            const isJWTVerified = user.verifyJWT(cookie);
-            if(!isJWTVerified) {
-              return res.status(400).json({
-                type: TYPES.FAILED_TO_VERIFY_JWT_TOKEN,
-                message: MESSAGES.FAILED_TO_VERIFY_JWT_TOKEN,
-              })
-            }
-          }
+          // const cookie = req.cookies.jwtToken;
+          // if (cookie == undefined) {
+          //   res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
+          // } else {
+          //   const isJWTVerified = user.verifyJWT(cookie);
+          //   if(!isJWTVerified) {
+          //     return res.status(400).json({
+          //       type: TYPES.FAILED_TO_VERIFY_JWT_TOKEN,
+          //       message: MESSAGES.FAILED_TO_VERIFY_JWT_TOKEN,
+          //     })
+          //   }
+          // }
           return res.status(200).json({
             type: TYPES.LOGIN_SUCCESS,
             message: MESSAGES.LOGIN_SUCCESS,
