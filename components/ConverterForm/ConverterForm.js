@@ -1,8 +1,5 @@
 import * as React from 'react'
 import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload} from 'antd';
-import {applyMiddleware, combineReducers, createStore} from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import reduxApi from '../../lib/reduxApi';
 import cachios from 'cachios';
 import redirect from '../../lib/redirect';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
@@ -303,8 +300,5 @@ class CForm extends React.Component {
 }
 
 const ConverterForm = Form.create({})(CForm);
-const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
-const mapStateToProps = (reduxState) => ({sticker: reduxState.sticker}); // Use reduxApi endpoint names here
 
 export default ConverterForm

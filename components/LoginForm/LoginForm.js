@@ -51,7 +51,7 @@ class Login extends React.Component {
           if (resp.status === 200) {
             this.props.setIsLoggedIn(true);
             redirect({}, e, '/submit')
-          } 
+          }
 
         } catch (e) {
 
@@ -123,14 +123,6 @@ class Login extends React.Component {
   }
 }
 
-const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(
-  combineReducers({
-    ...reduxApi.reducers,
-    stickersList: stickersListReducer,
-  }),
-  reduxState,
-);
 const mapStateToProps = reduxState => ({
   stickersList: reduxState.stickersList,
 });
@@ -144,8 +136,4 @@ const mapDispatchToProps = dispatch => ({
 
 const LoginForm = Form.create({})(Login);
 
-export default withRedux({
-  createStore: makeStore,
-  mapStateToProps,
-  mapDispatchToProps,
-})(LoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

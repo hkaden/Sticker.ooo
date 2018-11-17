@@ -2,21 +2,12 @@ import * as React from 'react'
 import {findDOMNode} from 'react-dom';
 import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
-import {applyMiddleware, combineReducers, createStore} from 'redux';
-import withRedux from 'next-redux-wrapper';
-import thunkMiddleware from 'redux-thunk';
-import {connect} from "react-redux";
-import reduxApi from '../../lib/reduxApi';
+import { connect } from 'react-redux';
 import styles from './Nav.less';
 
 const Item = Menu.Item;
 
 class Nav extends React.Component {
-  static async getInitialProps({
-    store, query, router, req,
-  }) {
-   console.log(store)
-  }
 
   constructor(props) {
     super(props);
@@ -49,11 +40,11 @@ class Nav extends React.Component {
     }
 
     renderLoginLogOutButton = () => {
-      
+
     }
 
     render() {
-      const {...props} = this.props;
+      const {dispatch, ...props} = this.props;
       const {dataSource, isMobile} = props;
       delete props.dataSource;
       delete props.isMobile;
@@ -98,23 +89,8 @@ class Nav extends React.Component {
     }
 }
 
-const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(
-  combineReducers({
-    ...reduxApi.reducers,
-    isLoggedIn: authReducer,
-  }),
-  reduxState,
-);
 const mapStateToProps = reduxState => ({
-  isLoggedIn: reduxState.isLoggedIn,
-}); 
-
-const mapDispatchToProps = dispatch => ({
-  
+  auth: reduxState.auth,
 });
 
-export default connect(
-  (state) => state,
-)(Nav);
-
+export default connect(mapStateToProps)(Nav);
