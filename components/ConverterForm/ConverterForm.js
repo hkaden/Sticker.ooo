@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload} from 'antd';
+import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload, Modal} from 'antd';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import reduxApi from '../../lib/reduxApi';
@@ -32,7 +32,21 @@ class CForm extends React.Component {
 
   componentDidMount() {
     this.converter = new WhatsAppStickersConverter();
-    this.converter.init().catch(e => console.log(e));
+    this.converter.init().catch(() => {
+      Modal.error({
+        title: 'Critical API not loaded!',
+        content: (
+          <div>
+            <p>Please try refreshing the page, and ensure that you are using the latest version of Chrome / Firefox / Safari</p>
+          </div>
+        ),
+        okText: 'Refresh',
+        maskClosable: true,
+        onOk() {
+          location.reload();
+        },
+      });
+    });
 
     this.setState({
       isLoading: false
