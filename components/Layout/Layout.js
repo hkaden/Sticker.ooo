@@ -4,6 +4,7 @@ import Footer from '../Footer/Footer';
 import {Nav00DataSource, FooterDataSource} from '../data.source.js';
 import {enquireScreen} from "enquire-js"
 import styles from "./Layout.less"
+import { locales } from "../../locales/locales";
 
 let isMobile;
 enquireScreen((b) => {
@@ -22,9 +23,19 @@ class Layout extends React.Component {
     enquireScreen((b) => {
       this.setState({isMobile: !!b});
     });
+
+    //TODO: update locale based on redux state;
+    this.setState({
+      locales: locales.en
+    })
   }
 
   render() {
+    const children = React.Children.map(this.props.children, child => {
+      return React.cloneElement(child, {
+        locales: this.state.locales
+      });
+    });
     return (
 
       <div
@@ -40,7 +51,7 @@ class Layout extends React.Component {
           isMobile={this.state.isMobile}
         />
         <div className="MainContent">
-          {this.props.children}
+          {children}
         </div>
         <Footer
           dataSource={FooterDataSource}
