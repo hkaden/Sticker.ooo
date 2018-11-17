@@ -20,6 +20,9 @@ const UsersSchema = new Schema({
   email: {
     type: String, required: true, unique: true, lowerCase: true, minLength: 4, maxLength: 40,
   },
+  emailExternal: {
+    type: String, minLength: 4, maxLength: 40,
+  },
   salt: { type: String },
   isVerified: { type: Boolean, default: false },
   createdAt: {

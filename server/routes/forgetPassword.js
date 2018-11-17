@@ -17,7 +17,7 @@ module.exports = function (server) {
     [
       body('email').withMessage(MESSAGES.IS_REQUIRE),
       body('email').isEmail(),
-      // sanitizeBody('email').normalizeEmail({ remove_dots: false }),
+      sanitizeBody('email').normalizeEmail(),
       expressValidatorErrorHandler,
     ],
     async (req, res, next) => {
@@ -41,13 +41,13 @@ module.exports = function (server) {
           let content = `${'Hello,\n\n' + 'You recently have requested to reset password. Please do it by clicking the link: \nhttp:\/\/'}${req.headers.host}\/api\/resetPassword\/${token.token}.\n`;
           let successReturn = {
             type: TYPES.RESET_PASSWORD_EMAIL_SENT,
-            message: MESSAGES.RESET_PASSWORD_EMAIL_SENT_SUCCESS + email
+            message: MESSAGES.RESET_PASSWORD_EMAIL_SENT_SUCCESS + user.emailExternal,
           };
           let failedReturn = {
             type: TYPES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
             message: MESSAGES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
           };
-          sendEmail(email, subject, content, req, res, successReturn, failedReturn);
+          sendEmail(user.emailExternal, subject, content, req, res, successReturn, failedReturn);
         });
       } catch (e) {
         next(e);

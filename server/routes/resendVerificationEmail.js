@@ -17,7 +17,7 @@ module.exports = function (server) {
     [
       body('email').withMessage(MESSAGES.IS_REQUIRE),
       body('email').isEmail(),
-      // sanitizeBody('email').normalizeEmail({ remove_dots: false }),
+      sanitizeBody('email').normalizeEmail(),
       expressValidatorErrorHandler,
     ],
     async (req, res, next) => {
@@ -50,13 +50,13 @@ module.exports = function (server) {
             let content = `${'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/'}${req.headers.host}\/api\/verifyAccount\/${token.token}.\n`;
             let successReturn = {
               type: TYPES.VERIFICATION_EMAIL_SENT,
-              message: MESSAGES.VERIFICATION_EMAIL_SENT_SUCCESS + email
+              message: MESSAGES.VERIFICATION_EMAIL_SENT_SUCCESS + user.emailExternal,
             };
             let failedReturn = {
               type: TYPES.FAILED_TO_SEND_VERIFICATION_EMAIL,
               message: MESSAGES.FAILED_TO_SEND_VERIFICATION_EMAIL,
             };
-            sendEmail(email, subject, content, req, res, successReturn, failedReturn);
+            sendEmail(user.emailExternal, subject, content, req, res, successReturn, failedReturn);
           });
         });
       } catch (e) {
