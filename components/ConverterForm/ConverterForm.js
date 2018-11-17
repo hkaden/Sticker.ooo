@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload} from 'antd';
+import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload, Modal} from 'antd';
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import reduxApi from '../../lib/reduxApi';
@@ -32,7 +32,21 @@ class CForm extends React.Component {
 
   componentDidMount() {
     this.converter = new WhatsAppStickersConverter();
-    this.converter.init().catch(e => console.log(e));
+    this.converter.init().catch(() => {
+      Modal.error({
+        title: 'Critical API not loaded!',
+        content: (
+          <div>
+            <p>Please try refreshing the page, and ensure that you are using the latest version of Chrome / Firefox / Safari</p>
+          </div>
+        ),
+        okText: 'Refresh',
+        maskClosable: true,
+        onOk() {
+          location.reload();
+        },
+      });
+    });
 
     this.setState({
       isLoading: false
@@ -120,6 +134,7 @@ class CForm extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
+    const { locales } = this.props;
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'}/>
@@ -137,11 +152,11 @@ class CForm extends React.Component {
         <div className="ConverterWrapper">
           <Row type="flex" justify="start" align="middle" >
           <Col span={24}>
-            <Card title="Submit your Stickers" bordered={true} className="ConverterCard">
+            <Card title={locales.submitStickersLabel} bordered={true} className="ConverterCard">
               <Form onSubmit={this.handleSubmit} hideRequiredMark={true} className="login-form" autoComplete="off">
                 <FormItem>
                   {getFieldDecorator('name', {
-                    rules: [{required: true, message: 'Please input pack name!'}],
+                    rules: [{required: true, message: locales.pleaseInputPackName}],
                   })(
                     <Input prefix={<Icon type="file" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Pack Name"
                            disabled={this.state.isSubmitting}/>
@@ -165,7 +180,7 @@ class CForm extends React.Component {
                   )}
                 </FormItem>*/}
                 <FormItem
-                  label="Maximum number of stickers per pack"
+                  label={locales.maxNumOfStickersPerPack}
                 >
                   {getFieldDecorator('packSize', {
                     initialValue: 30,
@@ -184,8 +199,8 @@ class CForm extends React.Component {
                     initialValue: 'image'
                   })(
                     <Radio.Group name="uploadType" onChange={this.handleFieldChange} disabled={this.state.isSubmitting}>
-                      <Radio.Button value="image">Image Files</Radio.Button>
-                      <Radio.Button value="zip">Zip File</Radio.Button>
+                      <Radio.Button value="image">{locales.imageFiles}</Radio.Button>
+                      <Radio.Button value="zip">{locales.zipFiles}</Radio.Button>
                     </Radio.Group>,
                   )}
                 </FormItem>
@@ -197,11 +212,11 @@ class CForm extends React.Component {
                       {getFieldDecorator('tray', {
                         getValueFromEvent: this.normFile,
                         rules: [
-                          {required: true, message: 'Please select tray icon!'},
+                          {required: true, message: locales.pleaseSelectTrayIcon},
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length > 1 ? false : undefined);
-                            }, message: 'Please select only 1 tray icon!'
+                            }, message: locales.pleaseSelectOnlyOneTrayIcon
                           }
                         ],
 
@@ -211,14 +226,14 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">Choose file or drag file to this area</p>
-                          <p className="ant-upload-hint">Any resolution</p>
+                          <p className="ant-upload-text">{locales.dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales.anyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
                   </FormItem>
                   <FormItem
-                    label="Stickers (3 or more images)"
+                    label={locales.threeOrMoreImages}
                   >
                     <div className="dropbox">
                       {getFieldDecorator('stickers', {
@@ -227,7 +242,7 @@ class CForm extends React.Component {
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length >= 3 ? undefined : false);
-                            }, message: 'Please select 3 or more images!'
+                            }, message: locales.pleaseSelectThreeOrMoreImages
                           }
                         ],
                       })(
@@ -236,8 +251,8 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">Choose files or drag files to this area</p>
-                          <p className="ant-upload-hint">Any resolution</p>
+                          <p className="ant-upload-text">{locales.dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales.anyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
@@ -250,11 +265,11 @@ class CForm extends React.Component {
                       {getFieldDecorator('zip', {
                         getValueFromEvent: this.normFile,
                         rules: [
-                          {required: true, message: 'Please select zip file!'},
+                          {required: true, message: locales.pleaseSelectZipFile},
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length > 1 ? false : undefined);
-                            }, message: 'Please select only 1 zip file!'
+                            }, message: locales.pleaseSelectOnlyOneZipFile
                           }
                         ],
                       })(
@@ -263,8 +278,8 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">Choose file or drag file to this area</p>
-                          <p className="ant-upload-hint">Zip file with images of any resolution</p>
+                          <p className="ant-upload-text">{locales.dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales.zipWithAnyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
@@ -274,12 +289,12 @@ class CForm extends React.Component {
                   <div>
 
                     <span className="ant-form-text">
-                      By submitting my stickers to Stickers.ooo, I agree to the <Link href="/tnc">Terms & Conditions</Link> of Sticker.ooo
+                      {locales.submitAgreementPrefix} <Link href="/tnc">{locales.termsAndConditions}</Link> {locales.submitAgreementSuffix}
                 </span>
                     {getFieldDecorator('agreeTnC', {
                       rules: [{
                         validator: (rule, value, callback) => callback(value === true ? undefined : false),
-                        message: 'Please agree to the Terms & Conditions',
+                        message: locales.pleaseAgreeTnc,
                       }],
                     })(
                       <Switch checkedChildren={<Icon type="check"/>} unCheckedChildren={<Icon type="close"/>}/>
