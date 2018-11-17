@@ -28,6 +28,10 @@ class Nav extends React.Component {
       location.href = "/login"
     }
 
+    handleLogoClick = () => {
+      location.href = "/"
+    }
+
     render() {
       const {...props} = this.props;
       const {dataSource, isMobile} = props;
@@ -61,7 +65,7 @@ class Nav extends React.Component {
             <TweenOne
               {...dataSource.logo}
             >
-              <img width="100%" src={dataSource.logo.children} alt="img"/>
+              <img className="site-logo" width="100%" src={dataSource.logo.children} alt="img" onClick={this.handleLogoClick}/>
             </TweenOne>
             <div className="buttonsList">
               <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>我要整一套屬於自己既Stickers!</Button>
