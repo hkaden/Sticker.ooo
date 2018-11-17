@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styles from "../FactArea/FactArea.less"
 import {Row, Col} from 'antd';
-import Loader from '../Loader/Loader';
 import cachios from 'cachios';
 import numeral from 'numeral';
 
@@ -39,7 +38,7 @@ class FactArea extends React.Component {
     delete props.isMobile;
     if (this.state.isLoading) {
       return (
-        <Loader/>
+        null
       )
     }
     return (
