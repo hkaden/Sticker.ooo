@@ -46,6 +46,10 @@ class StickerPage extends Component {
       return this.props.userAgent.includes('Chrome') || this.props.userAgent.includes('Android');
     }
 
+    isMobile() {
+      return this.props.userAgent.includes('iPhone');
+    }
+
     render() {
       const { stickersList } = this.props;
       const packList = stickersList[0].stickers.map((pack, index) => (
@@ -54,14 +58,15 @@ class StickerPage extends Component {
           title={`Pack ${index + 1}`}
           extra={<Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost onClick={() => {
             let url = `/api/stickers/${this.props.uuid}/packs/${index + 1}.json`;
-            if (this.props.userAgent.includes('iPhone')) {
-              Router.push(url);
+            if (this.isMobile()) {
+              window.location.href = `twesticker://json?urlString=${window.location.origin}${url}`
             } else {
               saveAs(url, `${stickersList[0].name}_${index + 1}.json`, {type: 'application/json'});
             }
-
           }} >
-            Download JSON
+            {
+              this.isMobile() ? 'Open in Twemoji' : 'Download JSON'
+            }
           </Button>}
         >
           {
