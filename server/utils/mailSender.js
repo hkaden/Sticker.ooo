@@ -12,6 +12,7 @@ const sendEmail = (email, subject, content, req, res, successReturn, failedRetur
 
   mailgun.messages().send(mailOptions, function (error, body) {
     if (error) {
+      console.error(error)
       return res.status(400).json(failedReturn);
     }
 
