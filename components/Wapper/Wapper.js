@@ -8,7 +8,7 @@ const { Content } = Layout;
 const Wapper = ({ children }) => (
   <div className="Wapper">
     <Layout>
-      <Row type="flex" justify="center">
+      <Row>
         <Content style={{padding: '0 50px', margin: '50px 0px 200px 0px'}}>
           {children}
         </Content>
