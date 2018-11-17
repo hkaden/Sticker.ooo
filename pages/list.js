@@ -10,6 +10,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import reduxApi from '../lib/reduxApi';
 import Wapper from '../components/Wapper/Wapper';
+import Layout from '../components/Layout/Layout';
 import { decrypt } from '../server/utils/crypto';
 import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
 import { decodeWebp, loadStickersList, stickersListReducer } from '../lib/customReducers';
@@ -132,36 +133,37 @@ class stickersList extends Component {
             <script src="../static/libwebpjs.out.js" />
           </Head>
 
+          <Layout>
+            <Wapper>
+              <Row type="flex" justify="center">
+                <Col xs={24} lg={12}>
+                  <Card
+                    title="Stickers List"
+                    bordered={false}
+                  >
 
-          <Wapper>
-            <Row type="flex" justify="center">
-              <Col xs={24} lg={12}>
-                <Card
-                  title="Stickers List"
-                  bordered={false}
-                >
-
-                  { this.state.isLoading && this.renderLoader() }
-                  { !this.state.isLoading && this.props.stickersList.length > 0
-                                      && (
-                                      <div>
-                                        { packList }
-                                        <Pagination current={this.state.currentPage} onChange={this.pageinationOnChange} total={this.state.itemCount} pageSize={this.props.pageSize} />
-                                      </div>
-                                      )
-                                  }
-                  { !this.state.isLoading && this.props.stickersList.length == 0
-                                      && (
-                                      <div>
-                                        No Stickers
-                                      </div>
-                                      )
-                                  }
-                </Card>
-              </Col>
-            </Row>
-          </Wapper>
-        </div>
+                    { this.state.isLoading && this.renderLoader() }
+                    { !this.state.isLoading && this.props.stickersList.length > 0
+                                        && (
+                                        <div>
+                                          { packList }
+                                          <Pagination current={this.state.currentPage} onChange={this.pageinationOnChange} total={this.state.itemCount} pageSize={this.props.pageSize} />
+                                        </div>
+                                        )
+                                    }
+                    { !this.state.isLoading && this.props.stickersList.length == 0
+                                        && (
+                                        <div>
+                                          No Stickers
+                                        </div>
+                                        )
+                                    }
+                  </Card>
+                </Col>
+              </Row>
+            </Wapper>
+          </Layout>
+       </div>
       );
     }
 }
