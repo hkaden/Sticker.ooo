@@ -8,9 +8,15 @@ class Footer extends React.Component {
       this.state = {
         phoneOpen: false,
         menuHeight: 0,
+        isLoading: true,
       };
     }
 
+    componentDidMount() {
+      this.setState({
+        isLoading: false
+      })
+    }
     render() {
       const {...props} = this.props;
       const {dataSource, isMobile} = props;
@@ -30,6 +36,10 @@ class Footer extends React.Component {
         </li>
       ));
 
+        if(this.state.isLoading){
+          return (null)
+        }
+        
         return (
           <TweenOne
             component="footer"
