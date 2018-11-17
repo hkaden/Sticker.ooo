@@ -23,14 +23,14 @@ module.exports = function (server) {
     [
       body('email').isEmail(),
       body('password').isString(),
-      // sanitizeBody('email').normalizeEmail(),
+      sanitizeBody('email').normalizeEmail(),
       expressValidatorErrorHandler,
     ],
     (req, res, next) => passport.authenticate('local', { session: false }, (err, passportUser, info) => {
       if (err) {
         return next(err);
       }
-      
+
       if (passportUser) {
         const user = passportUser;
         return req.brute.reset(() => {
