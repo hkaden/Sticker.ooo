@@ -49,12 +49,14 @@ class Layout extends React.Component {
           key="Nav0_0"
           dataSource={Nav00DataSource}
           isMobile={this.state.isMobile}
+          locales={this.state.locales}
         />
         <div className="MainContent">
           {children}
         </div>
         <Footer
           dataSource={FooterDataSource}
+          locales={this.state.locales}
         />
       </div>
     );

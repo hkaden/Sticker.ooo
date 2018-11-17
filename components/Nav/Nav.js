@@ -13,7 +13,14 @@ class Nav extends React.Component {
     this.state = {
       phoneOpen: false,
       menuHeight: 0,
+      isLoading: true,
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      isLoading: false
+    })
   }
 
     phoneClick = () => {
@@ -35,7 +42,7 @@ class Nav extends React.Component {
 
     render() {
       const {...props} = this.props;
-      const {dataSource, isMobile} = props;
+      const {dataSource, isMobile, locales} = props;
       delete props.dataSource;
       delete props.isMobile;
       const {menuHeight, phoneOpen} = this.state;
@@ -52,6 +59,10 @@ class Nav extends React.Component {
           </a>
         </li>
       ));
+
+      if(this.state.isLoading) {
+        return (null)
+      }
 
       return (
 
@@ -70,7 +81,7 @@ class Nav extends React.Component {
             </TweenOne>
             <div className="buttonsList">
               <Locale/>
-              <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>我要整一套屬於自己既Stickers!</Button>
+              <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>{locales.createStickers}</Button>
             </div>
           </div>
         </TweenOne>
