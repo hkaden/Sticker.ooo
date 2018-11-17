@@ -3,6 +3,7 @@ import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import {Nav00DataSource, FooterDataSource} from '../data.source.js';
 import {enquireScreen} from "enquire-js"
+import Loader from '../Loader/Loader';
 import styles from "./Layout.less"
 import { locales } from "../../locales/locales";
 
@@ -16,6 +17,7 @@ class Layout extends React.Component {
     super(props);
     this.state = {
       isMobile,
+      isLoading: true,
     };
   }
 
@@ -26,7 +28,8 @@ class Layout extends React.Component {
 
     //TODO: update locale based on redux state;
     this.setState({
-      locales: locales.en
+      locales: locales.en,
+      isLoading: false
     })
   }
 
@@ -36,6 +39,11 @@ class Layout extends React.Component {
         locales: this.state.locales
       });
     });
+
+    if(this.state.isLoading) {
+      return <Loader/>
+    }
+    
     return (
 
       <div
