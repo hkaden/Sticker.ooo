@@ -3,6 +3,7 @@ import {findDOMNode} from 'react-dom';
 import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
 import styles from './Nav.less';
+import Locale from '../Locale/Locale';
 
 const Item = Menu.Item;
 
@@ -68,6 +69,7 @@ class Nav extends React.Component {
               <img className="site-logo" width="100%" src={dataSource.logo.children} alt="img" onClick={this.handleLogoClick}/>
             </TweenOne>
             <div className="buttonsList">
+              <Locale/>
               <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>我要整一套屬於自己既Stickers!</Button>
             </div>
           </div>
