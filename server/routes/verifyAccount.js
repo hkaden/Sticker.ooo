@@ -21,53 +21,31 @@ module.exports = function (server) {
       expressValidatorErrorHandler,
     ],
     async (req, res, next) => {
+      let type = TYPES.ACCOUNT_NOT_VERIFIED;
+      let success = false;
       try {
         // const { token } = req.body;
         let token = requestParameterValidator(req.path.substr(req.path.lastIndexOf('/') + 1));
-        await Token.findOne({ token }, (err, token) => {
-          if (!token) {
-            return res.status(400).json({
-              type: TYPES.INVALID_TOKEN,
-              message: MESSAGES.INVALID_TOKEN,
-            });
-          }
-
-          return User.findOne({ uuid: token.uuid }, (err, user) => {
-            if (!user) {
-              return res.status(400).json({
-                type: TYPES.ACCOUNT_NOT_MATCH_TOKEN,
-                message: MESSAGES.FAILED_TO_MATCH_USER,
-              });
-            }
-
-            if (user.isVerified) {
-              return res.status(400).json({
-                type: TYPES.ACCOUNT_ALREADY_BEEN_VERIFIED,
-                message: MESSAGES.ACCOUNT_ALREADY_BEEN_VERIFIED,
-              });
-            }
-
+        const tokenObj = await Token.findOne({ token });
+        if (!tokenObj) {
+          type = TYPES.INVALID_TOKEN;
+        } else {
+          const user = await User.findOne({ uuid: tokenObj.uuid });
+          if (!user) {
+            type = TYPES.ACCOUNT_NOT_MATCH_TOKEN;
+          } else if (user.isVerified) {
+            success = true;
+            type = TYPES.ACCOUNT_ALREADY_BEEN_VERIFIED;
+          } else {
             user.isVerified = true;
-            return user.save((err) => {
-              if (err) {
-                return res.status(500).json({
-                  type: TYPES.ACCOUNT_NOT_VERIFIED,
-                  message: MESSAGES.FAILED_TO_VERIFY_ACCOUNT,
-                });
-              }
-
-              // return res.status(200).json({
-              //   type: TYPES.ACCOUNT_VERIFIED,
-              //   message: MESSAGES.ACCOUNT_ALREADY_VERIFIED,
-              // });
-
-              return res.redirect('/login')
-            });
-          });
-        });
+            await user.save();
+            type = TYPES.ACCOUNT_VERIFIED;
+            success = true;
+          }
+        }
       } catch (e) {
-        next(e);
       }
+      return res.redirect(`/login?type=${type}&success=${success}`);
     },
   );
 };

@@ -77,6 +77,7 @@ app.prepare().then(() => {
 
 
   const redirectIfLoggedIn = (req, res) => {
+    const mergedQuery = Object.assign({}, req.query, req.params);
     const token = req.cookies.jwtToken;
     if(token != undefined && token != null) {
       return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
@@ -86,8 +87,8 @@ app.prepare().then(() => {
         return res.redirect('/list');
       });
     } else {
-      return app.render(req, res, req.path);
-    } 
+      return app.render(req, res, req.path, mergedQuery);
+    }
   }
 
   const validateJwtTokenBeforeRender = (req, res) => {
