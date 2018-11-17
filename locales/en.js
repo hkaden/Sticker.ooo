@@ -36,8 +36,12 @@ export const en = {
     submitAgreementPrefix: 'By submitting my stickers to Stickers.ooo, I agree to the ',
     submitAgreementSuffix: 'of Sticker.ooo',
     upload: 'Upload',
+    threeOrMoreImages: 'Stickers (3 or more images)',
     pleaseInputPackName: 'Please input pack name!',
     pleaseSelectTrayIcon:' Please select tray icon',
+    pleaseSelectZipFile: 'Please select zip file!',
     pleaseSelectOnlyOneTrayIcon: 'Please select only 1 tray icon',
+    pleaseSelectOnlyOneZipFile: 'Please select only 1 zip file!',
     pleaseAgreeTnc: 'Please agree to the Terms & Conditions',
+    pleaseSelectThreeOrMoreImages: 'Please select 3 or more images!'
 }

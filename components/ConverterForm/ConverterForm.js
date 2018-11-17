@@ -219,7 +219,7 @@ class CForm extends React.Component {
                     </div>
                   </FormItem>
                   <FormItem
-                    label="Stickers (3 or more images)"
+                    label={locales.threeOrMoreImages}
                   >
                     <div className="dropbox">
                       {getFieldDecorator('stickers', {
@@ -228,7 +228,7 @@ class CForm extends React.Component {
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length >= 3 ? undefined : false);
-                            }, message: 'Please select 3 or more images!'
+                            }, message: locales.pleaseSelectThreeOrMoreImages
                           }
                         ],
                       })(
@@ -251,11 +251,11 @@ class CForm extends React.Component {
                       {getFieldDecorator('zip', {
                         getValueFromEvent: this.normFile,
                         rules: [
-                          {required: true, message: 'Please select zip file!'},
+                          {required: true, message: locales.pleaseSelectZipFile},
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length > 1 ? false : undefined);
-                            }, message: 'Please select only 1 zip file!'
+                            }, message: locales.pleaseSelectOnlyOneZipFile
                           }
                         ],
                       })(
