@@ -25,7 +25,7 @@ class Nav extends React.Component {
     };
 
     handleButtonClick = () => {
-      location.href = "/login"
+      location.href = "/submit"
     }
 
     render() {
