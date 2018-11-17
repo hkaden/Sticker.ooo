@@ -2,10 +2,16 @@ import * as React from 'react'
 import cachios from 'cachios';
 import {Form, Input, Button, message, Row, Col, Modal} from 'antd';
 import _ from 'lodash';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import {connect} from "react-redux";
+import thunkMiddleware from 'redux-thunk';
+import withRedux from 'next-redux-wrapper';
 import redirect from '../../lib/redirect';
 import styles from './LoginForm.less';
 import Loader from '../Loader/Loader';
-import { MESSAGES } from '../../server/configs/constants'
+import {
+  setIsLoggedIn,
+} from '../../lib/customReducers';
 
 const FormItem = Form.Item;
 
@@ -74,6 +80,7 @@ class Login extends React.Component {
           const resp = await cachios.post('/api/login', credential);
 
           if (resp.status === 200) {
+            this.props.setIsLoggedIn(true);
             redirect({}, e, '/submit')
           }
 
@@ -147,5 +154,17 @@ class Login extends React.Component {
   }
 }
 
+const mapStateToProps = reduxState => ({
+  stickersList: reduxState.stickersList,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  setIsLoggedIn: (isLoggerIn) => {
+    dispatch(setIsLoggedIn(isLoggerIn));
+  },
+});
+
 const LoginForm = Form.create({})(Login);
-export default LoginForm
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

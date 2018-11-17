@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import withRedux from 'next-redux-wrapper';
+import {connect} from "react-redux";
 import {
   Button, Card, Col, Pagination, Row,
 } from 'antd';
@@ -168,9 +166,6 @@ class stickersList extends Component {
     }
 }
 
-const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers({ ...reduxApi.reducers, stickersList: stickersListReducer }), reduxState);
 const mapStateToProps = reduxState => ({ stickersList: reduxState.stickersList }); // Use reduxApi endpoint names here
 
-const stickersListConnected = withRedux({ createStore: makeStore, mapStateToProps })(stickersList);
-export default stickersListConnected;
+export default connect(mapStateToProps)(stickersList);

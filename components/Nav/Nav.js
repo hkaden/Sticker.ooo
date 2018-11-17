@@ -2,12 +2,14 @@ import * as React from 'react'
 import {findDOMNode} from 'react-dom';
 import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
+import { connect } from 'react-redux';
 import styles from './Nav.less';
 import Locale from '../Locale/Locale';
 
 const Item = Menu.Item;
 
 class Nav extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -40,8 +42,12 @@ class Nav extends React.Component {
       location.href = "/"
     }
 
+    renderLoginLogOutButton = () => {
+
+    }
+
     render() {
-      const {...props} = this.props;
+      const {dispatch, ...props} = this.props;
       const {dataSource, isMobile, locales} = props;
       delete props.dataSource;
       delete props.isMobile;
@@ -82,6 +88,7 @@ class Nav extends React.Component {
             <div className="buttonsList">
               <Locale/>
               <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>{locales.createStickers}</Button>
+              { this.renderLoginLogOutButton() }
             </div>
           </div>
         </TweenOne>
@@ -90,4 +97,8 @@ class Nav extends React.Component {
     }
 }
 
-export default Nav
+const mapStateToProps = reduxState => ({
+  auth: reduxState.auth,
+});
+
+export default connect(mapStateToProps)(Nav);
