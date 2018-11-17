@@ -46,7 +46,7 @@ module.exports = function (server) {
               });
             }
 
-            sendVerificationEmail(user.emailExternal, token.token, req, res);
+            sendVerificationEmail(user.emailExternal || user.email, token.token, req, res);
           });
         });
       } catch (e) {
