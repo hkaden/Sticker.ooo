@@ -6,6 +6,7 @@ module.exports = verificationUrl => `
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="x-apple-disable-message-reformatting" />
 		<style type="text/css">
 			/* ----- Custom Font Import ----- */
 			@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin,latin-ext);
