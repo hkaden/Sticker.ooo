@@ -9,7 +9,7 @@ export const en = {
     totalWeeklyDownloads: 'Total Weekly Downloads',
     totalMonthlyDownloads: 'Total Monthly Downloads',
     totalYearlyDownloads: 'Total Yearly Downloads',
-    termsAndConditions: 'Terms And Conditions',
+    termsAndConditions: 'Terms & Conditions',
     login: 'Login',
     email: 'E-mail Address',
     password: 'Password',
@@ -32,6 +32,12 @@ export const en = {
     trayIcon: 'Tray Icon',
     dragAndDropLabel: 'Choose file or grag file to this area',
     anyResolution: 'Any Resolution',
-    submitAgreement: 'By submitting my stickers to Stickers.ooo, I agree to the Terms & Conditions of Sticker.ooo',
-    upload: 'Upload'
+    zipWithAnyResolution: 'Zip file with images of any resolution',
+    submitAgreementPrefix: 'By submitting my stickers to Stickers.ooo, I agree to the ',
+    submitAgreementSuffix: 'of Sticker.ooo',
+    upload: 'Upload',
+    pleaseInputPackName: 'Please input pack name!',
+    pleaseSelectTrayIcon:' Please select tray icon',
+    pleaseSelectOnlyOneTrayIcon: 'Please select only 1 tray icon',
+    pleaseAgreeTnc: 'Please agree to the Terms & Conditions',
 }
