@@ -43,7 +43,7 @@ const listStickerValidators = [
   query('offset').optional().toInt().custom(v => v >= 0)
     .withMessage(MESSAGES.VERIFY_QUERY_OFFSET),
   query('sort').optional().isString()
-    .isIn([...siteStatsFields, 'popular', 'createdAt'])
+    .isIn([...siteStatsFields, 'popular', 'latest', 'updatedAt', 'createdAt'])
     .withMessage(MESSAGES.VERIFY_QUERY_SORT),
   query('order').optional().isString().customSanitizer(v => v.toLowerCase())
     .isIn(['asc', 'desc'])
@@ -140,6 +140,11 @@ module.exports = (server) => {
 
           options.sort = siteStatsFields.includes(options.sort) ? `stats.${options.sort}` : options.sort;
           options.sort = options.sort === 'popular' ? 'stats.weeklyDownloads' : options.sort;
+          if (options.sort === 'popular') {
+            options.sort = 'stats.weeklyDownloads';
+          } else if (options.sort === 'latest') {
+            options.sort = 'updatedAt';
+          }
 
           const findConditions = {
             $or: [
