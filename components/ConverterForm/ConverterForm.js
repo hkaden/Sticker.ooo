@@ -131,7 +131,7 @@ class CForm extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
-    const { locales } = this.props;
+    const { locales, lang } = this.props;
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'}/>
@@ -149,7 +149,7 @@ class CForm extends React.Component {
         <div className="ConverterWrapper">
           <Row type="flex" justify="start" align="middle" >
           <Col span={24}>
-            <Card title={locales.submitStickersLabel} bordered={true} className="ConverterCard">
+            <Card title={locales[lang].submitStickersLabel} bordered={true} className="ConverterCard">
               <Form onSubmit={this.handleSubmit} hideRequiredMark={true} className="login-form" autoComplete="off">
                 <FormItem>
                   {getFieldDecorator('name', {
@@ -177,7 +177,7 @@ class CForm extends React.Component {
                   )}
                 </FormItem>
                 <FormItem
-                  label={locales.maxNumOfStickersPerPack}
+                  label={locales[lang].maxNumOfStickersPerPack}
                 >
                   {getFieldDecorator('packSize', {
                     initialValue: 30,
@@ -196,8 +196,8 @@ class CForm extends React.Component {
                     initialValue: 'image'
                   })(
                     <Radio.Group name="uploadType" onChange={this.handleFieldChange} disabled={this.state.isSubmitting}>
-                      <Radio.Button value="image">{locales.imageFiles}</Radio.Button>
-                      <Radio.Button value="zip">{locales.zipFiles}</Radio.Button>
+                      <Radio.Button value="image">{locales[lang].imageFiles}</Radio.Button>
+                      <Radio.Button value="zip">{locales[lang].zipFiles}</Radio.Button>
                     </Radio.Group>,
                   )}
                 </FormItem>
@@ -223,14 +223,14 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">{locales.dragAndDropLabel}</p>
-                          <p className="ant-upload-hint">{locales.anyResolution}</p>
+                          <p className="ant-upload-text">{locales[lang].dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales[lang].anyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
                   </FormItem>
                   <FormItem
-                    label={locales.threeOrMoreImages}
+                    label={locales[lang].threeOrMoreImages}
                   >
                     <div className="dropbox">
                       {getFieldDecorator('stickers', {
@@ -248,8 +248,8 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">{locales.dragAndDropLabel}</p>
-                          <p className="ant-upload-hint">{locales.anyResolution}</p>
+                          <p className="ant-upload-text">{locales[lang].dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales[lang].anyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
@@ -275,8 +275,8 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">{locales.dragAndDropLabel}</p>
-                          <p className="ant-upload-hint">{locales.zipWithAnyResolution}</p>
+                          <p className="ant-upload-text">{locales[lang].dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales[lang].zipWithAnyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
@@ -286,7 +286,7 @@ class CForm extends React.Component {
                   <div>
 
                     <span className="ant-form-text">
-                      {locales.submitAgreementPrefix} <Link href="/tnc">{locales.termsAndConditions}</Link> {locales.submitAgreementSuffix}
+                      {locales[lang].submitAgreementPrefix} <Link href="/tnc">{locales[lang].termsAndConditions}</Link> {locales[lang].submitAgreementSuffix}
                 </span>
                     {getFieldDecorator('agreeTnC', {
                       rules: [{
@@ -318,7 +318,8 @@ const ConverterForm = Form.create({})(CForm);
 
 
 const mapStateToProps = reduxState => ({
-  locales: reduxState.locales,
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
 });
 
 export default connect(mapStateToProps)(ConverterForm);

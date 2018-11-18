@@ -3,7 +3,12 @@ import { LocaleProvider, Radio } from 'antd';
 import zhTW from 'antd/lib/locale-provider/zh_TW';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
+import {connect} from "react-redux";
 import styles from './Locale.less';
+import {
+    setLang,
+} from '../../lib/customReducers';
+
 
 class Locale extends React.Component {
   constructor(props) {
@@ -18,8 +23,10 @@ class Locale extends React.Component {
         this.setState({ locale: localeValue });
         if (!localeValue) {
             moment.locale('en');
+            this.props.setLang('en')
         } else {
             moment.locale('zh-tw');
+            this.props.setLang('zh')
         }
     }
 
@@ -37,4 +44,16 @@ class Locale extends React.Component {
     }
 }
 
-export default Locale
+const mapStateToProps = reduxState => ({
+    locales: reduxState.locales.locales,
+    lang: reduxState.locales.lang,
+  });
+  
+  
+  const mapDispatchToProps = dispatch => ({
+    setLang: (lang) => {
+      dispatch(setLang(lang));
+    },
+  });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Locale);

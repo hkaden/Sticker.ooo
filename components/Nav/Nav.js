@@ -37,11 +37,11 @@ class Nav extends React.Component {
 
   renderLoginLogOutButton = () => {
     const { isLoggedIn } = this.state;
-    const { locales } = this.props;
+    const { locales, lang } = this.props;
     if(isLoggedIn) {
-      return <Button type="primary" className="authBtn logoutBtn" size="large" onClick={this.handleLogoutButtonClick} loading={this.state.isSubmitting}>{locales.logout}</Button>
+      return <Button type="primary" className="authBtn logoutBtn" size="large" onClick={this.handleLogoutButtonClick} loading={this.state.isSubmitting}>{locales[lang].logout}</Button>
     } 
-    return <Button type="primary" className="authBtn loginBtn" size="large" onClick={this.handleLoginButtonClick} loading={this.state.isSubmitting}>{locales.login}</Button>
+    return <Button type="primary" className="authBtn loginBtn" size="large" onClick={this.handleLoginButtonClick} loading={this.state.isSubmitting}>{locales[lang].login}</Button>
   }
 
 
@@ -88,9 +88,8 @@ class Nav extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     const {dispatch, ...props} = this.props;
-    const {dataSource, isMobile, locales} = props;
+    const {dataSource, isMobile, locales, lang} = props;
     delete props.dataSource;
     delete props.isMobile;
     const {menuHeight, phoneOpen} = this.state;
@@ -129,7 +128,7 @@ class Nav extends React.Component {
           </TweenOne>
           <div className="buttonsList">
             <Locale/>
-            <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>{locales.createStickers}</Button>
+            <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>{locales[lang].createStickers}</Button>
             { this.renderLoginLogOutButton() }
           </div>
         </div>
@@ -141,7 +140,8 @@ class Nav extends React.Component {
 
 const mapStateToProps = reduxState => ({
   auth: reduxState.auth,
-  locales: reduxState.locales
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
 });
 
 const mapDispatchToProps = dispatch => ({

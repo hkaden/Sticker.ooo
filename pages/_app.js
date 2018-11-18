@@ -16,12 +16,7 @@ class MyApp extends App {
     if (isServer) {
       const isLoggedIn = await new Promise(resolve => verifyJwt(req.cookies.jwtToken, (err) => resolve(!err)));
       ctx.store.dispatch(setIsLoggedIn(isLoggedIn));
-
-      let lang = 'en';
-      if(!req.cookies.lang && req.cookies.lang == 'zh') {
-        lang = req.cookies.lang;
-      }
-      ctx.store.dispatch(setLocales(locales[lang]));
+      ctx.store.dispatch(setLocales(locales));
     }
     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
     return { pageProps };

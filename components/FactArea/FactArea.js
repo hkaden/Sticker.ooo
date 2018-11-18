@@ -33,7 +33,7 @@ class FactArea extends React.Component {
 
   render() {
     const {...props} = this.props;
-    const { locales } = this.props;
+    const { locales, lang } = this.props;
     const {dataSource} = props;
     delete props.dataSource;
     delete props.isMobile;
@@ -51,19 +51,19 @@ class FactArea extends React.Component {
               <Row type='flex' align="middle" justify="center">
                 <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalPack}</h2>
-                  <p>{locales.totalPacks}</p>
+                  <p>{locales[lang].totalPacks}</p>
                 </Col>
                 <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalWeeklyDownloads}</h2>
-                  <p>{locales.totalWeeklyDownloads}</p>
+                  <p>{locales[lang].totalWeeklyDownloads}</p>
                 </Col>
                 <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalMonthlyDownloads}</h2>
-                  <p>{locales.totalMonthlyDownloads}</p>
+                  <p>{locales[lang].totalMonthlyDownloads}</p>
                 </Col>
                 <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalYearlyDownloads}</h2>
-                  <p>{locales.totalYearlyDownloads}</p>
+                  <p>{locales[lang].totalYearlyDownloads}</p>
                 </Col>
               </Row>
             </div>
@@ -75,7 +75,8 @@ class FactArea extends React.Component {
 }
 
 const mapStateToProps = reduxState => ({
-  locales: reduxState.locales,
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
 });
 
 export default connect(mapStateToProps)(FactArea);
