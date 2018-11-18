@@ -91,7 +91,7 @@ class Register extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
-    const { locales } = this.props;
+    const { locales, lang } = this.props;
 
     if(this.state.isLoading) {
       return (
@@ -105,7 +105,7 @@ class Register extends React.Component {
           <Col md={6} lg={6} xs={12} sm={12} className="LoginFormWrapper">
             <Form onSubmit={this.handleSubmit} className="login-form" className="Form" autoComplete="off">
               					<span className="login100-form-title">
-						{locales.register}
+						{locales[lang].register}
 					</span>
               <FormItem className="inputWrapper">
                 {getFieldDecorator('username', {
@@ -116,7 +116,7 @@ class Register extends React.Component {
                     {max: 20, message: locales.usernameValidationMessage}
                   ],
                 })(
-                  <Input placeholder={locales.username} className="Input"/>
+                  <Input placeholder={locales[lang].username} className="Input"/>
                 )}
               </FormItem>
               <FormItem className="inputWrapper">
@@ -129,7 +129,7 @@ class Register extends React.Component {
                       required: true, message: locales.pleaseInputEmail
                     }],
                 })(
-                  <Input placeholder={locales.email} className="Input"/>
+                  <Input placeholder={locales[lang].email} className="Input"/>
                 )}
               </FormItem>
 
@@ -141,7 +141,7 @@ class Register extends React.Component {
                   ],
                 })(
                   <Input type="password"
-                         placeholder={locales.password} className="Input"/>
+                         placeholder={locales[lang].password} className="Input"/>
                 )}
               </FormItem>
               <FormItem className="inputWrapper">
@@ -155,15 +155,15 @@ class Register extends React.Component {
                   ],
                 })(
                   <Input type="password"
-                         placeholder={locales.confirmPassword} className="Input" onBlur={this.handleConfirmBlur}/>
+                         placeholder={locales[lang].confirmPassword} className="Input" onBlur={this.handleConfirmBlur}/>
                 )}
               </FormItem>
               <FormItem>
                 <Button type="primary" htmlType="submit" className="login-form-button"
                         loading={this.state.isSubmitting}>
-                  {locales.registerButton}
+                  {locales[lang].registerButton}
                 </Button>
-                {locales.or} <a href="/login">{locales.loginNowLabel}</a>
+                {locales[lang].or} <a href="/login">{locales[lang].loginNowLabel}</a>
               </FormItem>
             </Form>
           </Col>

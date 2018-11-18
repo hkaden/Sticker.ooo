@@ -159,7 +159,8 @@ class Login extends React.Component {
 
 const mapStateToProps = reduxState => ({
   stickersList: reduxState.stickersList,
-  locales: reduxState.locales,
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
 });
 
 

@@ -21,7 +21,7 @@ class Banner extends React.Component {
 
   render() {
     const {...currentProps} = this.props;
-    const { locales } = this.props;
+    const { locales, lang } = this.props;
     const {dataSource} = currentProps;
     delete currentProps.dataSource;
     delete currentProps.isMobile;
@@ -44,17 +44,17 @@ class Banner extends React.Component {
             <Col md={6} lg={6} className="home-banner-content">
 
               <h1>
-                                {locales.site}
+                                {locales[lang].site}
               </h1>
-              <p>{locales.intro}</p>
+              <p>{locales[lang].intro}</p>
               <div className="download-button d-flex justify-content-start">
                 <div className="buttons dark d-flex">
                   <div className="desc" className=" d-flex " style={{justifyContent: 'center', alignItems: 'center'}}>
                     <FontAwesomeIcon icon={faApple}/>
                     <a href="#">
                       <p>
-                        <span>{locales.comingSoon}</span> <br/>
-                        {locales.onAppStore}
+                        <span>{locales[lang].comingSoon}</span> <br/>
+                        {locales[lang].onAppStore}
                       </p>
                     </a>
                   </div>
@@ -64,8 +64,8 @@ class Banner extends React.Component {
                   <div className="desc" className=" d-flex " style={{justifyContent: 'center', alignItems: 'center'}}>
                     <a href="#">
                       <p>
-                        <span>{locales.comingSoon}</span> <br/>
-                        {locales.onPlayStore}
+                        <span>{locales[lang].comingSoon}</span> <br/>
+                        {locales[lang].onPlayStore}
                       </p>
                     </a>
                   </div>
@@ -86,7 +86,8 @@ class Banner extends React.Component {
 }
 
 const mapStateToProps = reduxState => ({
-  locales: reduxState.locales,
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
 });
 
 export default connect(mapStateToProps)(Banner);
