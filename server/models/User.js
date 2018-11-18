@@ -61,13 +61,15 @@ UsersSchema.methods.generateJWT = function () {
   });
 };
 
-UsersSchema.methods.verifyJWT = function (token) {
-  const cert = fs.readFileSync(`${__dirname}/../public.pem`);
-  return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
-    return err ? null : payload;
-  });
-
-}
+// @deprecated
+// use auth.verifyJwt instead
+//
+// UsersSchema.methods.verifyJWT = function (token) {
+//   const cert = fs.readFileSync(`${__dirname}/../public.pem`);
+//   return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
+//     return err ? null : payload;
+//   });
+// }
 
 UsersSchema.methods.toAuthJSON = function () {
   return {
