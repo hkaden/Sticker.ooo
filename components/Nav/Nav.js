@@ -5,7 +5,7 @@ import TweenOne from 'rc-tween-one';
 import { connect } from 'react-redux';
 import cachios from 'cachios';
 import redirect from '../../lib/redirect';
-import styles from './Nav.less';
+import './Nav.less';
 import Locale from '../Locale/Locale';
 import {
   setIsLoggedIn,

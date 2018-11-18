@@ -1,9 +1,9 @@
 import * as React from 'react'
-import styles from "../FactArea/FactArea.less"
 import {Row, Col} from 'antd';
 import cachios from 'cachios';
 import numeral from 'numeral';
 import { connect } from 'react-redux';
+import "../FactArea/FactArea.less"
 
 class FactArea extends React.Component {
 

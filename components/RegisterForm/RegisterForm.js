@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import redirect from '../../lib/redirect'
 import Loader from '../Loader/Loader';
-import styles from "../RegisterForm/RegisterForm.less"
+import "../RegisterForm/RegisterForm.less"
 
 const FormItem = Form.Item;
 

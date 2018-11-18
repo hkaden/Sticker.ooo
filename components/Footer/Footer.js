@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TweenOne from "rc-tween-one";
 import { connect } from 'react-redux';
-import styles from './Footer.less';
+import './Footer.less';
 
 class Footer extends React.Component {
     constructor(props) {
