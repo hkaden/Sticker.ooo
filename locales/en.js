@@ -55,5 +55,7 @@ export const en = {
     passwordValidationMessage: 'Your password must be more than 6 characters',
     emailValidationMessage: 'The input is not valid E-mail!',
     loginSuccessMessage: 'Congratulations! You can now login and create your own stickers!',
-    confirmEmailMessage: 'Please confirm your email to fully access your website. Check your email inbox as well as spam section for confirmation letter and click on link in it to confirm your account.'
+    confirmEmailMessage: 'Please confirm your email to fully access your website. Check your email inbox as well as spam section for confirmation letter and click on link in it to confirm your account.',
+    latest: 'Latest',
+    popular: 'Popular',
 }
