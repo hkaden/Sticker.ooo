@@ -10,3 +10,4 @@ yarn-error.log
 access.log
 .env
 *.pem
+server/public.js

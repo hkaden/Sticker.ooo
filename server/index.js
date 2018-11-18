@@ -16,13 +16,12 @@ const path = require('path');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { logger, httpLogger } = require('./configs/winston');
+const { verifyJwt } = require('./middleware/auth');
 const statisticsHelper = require('./utils/statisticsHelper');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3001;
 const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
-const jwt = require('jsonwebtoken');
-const cert = fs.readFileSync(`${__dirname}/public.pem`);
 
 app.prepare().then(() => {
   // Helmet
@@ -79,9 +78,9 @@ app.prepare().then(() => {
   const redirectIfLoggedIn = (req, res) => {
     const mergedQuery = Object.assign({}, req.query, req.params);
     const token = req.cookies.jwtToken;
-    if(token != undefined && token != null) {
-      return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
-        if(err) {
+    if (token == null) {
+      return verifyJwt(token, (err, payload) => {
+        if (err) {
           return app.render(req, res, req.path);
         }
         return res.redirect('/list');
@@ -93,11 +92,11 @@ app.prepare().then(() => {
 
   const validateJwtTokenBeforeRender = (req, res) => {
     const token = req.cookies.jwtToken;
-    if(token == undefined || token == null) {
-      return res.redirect('/login')
+    if (token == null) {
+      return res.redirect('/login');
     } else {
-      return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
-        if(err) {
+      return verifyJwt(token, (err, payload) => {
+        if (err) {
           return res.redirect('/login')
         }
         return app.render(req, res, req.path);
