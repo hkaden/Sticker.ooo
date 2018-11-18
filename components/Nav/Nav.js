@@ -16,12 +16,15 @@ class Nav extends React.Component {
       phoneOpen: false,
       menuHeight: 0,
       isLoading: true,
+      isLoggedIn: false
     };
   }
 
   componentDidMount() {
+    const { isLoggedIn } = this.props.auth;
     this.setState({
-      isLoading: false
+      isLoading: false,
+      isLoggedIn
     })
   }
 
@@ -42,8 +45,23 @@ class Nav extends React.Component {
       location.href = "/"
     }
 
-    renderLoginLogOutButton = () => {
+    handleLoginButtonClick = () => {
+      location.href = "/login"
+    }
 
+    handleLogoutButtonClick = () => {
+      //TODO:
+    }
+
+    renderLoginLogOutButton = () => {
+      const { isLoggedIn } = this.state;
+      const { locales } = this.props;
+      console.log(this.state)
+      if(isLoggedIn) {
+        return <Button type="primary" className="authBtn logoutBtn" size="large" onClick={this.handleLogoutButtonClick}>{locales.logout}</Button>
+      } 
+
+      return <Button type="primary" className="authBtn loginBtn" size="large" onClick={this.handleLoginButtonClick}>{locales.login}</Button>
     }
 
     render() {

@@ -11,6 +11,7 @@ export const en = {
     totalYearlyDownloads: 'Total Yearly Downloads',
     termsAndConditions: 'Terms & Conditions',
     login: 'Login',
+    logout: 'Logout',
     email: 'E-mail Address',
     password: 'Password',
     confirmPassword: 'Confirm Password',
