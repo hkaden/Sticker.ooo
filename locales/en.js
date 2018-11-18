@@ -1,6 +1,6 @@
 export const en = {
     site: 'Sticker.ooo',
-    intro: '免費、開源、無廣告',
+    intro: 'Free. Open Source. Ad-Free',
     comingSoon: 'Coming Soon',
     onAppStore: 'on App Store',
     onPlayStore: 'on Play Store',
@@ -24,7 +24,7 @@ export const en = {
     username: 'Username',
     stickerListLabel: 'Stickers List',
     noStickers: 'No Sticker',
-    createStickers: '我要整一套屬於自己既Stickers!',
+    createStickers: 'I wanna make my own Stickers!',
     submitStickersLabel: 'Submit your Stickers',
     packName: 'Pack Name',
     maxNumOfStickersPerPack: 'Maximum number of stickers per pack',
