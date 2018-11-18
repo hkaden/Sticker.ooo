@@ -35,6 +35,7 @@ const UsersSchema = new Schema({
   },
   createdBy: { type: String },
   updatedBy: { type: String },
+  role: { type: String, default: 'user', enum: ['user', 'admin']}
 });
 
 UsersSchema.methods.setPassword = function (password) {
@@ -53,6 +54,7 @@ UsersSchema.methods.generateJWT = function () {
     username: this.username,
     email: this.email,
     uuid: this.uuid,
+    role: this.role
   }, cert, {
     algorithm: 'RS256',
     expiresIn: '60 days',
@@ -62,7 +64,7 @@ UsersSchema.methods.generateJWT = function () {
 UsersSchema.methods.verifyJWT = function (token) {
   const cert = fs.readFileSync(`${__dirname}/../public.pem`);
   return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
-    return err ? false : true;
+    return err ? null : payload;
   });
 
 }
@@ -73,6 +75,7 @@ UsersSchema.methods.toAuthJSON = function () {
     username: this.username,
     email: this.email,
     token: this.generateJWT(),
+    role: this.role
   };
 };
 
