@@ -6,8 +6,9 @@ import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import thunkMiddleware from 'redux-thunk';
 import reduxApi from '../lib/reduxApi';
-import { stickersListReducer, authReducer, setIsLoggedIn } from '../lib/customReducers';
+import { stickersListReducer, authReducer, localesReducer, setIsLoggedIn, setLocales } from '../lib/customReducers';
 import { verifyJwt } from '../server/middleware/auth';
+import { locales } from '../locales/locales';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -15,6 +16,12 @@ class MyApp extends App {
     if (isServer) {
       const isLoggedIn = await new Promise(resolve => verifyJwt(req.cookies.jwtToken, (err) => resolve(!err)));
       ctx.store.dispatch(setIsLoggedIn(isLoggedIn));
+
+      let lang = 'en';
+      if(!req.cookies.lang && req.cookies.lang == 'zh') {
+        lang = req.cookies.lang;
+      }
+      ctx.store.dispatch(setLocales(locales[lang]));
     }
     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
     return { pageProps };
@@ -39,6 +46,7 @@ const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(
     ...reduxApi.reducers,
     stickersList: stickersListReducer,
     auth: authReducer,
+    locales: localesReducer
   }),
   reduxState,
 );

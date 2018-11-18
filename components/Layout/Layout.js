@@ -26,20 +26,12 @@ class Layout extends React.Component {
       this.setState({isMobile: !!b});
     });
 
-    //TODO: update locale based on redux state;
     this.setState({
-      locales: locales.en,
       isLoading: false
     })
   }
 
   render() {
-    const children = React.Children.map(this.props.children, child => {
-      return React.cloneElement(child, {
-        locales: this.state.locales
-      });
-    });
-
     if(this.state.isLoading) {
       return <Loader/>
     }
@@ -57,14 +49,12 @@ class Layout extends React.Component {
           key="Nav0_0"
           dataSource={Nav00DataSource}
           isMobile={this.state.isMobile}
-          locales={this.state.locales}
         />
         <div className="MainContent">
-          {children}
+          {this.props.children}
         </div>
         <Footer
           dataSource={FooterDataSource}
-          locales={this.state.locales}
         />
       </div>
     );

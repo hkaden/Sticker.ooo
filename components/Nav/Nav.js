@@ -88,6 +88,7 @@ class Nav extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     const {dispatch, ...props} = this.props;
     const {dataSource, isMobile, locales} = props;
     delete props.dataSource;
@@ -140,6 +141,7 @@ class Nav extends React.Component {
 
 const mapStateToProps = reduxState => ({
   auth: reduxState.auth,
+  locales: reduxState.locales
 });
 
 const mapDispatchToProps = dispatch => ({

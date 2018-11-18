@@ -2,6 +2,7 @@ import * as React from 'react'
 import {Col, Row} from 'antd';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faAndroid, faApple} from '@fortawesome/free-brands-svg-icons'
+import { connect } from 'react-redux';
 import styles from './Banner.less';
 
 class Banner extends React.Component {
@@ -84,4 +85,8 @@ class Banner extends React.Component {
   }
 }
 
-export default Banner
+const mapStateToProps = reduxState => ({
+  locales: reduxState.locales,
+});
+
+export default connect(mapStateToProps)(Banner);
