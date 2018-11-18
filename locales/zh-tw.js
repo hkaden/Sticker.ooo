@@ -24,7 +24,7 @@ export const zh = {
     username: 'Username',
     stickerListLabel: 'Stickers List',
     noStickers: 'No Sticker',
-    createStickers: '我要整一套屬於自己既Stickers!',
+    createStickers: '我要整一套屬於自己既Stickers! (CH)',
     submitStickersLabel: 'Submit your Stickers',
     packName: 'Pack Name',
     maxNumOfStickersPerPack: 'Maximum number of stickers per pack',
