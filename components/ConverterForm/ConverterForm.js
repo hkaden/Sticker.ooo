@@ -153,7 +153,7 @@ class CForm extends React.Component {
               <Form onSubmit={this.handleSubmit} hideRequiredMark={true} className="login-form" autoComplete="off">
                 <FormItem>
                   {getFieldDecorator('name', {
-                    rules: [{required: true, message: locales.pleaseInputPackName}],
+                    rules: [{required: true, message: locales[lang].pleaseInputPackName}],
                   })(
                     <Input prefix={<Icon type="file" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Pack Name"
                            disabled={this.state.isSubmitting}/>
@@ -209,11 +209,11 @@ class CForm extends React.Component {
                       {getFieldDecorator('tray', {
                         getValueFromEvent: this.normFile,
                         rules: [
-                          {required: true, message: locales.pleaseSelectTrayIcon},
+                          {required: true, message: locales[lang].pleaseSelectTrayIcon},
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length > 1 ? false : undefined);
-                            }, message: locales.pleaseSelectOnlyOneTrayIcon
+                            }, message: locales[lang].pleaseSelectOnlyOneTrayIcon
                           }
                         ],
 
@@ -239,7 +239,7 @@ class CForm extends React.Component {
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length >= 3 ? undefined : false);
-                            }, message: locales.pleaseSelectThreeOrMoreImages
+                            }, message: locales[lang].pleaseSelectThreeOrMoreImages
                           }
                         ],
                       })(
@@ -262,11 +262,11 @@ class CForm extends React.Component {
                       {getFieldDecorator('zip', {
                         getValueFromEvent: this.normFile,
                         rules: [
-                          {required: true, message: locales.pleaseSelectZipFile},
+                          {required: true, message: locales[lang].pleaseSelectZipFile},
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length > 1 ? false : undefined);
-                            }, message: locales.pleaseSelectOnlyOneZipFile
+                            }, message: locales[lang].pleaseSelectOnlyOneZipFile
                           }
                         ],
                       })(
@@ -291,7 +291,7 @@ class CForm extends React.Component {
                     {getFieldDecorator('agreeTnC', {
                       rules: [{
                         validator: (rule, value, callback) => callback(value === true ? undefined : false),
-                        message: locales.pleaseAgreeTnc,
+                        message: locales[lang].pleaseAgreeTnc,
                       }],
                     })(
                       <Switch checkedChildren={<Icon type="check"/>} unCheckedChildren={<Icon type="close"/>}/>

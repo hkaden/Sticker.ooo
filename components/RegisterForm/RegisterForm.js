@@ -2,6 +2,7 @@ import * as React from 'react'
 import cachios from 'cachios';
 import {Form, Input, Button, message, Row, Col, Modal} from 'antd';
 import _ from 'lodash';
+import { connect } from 'react-redux';
 import redirect from '../../lib/redirect'
 import Loader from '../Loader/Loader';
 import styles from "../RegisterForm/RegisterForm.less"
@@ -38,6 +39,7 @@ class Register extends React.Component {
   }
 
   handleSubmit = (e) => {
+    const {locales, lang} = this.props;
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
@@ -61,8 +63,7 @@ class Register extends React.Component {
               title: 'One more step',
               content: (
                 <div>
-                  <p>Please confirm your email to fully access your website. Check your email inbox as well as spam
-                    section for confirmation letter and click on link in it to confirm your account.</p>
+                  <p>{locales[lang].confirmEmailMessage}</p>
                 </div>
               ),
               onOk() {
@@ -104,16 +105,16 @@ class Register extends React.Component {
         <Row type="flex" justify="center" align="middle" className="LoginFormWrapper">
           <Col md={6} lg={6} xs={12} sm={12} className="LoginFormWrapper">
             <Form onSubmit={this.handleSubmit} className="login-form" className="Form" autoComplete="off">
-              					<span className="login100-form-title">
-						{locales[lang].register}
-					</span>
+              <span className="login100-form-title">
+                {locales[lang].register}
+              </span>
               <FormItem className="inputWrapper">
                 {getFieldDecorator('username', {
                   validateTrigger: 'onBlur',
                   rules: [
-                    {required: true, message: locales.pleaseInputUsername},
-                    {min: 4, message: locales.usernameValidationMessage},
-                    {max: 20, message: locales.usernameValidationMessage}
+                    {required: true, message: locales[lang].pleaseInputUsername},
+                    {min: 4, message: locales[lang].usernameValidationMessage},
+                    {max: 20, message: locales[lang].usernameValidationMessage}
                   ],
                 })(
                   <Input placeholder={locales[lang].username} className="Input"/>
@@ -123,10 +124,10 @@ class Register extends React.Component {
                 {getFieldDecorator('email', {
                   validateTrigger: 'onBlur',
                   rules: [{
-                    type: 'email', message: locales.emailValidationMessage,
+                    type: 'email', message: locales[lang].emailValidationMessage,
                   },
                     {
-                      required: true, message: locales.pleaseInputEmail
+                      required: true, message: locales[lang].pleaseInputEmail
                     }],
                 })(
                   <Input placeholder={locales[lang].email} className="Input"/>
@@ -136,8 +137,8 @@ class Register extends React.Component {
               <FormItem className="inputWrapper">
                 {getFieldDecorator('password', {
                   rules: [
-                    {required: true, message: locales.pleaseInputPassword},
-                    {min: 6, message: locales.passwordValidationMessage},
+                    {required: true, message: locales[lang].pleaseInputPassword},
+                    {min: 6, message: locales[lang].passwordValidationMessage},
                   ],
                 })(
                   <Input type="password"
@@ -147,10 +148,10 @@ class Register extends React.Component {
               <FormItem className="inputWrapper">
                 {getFieldDecorator('confirmPassword', {
                   rules: [
-                    {required: true, message: locales.pleaseInputPassword},
+                    {required: true, message: locales[lang].pleaseInputPassword},
                     {
                       validator: this.compareToFirstPassword,
-                      message: locales.passwordNotMatch
+                      message: locales[lang].passwordNotMatch
                     }
                   ],
                 })(
@@ -174,4 +175,9 @@ class Register extends React.Component {
 }
 
 const RegisterForm = Form.create({})(Register);
-export default RegisterForm
+const mapStateToProps = reduxState => ({
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
+});
+
+export default connect(mapStateToProps)(RegisterForm)
