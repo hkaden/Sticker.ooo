@@ -1,8 +1,9 @@
-const jwt = require('express-jwt');
+const expressJwt = require('express-jwt');
+const jwt = require('jsonwebtoken');
 const _ = require('lodash');
-const fs = require('fs');
 const User = require('../models/User');
 const { TYPES, MESSAGES } = require('../configs/constants');
+const cert = require('../public');
 
 // const getTokenFromHeaders = (req) => {
 //   const { headers: { authorization } } = req;
@@ -19,22 +20,22 @@ const getTokenFromCookies = (req) => {
   }
   return null;
 };
-const cert = fs.readFileSync(`${__dirname}/../public.pem`);
 
 const auth = {
-  required: jwt({
+  required: expressJwt({
     secret: cert,
     userProperty: 'payload',
     getToken: getTokenFromCookies,
     algorithm: 'RS256',
   }),
-  optional: jwt({
+  optional: expressJwt({
     secret: cert,
     userProperty: 'payload',
     getToken: getTokenFromCookies,
     credentialsRequired: false,
     algorithm: 'RS256',
   }),
+  verifyJwt: (token, callback) => jwt.verify(token, cert, { algorithm: 'RS256' }, callback),
   requiredAdminRole: (req, res, next) => {
     const cookie = req.cookies.jwtToken;
     if (cookie == undefined) {
@@ -43,6 +44,12 @@ const auth = {
         message: MESSAGES.UNAUTHORIZED_ACTION,
       })
     } else {
+      // console.log("here")
+      // verifyJwt(cookie, (err, payload) => {
+      //   console.log(err)
+      //   console.log(payload)
+      // })
+      // next();
       const user = new User();
       const payload = user.verifyJWT(cookie);
       if(payload == null) {
