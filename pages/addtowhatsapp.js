@@ -36,7 +36,7 @@ class appToWhatsapp extends Component {
 
 const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
 const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
-const mapStateToProps = reduxState => ({ appToWhatsapp: reduxState.appToWhatsapp }); // Use reduxApi endpoint names here
+const mapStateToProps = reduxState => ({}); // Use reduxApi endpoint names here
 
 const appToWhatsappConnented = withRedux({ createStore: makeStore, mapStateToProps })(appToWhatsapp);
 export default appToWhatsappConnented;

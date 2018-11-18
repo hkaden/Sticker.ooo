@@ -2,24 +2,29 @@ import * as React from 'react'
 import {findDOMNode} from 'react-dom';
 import {Button, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
+import { connect } from 'react-redux';
 import styles from './Nav.less';
 import Locale from '../Locale/Locale';
 
 const Item = Menu.Item;
 
 class Nav extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       phoneOpen: false,
       menuHeight: 0,
       isLoading: true,
+      isLoggedIn: false
     };
   }
 
   componentDidMount() {
+    const { isLoggedIn } = this.props.auth;
     this.setState({
-      isLoading: false
+      isLoading: false,
+      isLoggedIn
     })
   }
 
@@ -40,8 +45,27 @@ class Nav extends React.Component {
       location.href = "/"
     }
 
+    handleLoginButtonClick = () => {
+      location.href = "/login"
+    }
+
+    handleLogoutButtonClick = () => {
+      //TODO:
+    }
+
+    renderLoginLogOutButton = () => {
+      const { isLoggedIn } = this.state;
+      const { locales } = this.props;
+      console.log(this.state)
+      if(isLoggedIn) {
+        return <Button type="primary" className="authBtn logoutBtn" size="large" onClick={this.handleLogoutButtonClick}>{locales.logout}</Button>
+      } 
+
+      return <Button type="primary" className="authBtn loginBtn" size="large" onClick={this.handleLoginButtonClick}>{locales.login}</Button>
+    }
+
     render() {
-      const {...props} = this.props;
+      const {dispatch, ...props} = this.props;
       const {dataSource, isMobile, locales} = props;
       delete props.dataSource;
       delete props.isMobile;
@@ -82,6 +106,7 @@ class Nav extends React.Component {
             <div className="buttonsList">
               <Locale/>
               <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>{locales.createStickers}</Button>
+              { this.renderLoginLogOutButton() }
             </div>
           </div>
         </TweenOne>
@@ -90,4 +115,8 @@ class Nav extends React.Component {
     }
 }
 
-export default Nav
+const mapStateToProps = reduxState => ({
+  auth: reduxState.auth,
+});
+
+export default connect(mapStateToProps)(Nav);
