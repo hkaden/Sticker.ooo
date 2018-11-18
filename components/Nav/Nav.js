@@ -72,10 +72,8 @@ class Nav extends React.Component {
         isSubmitting: true,
       }, async () => {
         const resp = await cachios.post('/api/logout');
-        if (resp.status === 200) {
-          this.props.setIsLoggedIn(false);
-          redirect({}, {}, '/')
-        } 
+        this.props.setIsLoggedIn(false);
+        redirect({}, {}, '/')
       });
     } catch(e) {
       this.setState({

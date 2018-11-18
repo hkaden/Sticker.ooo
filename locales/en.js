@@ -49,8 +49,11 @@ export const en = {
     pleaseInputUsername: 'Please input username!',
     pleaseInputPassword: 'Please input password!',
     pleaseInputEmail: 'Please input E-mail address!',
+    pleaseContactAdmin: 'Please contact administrators for assistance.',
     usernameValidationMessage: 'Your username must be between 4 and 20 characters long',
     passwordNotMatch: 'Those passwords didn\'t match. Try again. ',
     passwordValidationMessage: 'Your password must be more than 6 characters',
     emailValidationMessage: 'The input is not valid E-mail!',
+    loginSuccessMessage: 'Congratulations! You can now login and create your own stickers!',
+    confirmEmailMessage: 'Please confirm your email to fully access your website. Check your email inbox as well as spam section for confirmation letter and click on link in it to confirm your account.'
 }
