@@ -24,7 +24,7 @@ class CForm extends React.Component {
       progress: 0,
       isSubmitting: false,
       uploadType: 'image',
-      // sharingType: 'public',
+      sharingType: 'public',
       errorMsg: '',
       isLoading: true
     };
@@ -80,8 +80,7 @@ class CForm extends React.Component {
 
           const stickersData = {
             name: this.props.form.getFieldValue('name'),
-            // sharingType: this.props.form.getFieldValue('sharingType'),
-            sharingType: 'link',
+            sharingType: this.props.form.getFieldValue('sharingType'),
             tray,
             trays,
             stickers: stickersInPack,
@@ -147,10 +146,10 @@ class CForm extends React.Component {
                            disabled={this.state.isSubmitting}/>
                   )}
                 </FormItem>
-                {/*<FormItem
+                <FormItem
                   label="Sharing"
                   extra={{
-                    public: 'Your stickers will be publicly available',
+                    public: 'Your stickers will be publicly available when Sticker.ooo is out of beta',
                     link: 'Your stickers can only be accessible by link'
                   }[this.state.sharingType]}
                 >
@@ -163,7 +162,7 @@ class CForm extends React.Component {
                       <Radio.Button value="link">Link only</Radio.Button>
                     </Radio.Group>
                   )}
-                </FormItem>*/}
+                </FormItem>
                 <FormItem
                   label="Maximum number of stickers per pack"
                 >
