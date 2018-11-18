@@ -1,12 +1,12 @@
 import * as React from 'react'
 import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload} from 'antd';
 import cachios from 'cachios';
-import redirect from '../../lib/redirect';
-import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
-import styles from './ConverterForm.less';
-import Loader from '../Loader/Loader';
 import { connect } from 'react-redux';
 import Link from 'next/link';
+import redirect from '../../lib/redirect';
+import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
+import './ConverterForm.less';
+import Loader from '../Loader/Loader';
 
 const FormItem = Form.Item;
 

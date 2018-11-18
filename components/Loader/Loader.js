@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { Spin } from 'antd';
 import { connect } from 'react-redux';
-import styles from './Loader.less';
+import './Loader.less';
 
 class Loader extends React.Component {
     render() {

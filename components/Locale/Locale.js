@@ -5,7 +5,7 @@ import moment from 'moment';
 import 'moment/locale/zh-tw';
 import {connect} from "react-redux";
 import { withCookies, Cookies } from 'react-cookie';
-import styles from './Locale.less';
+import './Locale.less';
 import {
     setLang,
 } from '../../lib/customReducers';

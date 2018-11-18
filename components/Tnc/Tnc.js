@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Row} from 'antd';
 import Markdown from 'markdown-to-jsx';
-import styles from './Tnc.less';
+import './Tnc.less';
 
 class Tnc extends React.Component {
   constructor(props) {

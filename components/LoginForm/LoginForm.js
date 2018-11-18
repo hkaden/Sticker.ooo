@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import thunkMiddleware from 'redux-thunk';
 import withRedux from 'next-redux-wrapper';
 import redirect from '../../lib/redirect';
-import styles from './LoginForm.less';
+import './LoginForm.less';
 import Loader from '../Loader/Loader';
 import {
   setIsLoggedIn,

@@ -4,7 +4,7 @@ import Footer from '../Footer/Footer';
 import {Nav00DataSource, FooterDataSource} from '../data.source.js';
 import {enquireScreen} from "enquire-js"
 import Loader from '../Loader/Loader';
-import styles from "./Layout.less"
+import "./Layout.less"
 import { locales } from "../../locales/locales";
 
 let isMobile;
