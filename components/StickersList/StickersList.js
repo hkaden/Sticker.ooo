@@ -56,6 +56,7 @@ class StickersList extends Component {
   }
 
   render() {
+    const {locales, lang} = this.props;
     let packList = null;
 
     if (this.state.isLoading) {
@@ -93,7 +94,7 @@ class StickersList extends Component {
     } else {
       packList = (
         <Card>
-          No Stickers
+         {locales[lang].noStickers}
         </Card>
       );
     }
@@ -102,12 +103,12 @@ class StickersList extends Component {
       <Menu>
         <Menu.Item>
           <Link href={{ pathname: '/list', query: { sort: 'latest', page: 1 } }} as="/list/latest/page/1">
-            <a>Latest</a>
+            <a>{locales[lang].latest}</a>
           </Link>
         </Menu.Item>
         <Menu.Item>
           <Link href={{ pathname: '/list', query: { sort: 'popular', page: 1 } }} as="/list/popular/page/1">
-            <a>Popular</a>
+            <a>{locales[lang].popular}</a>
           </Link>
         </Menu.Item>
       </Menu>
@@ -143,6 +144,10 @@ class StickersList extends Component {
   }
 }
 
-const mapStateToProps = reduxState => ({ stickersList: reduxState.stickersList }); // Use reduxApi endpoint names here
+const mapStateToProps = reduxState => ({ 
+  stickersList: reduxState.stickersList,
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
+});
 
 export default connect(mapStateToProps)(StickersList);
