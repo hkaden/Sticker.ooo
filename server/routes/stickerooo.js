@@ -43,7 +43,7 @@ module.exports = function (server) {
   server.post(
     '/api/stickerooo',
     auth.required,
-    auth.requiredAdmin,
+    auth.requiredAdminRole,
     [
         body('version'),
         body('status'),

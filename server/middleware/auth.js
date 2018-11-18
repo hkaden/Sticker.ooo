@@ -35,7 +35,7 @@ const auth = {
     credentialsRequired: false,
     algorithm: 'RS256',
   }),
-  requiredAdmin: (req, res, next) => {
+  requiredAdminRole: (req, res, next) => {
     const cookie = req.cookies.jwtToken;
     if (cookie == undefined) {
       return res.status(401).json({
@@ -51,7 +51,6 @@ const auth = {
           message: MESSAGES.FAILED_TO_VERIFY_JWT_TOKEN,
         })
       } else {
-        console.log(payload)
         if(payload.role && payload.role == 'admin'){
           next()
         } else {
