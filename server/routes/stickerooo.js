@@ -66,9 +66,25 @@ module.exports = function (server) {
                 })
             }
 
-            return res.status(200).json({
-                type: TYPES.SET_APP_STATUS_SUCCESS,
-                message: MESSAGES.SET_APP_STATUS_SUCCESS
+            return Stickerooo.findOneAndUpdate({
+                $or: [
+                    { status: 'RUNNING' },
+                    { status: 'MAINTAINING' },
+                  ],
+            }, {
+                status: 'SUSPENDED'
+            }, (err, doc) => {
+                if(err) {
+                    return res.status(500).json({
+                        type: TYPES.FAILED_TO_SET_APP_STATUS,
+                        message: MESSAGES.FAILED_TO_SET_APP_STATUS
+                    })
+                }
+
+                return res.status(200).json({
+                    type: TYPES.SET_APP_STATUS_SUCCESS,
+                    message: MESSAGES.SET_APP_STATUS_SUCCESS
+                })
             })
         })
         } catch (e) {
