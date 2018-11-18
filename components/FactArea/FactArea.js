@@ -3,6 +3,7 @@ import styles from "../FactArea/FactArea.less"
 import {Row, Col} from 'antd';
 import cachios from 'cachios';
 import numeral from 'numeral';
+import { connect } from 'react-redux';
 
 class FactArea extends React.Component {
 
@@ -73,4 +74,8 @@ class FactArea extends React.Component {
   }
 }
 
-export default FactArea
+const mapStateToProps = reduxState => ({
+  locales: reduxState.locales,
+});
+
+export default connect(mapStateToProps)(FactArea);

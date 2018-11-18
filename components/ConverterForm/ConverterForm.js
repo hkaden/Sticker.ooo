@@ -5,6 +5,7 @@ import redirect from '../../lib/redirect';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
 import styles from './ConverterForm.less';
 import Loader from '../Loader/Loader';
+import { connect } from 'react-redux';
 import Link from 'next/link';
 
 const FormItem = Form.Item;
@@ -315,4 +316,9 @@ class CForm extends React.Component {
 
 const ConverterForm = Form.create({})(CForm);
 
-export default ConverterForm
+
+const mapStateToProps = reduxState => ({
+  locales: reduxState.locales,
+});
+
+export default connect(mapStateToProps)(ConverterForm);
