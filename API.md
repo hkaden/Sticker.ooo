@@ -323,10 +323,11 @@ Getting Stickerooo status by users with admin role only
 *  **Query Params**
     
      **Required:**
+     
     `jwtToken =[String] in cookie`
 
     `version  =[String]`
-    
+
     `status   =[String in ['RUNNING', 'SUSPENDED', 'MAINTAINING']]`
     
 
