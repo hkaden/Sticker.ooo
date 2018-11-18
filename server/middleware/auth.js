@@ -1,6 +1,7 @@
-const jwt = require('express-jwt');
+const expressJwt = require('express-jwt');
+const jwt = require('jsonwebtoken');
 const _ = require('lodash');
-const fs = require('fs');
+const cert = require('../public');
 
 // const getTokenFromHeaders = (req) => {
 //   const { headers: { authorization } } = req;
@@ -17,22 +18,22 @@ const getTokenFromCookies = (req) => {
   }
   return null;
 };
-const cert = fs.readFileSync(`${__dirname}/../public.pem`);
 
 const auth = {
-  required: jwt({
+  required: expressJwt({
     secret: cert,
     userProperty: 'payload',
     getToken: getTokenFromCookies,
     algorithm: 'RS256',
   }),
-  optional: jwt({
+  optional: expressJwt({
     secret: cert,
     userProperty: 'payload',
     getToken: getTokenFromCookies,
     credentialsRequired: false,
     algorithm: 'RS256',
   }),
+  verifyJwt: (token, callback) => jwt.verify(token, cert, { algorithm: 'RS256' }, callback),
   getUserUUID: req => _.get(req, 'payload.uuid', null),
 };
 
