@@ -51,7 +51,7 @@ const auth = {
           })
         }
         
-        if(payload.role && payload.role == 'admin'){
+        if(payload.role && payload.role.includes('admin')){
           next()
         } else {
           return res.status(401).json({

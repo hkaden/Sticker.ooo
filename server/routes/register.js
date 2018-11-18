@@ -51,6 +51,7 @@ module.exports = function (server) {
           emailExternal,
           createdBy: uuid,
           updatedBy: uuid,
+          role: ['user']
         });
 
         newUser.setPassword(password);

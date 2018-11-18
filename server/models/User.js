@@ -34,8 +34,10 @@ const UsersSchema = new Schema({
     default: Date.now,
   },
   createdBy: { type: String },
-  updatedBy: { type: String },
-  role: { type: String, default: 'user', enum: ['user', 'admin']}
+  updatedBy: {  type: String },
+  role: { 
+    type: [{ type: String, enum: ['user', 'admin'], required: true }]
+  }
 });
 
 UsersSchema.methods.setPassword = function (password) {
