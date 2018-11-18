@@ -26,7 +26,7 @@ class Login extends React.Component {
 
 
   componentDidMount() {
-
+    const { locales, lang } = this.props;
     this.setState({
       isLoading: false
     });
@@ -40,7 +40,7 @@ class Login extends React.Component {
               title: msg,
               content: (
                 <div>
-                  <p>Congratulations! You can now login and create your own stickers!</p>
+                  <p>{locales[lang].loginSuccessMessage}</p>
                 </div>
               ),
               onOk() {
@@ -52,7 +52,7 @@ class Login extends React.Component {
               title: msg,
               content: (
                 <div>
-                  <p>Please contact administrators for assistance.</p>
+                  <p>{locales[lang].pleaseContactAdmin}</p>
                 </div>
               ),
               onOk() {
@@ -105,7 +105,7 @@ class Login extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
-
+    const {locales, lang} = this.props;
     if(this.state.isLoading) {
       return (
         <Loader/>
@@ -118,7 +118,7 @@ class Login extends React.Component {
           <Col md={6} lg={6} xs={12} sm={12} className="LoginFormWrapper">
             <Form onSubmit={this.handleSubmit} className="login-form" className="Form" autoComplete="off">
               					<span className="login100-form-title">
-						Login
+              {locales[lang].login} 
 					</span>
               <FormItem className="inputWrapper">
                 {getFieldDecorator('email', {
@@ -144,10 +144,10 @@ class Login extends React.Component {
               <FormItem>
                 <Button type="primary" htmlType="submit" className="login-form-button"
                         loading={this.state.isSubmitting}>
-                  Log in
+                  {locales[lang].login} 
                 </Button>
-                Or <a href="/register">Register now!</a><br/>
-                Or <a href="/forget">Forget password</a>
+                {locales[lang].or} <a href="/register">{locales[lang].registerLinkLabel}</a><br/>
+                {locales[lang].or}  <a href="/forget">{locales[lang].forgetPasswordLinkLabel}</a>
               </FormItem>
             </Form>
           </Col>
