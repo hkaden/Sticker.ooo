@@ -100,7 +100,7 @@ class Nav extends React.Component {
           target={navData[key].a.target}
           className="link"
         >
-          {navData[key].a.children}
+          {navData[key].a.children[lang]}
         </a>
       </li>
     ));

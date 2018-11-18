@@ -1,6 +1,7 @@
-import * as React from 'react'
+import * as React from 'react';
+import TweenOne from "rc-tween-one";
+import { connect } from 'react-redux';
 import styles from './Footer.less';
-import TweenOne from "rc-tween-one"
 
 class Footer extends React.Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class Footer extends React.Component {
     }
     render() {
       const {...props} = this.props;
-      const {dataSource, isMobile} = props;
+      const {dataSource, isMobile, lang} = props;
       delete props.dataSource;
       delete props.isMobile;
       const navData = dataSource.Menu.children;
@@ -31,7 +32,7 @@ class Footer extends React.Component {
             target={navData[key].a.target}
             className="link"
           >
-            {navData[key].a.children}
+            {navData[key].a.children[lang]}
           </a>
         </li>
       ));
@@ -60,4 +61,9 @@ class Footer extends React.Component {
     }
 }
 
-export default Footer
+const mapStateToProps = reduxState => ({
+  lang: reduxState.locales.lang,
+});
+
+
+export default connect(mapStateToProps)(Footer)
