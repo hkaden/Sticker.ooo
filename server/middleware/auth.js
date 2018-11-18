@@ -1,7 +1,6 @@
 const expressJwt = require('express-jwt');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
-const User = require('../models/User');
 const { TYPES, MESSAGES } = require('../configs/constants');
 const cert = require('../public');
 
@@ -44,20 +43,14 @@ const auth = {
         message: MESSAGES.UNAUTHORIZED_ACTION,
       })
     } else {
-      // console.log("here")
-      // verifyJwt(cookie, (err, payload) => {
-      //   console.log(err)
-      //   console.log(payload)
-      // })
-      // next();
-      const user = new User();
-      const payload = user.verifyJWT(cookie);
-      if(payload == null) {
-        return res.status(400).json({
-          type: TYPES.FAILED_TO_VERIFY_JWT_TOKEN,
-          message: MESSAGES.FAILED_TO_VERIFY_JWT_TOKEN,
-        })
-      } else {
+      return auth.verifyJwt(cookie, (err, payload) => {
+        if(err || payload == null) {
+          return res.status(400).json({
+            type: TYPES.FAILED_TO_VERIFY_JWT_TOKEN,
+            message: MESSAGES.FAILED_TO_VERIFY_JWT_TOKEN,
+          })
+        }
+        
         if(payload.role && payload.role == 'admin'){
           next()
         } else {
@@ -66,7 +59,8 @@ const auth = {
             message: MESSAGES.UNAUTHORIZED_ACTION,
           })
         }
-      }
+
+      });
     }
   },
   getUserUUID: req => _.get(req, 'payload.uuid', null),
