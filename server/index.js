@@ -7,6 +7,7 @@ const glob = require('glob');
 const morgan = require('morgan');
 const compression = require('compression');
 const next = require('next');
+const { param } = require('express-validator/check');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -21,7 +22,7 @@ const statisticsHelper = require('./utils/statisticsHelper');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3001;
-const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
+const { defaultErrorHandler, expressValidatorErrorHandler } = require('./utils/expressErrorHandlers');
 
 app.prepare().then(() => {
   // Helmet
@@ -110,10 +111,12 @@ app.prepare().then(() => {
 
   // Routes
   // server.get('/custom', customRequestHandler.bind(undefined, '/custom-page'));
-  server.get('/sticker/:uuid', (req, res) => {
-    const params = { uuid: req.params.uuid };
-    return app.render(req, res, '/sticker', params);
-  });
+  server.get('/sticker/:uuid', (req, res) => customRequestHandler('/sticker', req, res));
+  server.get('/list/:sort/page/:page', [
+    param('sort').isIn(['popular', 'latest']),
+    param('page').isInt({ min: 1 }),
+    expressValidatorErrorHandler
+  ], (req, res) => customRequestHandler('/list', req, res));
 
   server.get('/login', redirectIfLoggedIn);
   server.get('/submit', validateJwtTokenBeforeRender);
