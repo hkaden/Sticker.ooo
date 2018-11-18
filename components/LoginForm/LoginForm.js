@@ -26,37 +26,40 @@ class Login extends React.Component {
 
 
   componentDidMount() {
-    const { success, type } = this.props.query;
+
     this.setState({
       isLoading: false
     });
-    if (success && type) {
-      const msg = MESSAGES[type];
-      if (msg) {
-        if (success === 'true') {
-          Modal.success({
-            title: msg,
-            content: (
-              <div>
-                <p>Congratulations! You can now login and create your own stickers!</p>
-              </div>
-            ),
-            onOk() {
-              redirect({}, {}, '/login');
-            },
-          })
-        } else {
-          Modal.error({
-            title: msg,
-            content: (
-              <div>
-                <p>Please contact administrators for assistance.</p>
-              </div>
-            ),
-            onOk() {
-              redirect({}, {}, '/login');
-            },
-          })
+    if (this.props.query) {
+      const { success, type } = this.props.query;
+      if (success && type) {
+        const msg = MESSAGES[type];
+        if (msg) {
+          if (success === 'true') {
+            Modal.success({
+              title: msg,
+              content: (
+                <div>
+                  <p>Congratulations! You can now login and create your own stickers!</p>
+                </div>
+              ),
+              onOk() {
+                redirect({}, {}, '/login');
+              },
+            })
+          } else {
+            Modal.error({
+              title: msg,
+              content: (
+                <div>
+                  <p>Please contact administrators for assistance.</p>
+                </div>
+              ),
+              onOk() {
+                redirect({}, {}, '/login');
+              },
+            })
+          }
         }
       }
     }
