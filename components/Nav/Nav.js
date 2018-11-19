@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {findDOMNode} from 'react-dom';
-import {Button, Menu} from 'antd';
+import {Button, Menu, Dropdown, Icon} from 'antd';
 import TweenOne from 'rc-tween-one';
 import { connect } from 'react-redux';
 import cachios from 'cachios';
@@ -39,9 +39,11 @@ class Nav extends React.Component {
     const { isLoggedIn } = this.state;
     const { locales, lang } = this.props;
     if(isLoggedIn) {
-      return <Button type="primary" className="authBtn logoutBtn" size="large" onClick={this.handleLogoutButtonClick} loading={this.state.isSubmitting}>{locales[lang].logout}</Button>
-    } 
-    return <Button type="primary" className="authBtn loginBtn" size="large" onClick={this.handleLoginButtonClick} loading={this.state.isSubmitting}>{locales[lang].login}</Button>
+      return <a href="">
+        <li className="item seperator" onClick={this.handleLogoutButtonClick}>{locales[lang].logout}</li>
+      </a>
+    }
+    return <li className="item seperator" onClick={this.handleLoginButtonClick}>{locales[lang].login}</li>
   }
 
 
@@ -124,10 +126,17 @@ class Nav extends React.Component {
           >
             <img className="site-logo" width="100%" src={dataSource.logo.children} alt="img" onClick={this.handleLogoClick}/>
           </TweenOne>
+          <div className="link">
+            <ul className="nav">
+              {navChildren}
+            </ul>
+            <ul className="rightNav">
+              <Locale/>
+              {this.renderLoginLogOutButton()}
+            </ul>
+          </div>
           <div className="buttonsList">
-            <Locale/>
             <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>{locales[lang].createStickers}</Button>
-            { this.renderLoginLogOutButton() }
           </div>
         </div>
       </TweenOne>

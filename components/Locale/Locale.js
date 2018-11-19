@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LocaleProvider, Radio } from 'antd';
+import {Button, Dropdown, Icon, LocaleProvider, Radio, Menu} from 'antd';
 import zhTW from 'antd/lib/locale-provider/zh_TW';
 import moment from 'moment';
 import 'moment/locale/zh-tw';
@@ -30,27 +30,40 @@ class Locale extends React.Component {
 
     changeLocale = (e) => {
         const { cookies } = this.props;
-        const localeValue = e.target.value;
+      const localeValue = e.key;
         this.setState({ locale: localeValue });
-        if (!localeValue) {
-            moment.locale('en');
-            this.props.setLang('en');
-            cookies.set('lang', 'en');
-        } else {
+      if (localeValue) {
+        switch (localeValue) {
+          case 'zhTw':
             moment.locale('zh-tw');
             this.props.setLang('zh');
             cookies.set('lang', 'zh');
+            break;
+          case 'en':
+            moment.locale('en');
+            this.props.setLang('en');
+            cookies.set('lang', 'en');
+            break;
+        }
         }
     }
 
     render() {
         const { lang } = this.props;
+      const menu = (
+        <Menu>
+          <Menu.Item key='en' onClick={this.changeLocale}>English</Menu.Item>
+          <Menu.Item key='zhTw' onClick={this.changeLocale}>中文</Menu.Item>
+        </Menu>
+      );
         return (
             <div className="change-locale">
-            <Radio.Group value={this.state.locale} onChange={this.changeLocale}>
-                <Radio.Button key="en" value={undefined}>English</Radio.Button>
-                <Radio.Button key="zh" value={zhTW}>中文</Radio.Button>
-            </Radio.Group>
+              <Dropdown overlay={menu} trigger={['click']}>
+                <Button style={{marginLeft: 8}} size="small">
+                  {console.log(this.state.locale)}
+                  <Icon type="down"/>
+                </Button>
+              </Dropdown>
             </div>
         );
     }
@@ -60,9 +73,9 @@ const mapStateToProps = reduxState => ({
     locales: reduxState.locales.locales,
     lang: reduxState.locales.lang,
   });
-  
-  
-  const mapDispatchToProps = dispatch => ({
+
+
+const mapDispatchToProps = dispatch => ({
     setLang: (lang) => {
       dispatch(setLang(lang));
     },
