@@ -7,12 +7,13 @@ const brute = require('../middleware/brute');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
 const { TYPES, MESSAGES } = require('../configs/constants');
+const fs = require('fs');
 
 module.exports = function (server) {
   // Docs: https://github.com/ryo718/mongoose-crudify
   server.post(
     '/api/login',
-    auth.optional,
+    // auth.optional,
     brute.globalBruteforce.prevent,
     brute.loginBruteforce.getMiddleware({
       key(req, res, next) {
@@ -22,7 +23,7 @@ module.exports = function (server) {
     [
       body('email').isEmail(),
       body('password').isString(),
-      // sanitizeBody('email').normalizeEmail(),
+      sanitizeBody('email').normalizeEmail(),
       expressValidatorErrorHandler,
     ],
     (req, res, next) => passport.authenticate('local', { session: false }, (err, passportUser, info) => {
@@ -41,14 +42,8 @@ module.exports = function (server) {
           }
 
           const userAuthJson = user.toAuthJSON();
-
-          const cookie = req.cookies.jwtToken;
-
-          if (cookie !== undefined || cookie !== null) {
-            res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
-          } else {
-            //TODO: validate jwtToken
-          }
+          res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
+          
           return res.status(200).json({
             type: TYPES.LOGIN_SUCCESS,
             message: MESSAGES.LOGIN_SUCCESS,

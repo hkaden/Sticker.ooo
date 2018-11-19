@@ -1,9 +1,9 @@
 import * as React from 'react'
-import styles from "../FactArea/FactArea.less"
 import {Row, Col} from 'antd';
-import Loader from '../Loader/Loader';
 import cachios from 'cachios';
 import numeral from 'numeral';
+import { connect } from 'react-redux';
+import "../FactArea/FactArea.less"
 
 class FactArea extends React.Component {
 
@@ -33,12 +33,13 @@ class FactArea extends React.Component {
 
   render() {
     const {...props} = this.props;
+    const { locales, lang } = this.props;
     const {dataSource} = props;
     delete props.dataSource;
     delete props.isMobile;
     if (this.state.isLoading) {
       return (
-        <Loader/>
+        null
       )
     }
     return (
@@ -48,21 +49,21 @@ class FactArea extends React.Component {
           <div className='fact-box'>
             <div className='block-wrapper'>
               <Row type='flex' align="middle" justify="center">
-                <Col className='single-fact'>
+                <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalPack}</h2>
-                  <p>Total Packs</p>
+                  <p>{locales[lang].totalPacks}</p>
                 </Col>
-                <Col className='single-fact'>
+                <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalWeeklyDownloads}</h2>
-                  <p>Total Weekly Downloads</p>
+                  <p>{locales[lang].totalWeeklyDownloads}</p>
                 </Col>
-                <Col className='single-fact'>
+                <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalMonthlyDownloads}</h2>
-                  <p>Total Monthly Downloads</p>
+                  <p>{locales[lang].totalMonthlyDownloads}</p>
                 </Col>
-                <Col className='single-fact'>
+                <Col xs={24} md={12} lg={6} className='single-fact'>
                   <h2>{this.state.data.totalYearlyDownloads}</h2>
-                  <p>Total Yearly Downloads</p>
+                  <p>{locales[lang].totalYearlyDownloads}</p>
                 </Col>
               </Row>
             </div>
@@ -73,4 +74,9 @@ class FactArea extends React.Component {
   }
 }
 
-export default FactArea
+const mapStateToProps = reduxState => ({
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
+});
+
+export default connect(mapStateToProps)(FactArea);

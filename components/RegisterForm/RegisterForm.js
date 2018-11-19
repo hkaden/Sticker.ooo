@@ -2,8 +2,10 @@ import * as React from 'react'
 import cachios from 'cachios';
 import {Form, Input, Button, message, Row, Col, Modal} from 'antd';
 import _ from 'lodash';
+import { connect } from 'react-redux';
 import redirect from '../../lib/redirect'
-import styles from "../RegisterForm/RegisterForm.less"
+import Loader from '../Loader/Loader';
+import "../RegisterForm/RegisterForm.less"
 
 const FormItem = Form.Item;
 
@@ -11,8 +13,15 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSubmitting: false
+      isSubmitting: false,
+      isLoading: true
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      isLoading: false
+    })
   }
 
   handleConfirmBlur = (e) => {
@@ -30,6 +39,7 @@ class Register extends React.Component {
   }
 
   handleSubmit = (e) => {
+    const {locales, lang} = this.props;
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
@@ -53,8 +63,7 @@ class Register extends React.Component {
               title: 'One more step',
               content: (
                 <div>
-                  <p>Please confirm your email to fully access your website. Check your email inbox as well as spam
-                    section for confirmation letter and click on link in it to confirm your account.</p>
+                  <p>{locales[lang].confirmEmailMessage}</p>
                 </div>
               ),
               onOk() {
@@ -83,71 +92,79 @@ class Register extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
+    const { locales, lang } = this.props;
+
+    if(this.state.isLoading) {
+      return (
+        <Loader/>
+      )
+    }
+
     return (
       <div className="Wrapper">
         <Row type="flex" justify="center" align="middle" className="LoginFormWrapper">
           <Col md={6} lg={6} xs={12} sm={12} className="LoginFormWrapper">
             <Form onSubmit={this.handleSubmit} className="login-form" className="Form" autoComplete="off">
-              					<span className="login100-form-title">
-						Register
-					</span>
+              <span className="login100-form-title">
+                {locales[lang].register}
+              </span>
               <FormItem className="inputWrapper">
                 {getFieldDecorator('username', {
                   validateTrigger: 'onBlur',
                   rules: [
-                    {required: true, message: 'Please input username!'},
-                    {min: 4, message: 'Your username must be between 4 and 20 characters long'},
-                    {max: 20, message: 'Your username must be between 4 and 20 characters long'}
+                    {required: true, message: locales[lang].pleaseInputUsername},
+                    {min: 4, message: locales[lang].usernameValidationMessage},
+                    {max: 20, message: locales[lang].usernameValidationMessage}
                   ],
                 })(
-                  <Input placeholder="Username" className="Input"/>
+                  <Input placeholder={locales[lang].username} className="Input"/>
                 )}
               </FormItem>
               <FormItem className="inputWrapper">
                 {getFieldDecorator('email', {
                   validateTrigger: 'onBlur',
                   rules: [{
-                    type: 'email', message: 'The input is not valid E-mail!',
+                    type: 'email', message: locales[lang].emailValidationMessage,
                   },
                     {
-                      required: true, message: 'Please input E-mail address!'
+                      required: true, message: locales[lang].pleaseInputEmail
                     }],
                 })(
-                  <Input placeholder="E-mail Address" className="Input"/>
+                  <Input placeholder={locales[lang].email} className="Input"/>
                 )}
               </FormItem>
 
               <FormItem className="inputWrapper">
                 {getFieldDecorator('password', {
                   rules: [
-                    {required: true, message: 'Please input password!'},
-                    {min: 6, message: 'Your password must be more than 6 characters'},
+                    {required: true, message: locales[lang].pleaseInputPassword},
+                    {min: 6, message: locales[lang].passwordValidationMessage},
                   ],
                 })(
                   <Input type="password"
-                         placeholder="Password" className="Input"/>
+                         placeholder={locales[lang].password} className="Input"/>
                 )}
               </FormItem>
               <FormItem className="inputWrapper">
                 {getFieldDecorator('confirmPassword', {
                   rules: [
-                    {required: true, message: 'Please input password!'},
+                    {required: true, message: locales[lang].pleaseInputPassword},
                     {
                       validator: this.compareToFirstPassword,
-                      message: 'Those passwords didn\'t match. Try again. '
+                      message: locales[lang].passwordNotMatch
                     }
                   ],
                 })(
                   <Input type="password"
-                         placeholder="Confirm Password" className="Input" onBlur={this.handleConfirmBlur}/>
+                         placeholder={locales[lang].confirmPassword} className="Input" onBlur={this.handleConfirmBlur}/>
                 )}
               </FormItem>
               <FormItem>
                 <Button type="primary" htmlType="submit" className="login-form-button"
                         loading={this.state.isSubmitting}>
-                  Register
+                  {locales[lang].registerButton}
                 </Button>
-                Or <a href="/login">Login now!</a>
+                {locales[lang].or} <a href="/login">{locales[lang].loginNowLabel}</a>
               </FormItem>
             </Form>
           </Col>
@@ -158,4 +175,9 @@ class Register extends React.Component {
 }
 
 const RegisterForm = Form.create({})(Register);
-export default RegisterForm
+const mapStateToProps = reduxState => ({
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
+});
+
+export default connect(mapStateToProps)(RegisterForm)

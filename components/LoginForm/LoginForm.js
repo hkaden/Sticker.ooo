@@ -1,10 +1,17 @@
 import * as React from 'react'
 import cachios from 'cachios';
-import {Form, Input, Button, message, Row, Col} from 'antd';
+import {Form, Input, Button, message, Row, Col, Modal} from 'antd';
 import _ from 'lodash';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import {connect} from "react-redux";
+import thunkMiddleware from 'redux-thunk';
+import withRedux from 'next-redux-wrapper';
 import redirect from '../../lib/redirect';
-import styles from './LoginForm.less';
+import './LoginForm.less';
 import Loader from '../Loader/Loader';
+import {
+  setIsLoggedIn,
+} from '../../lib/customReducers';
 
 const FormItem = Form.Item;
 
@@ -19,9 +26,43 @@ class Login extends React.Component {
 
 
   componentDidMount() {
+    const { locales, lang } = this.props;
     this.setState({
       isLoading: false
-    })
+    });
+    if (this.props.query) {
+      const { success, type } = this.props.query;
+      if (success && type) {
+        const msg = MESSAGES[type];
+        if (msg) {
+          if (success === 'true') {
+            Modal.success({
+              title: msg,
+              content: (
+                <div>
+                  <p>{locales[lang].loginSuccessMessage}</p>
+                </div>
+              ),
+              onOk() {
+                redirect({}, {}, '/login');
+              },
+            })
+          } else {
+            Modal.error({
+              title: msg,
+              content: (
+                <div>
+                  <p>{locales[lang].pleaseContactAdmin}</p>
+                </div>
+              ),
+              onOk() {
+                redirect({}, {}, '/login');
+              },
+            })
+          }
+        }
+      }
+    }
   }
 
   handleSubmit = (e) => {
@@ -42,10 +83,8 @@ class Login extends React.Component {
           const resp = await cachios.post('/api/login', credential);
 
           if (resp.status === 200) {
-            // redirect({}, e, '/list')
+            this.props.setIsLoggedIn(true);
             redirect({}, e, '/submit')
-          } else {
-            // TODO:
           }
 
         } catch (e) {
@@ -66,7 +105,7 @@ class Login extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
-
+    const {locales, lang} = this.props;
     if(this.state.isLoading) {
       return (
         <Loader/>
@@ -79,7 +118,7 @@ class Login extends React.Component {
           <Col md={6} lg={6} xs={12} sm={12} className="LoginFormWrapper">
             <Form onSubmit={this.handleSubmit} className="login-form" className="Form" autoComplete="off">
               					<span className="login100-form-title">
-						Login
+              {locales[lang].login} 
 					</span>
               <FormItem className="inputWrapper">
                 {getFieldDecorator('email', {
@@ -105,10 +144,10 @@ class Login extends React.Component {
               <FormItem>
                 <Button type="primary" htmlType="submit" className="login-form-button"
                         loading={this.state.isSubmitting}>
-                  Log in
+                  {locales[lang].login} 
                 </Button>
-                Or <a href="/register">Register now!</a><br/>
-                Or <a href="/forget">Forget password</a>
+                {locales[lang].or} <a href="/register">{locales[lang].registerLinkLabel}</a><br/>
+                {locales[lang].or}  <a href="/forget">{locales[lang].forgetPasswordLinkLabel}</a>
               </FormItem>
             </Form>
           </Col>
@@ -118,5 +157,19 @@ class Login extends React.Component {
   }
 }
 
+const mapStateToProps = reduxState => ({
+  stickersList: reduxState.stickersList,
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  setIsLoggedIn: (isLoggerIn) => {
+    dispatch(setIsLoggedIn(isLoggerIn));
+  },
+});
+
 const LoginForm = Form.create({})(Login);
-export default LoginForm
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

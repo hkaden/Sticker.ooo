@@ -3,13 +3,14 @@
 const uuidv4 = require('uuid/v4');
 const { body } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+const normalizeEmail = require('validator/lib/normalizeEmail')
 const { StatusError } = require('../errors');
 const validators = require('../utils/validators');
 const User = require('../models/User');
 const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
-const { sendEmail } = require('../utils/mailSender');
+const { sendVerificationEmail } = require('../utils/mailSender');
 const { TYPES, MESSAGES } = require('../configs/constants');
 
 module.exports = function (server) {
@@ -25,12 +26,14 @@ module.exports = function (server) {
       body('confirmPassword').withMessage(MESSAGES.IS_REQUIRE),
       body('email').isEmail(),
       body().custom(body => body.password === body.confirmPassword).withMessage(MESSAGES.PASSWORD_NOT_MATCH),
-      // sanitizeBody('email').normalizeEmail({ remove_dots: false }),
       expressValidatorErrorHandler,
     ],
     async (req, res, next) => {
       try {
-        const { username, password, email } = req.body;
+        const { username, password } = req.body;
+        let { email } = req.body;
+        const emailExternal = email;
+        email = normalizeEmail(email);
         const uuid = uuidv4();
 
         const user = await User.findOne({ $or: [{ email }, { username }] });
@@ -45,8 +48,10 @@ module.exports = function (server) {
           uuid,
           username,
           email,
+          emailExternal,
           createdBy: uuid,
           updatedBy: uuid,
+          role: ['user']
         });
 
         newUser.setPassword(password);
@@ -73,18 +78,8 @@ module.exports = function (server) {
                 message: MESSAGES.FAILED_TO_SEND_TOKEN,
               });
             }
-            
-            let subject = 'Sticker.ooo Email Verification';
-            let content = `${'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/'}${req.headers.host}\/api\/verifyAccount\/${token.token}.\n`;
-            let successReturn = {
-              type: TYPES.VERIFICATION_EMAIL_SENT,
-              message: MESSAGES.VERIFICATION_EMAIL_SENT_SUCCESS + email
-            };
-            let failedReturn = {
-              type: TYPES.FAILED_TO_SEND_VERIFICATION_EMAIL,
-              message: MESSAGES.FAILED_TO_SEND_VERIFICATION_EMAIL,
-            };
-            sendEmail(email, subject, content, req, res, successReturn, failedReturn);
+
+            sendVerificationEmail(emailExternal, token.token, req, res);
           });
         });
       } catch (e) {

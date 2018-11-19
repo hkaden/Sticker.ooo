@@ -8,7 +8,7 @@ export const Nav00DataSource = {
   Menu: {
     className: 'header0-menu',
     children: [
-      {name: 'item0', a: {children: '服務條款', href: '/tnc'}}
+      {name: 'item0', a: {children: {en: 'Terms & Conditions', zh: '服務條款'}, href: '/tnc'}}
     ],
   },
   mobileMenu: {className: 'header0-mobile-menu'},
@@ -36,7 +36,7 @@ export const FactArea00DataSource = {
   OverPack: {playScale: 0.3, className: ''},
   titleWrapper: {
     className: 'title-wrapper',
-    children: [{name: 'title', children: '我地已經收錄左'}],
+    children: [{name: 'title', children: {en: '我地已經收錄左', zh: '我地已經收錄左'}}],
   },
   block: {
     className: 'block-wrapper',
@@ -49,5 +49,12 @@ export const FactArea00DataSource = {
 export const FooterDataSource = {
   logo: {
     children: '/static/images/logo.png'
-  }
+  },
+  Menu: {
+    className: 'header0-menu',
+    children: [
+      {name: 'item0', a: {children: {en: 'Terms & Conditions', zh: '服務條款'}, href: '/tnc'}}
+    ],
+  },
+  mobileMenu: {className: 'header0-mobile-menu'},
 }

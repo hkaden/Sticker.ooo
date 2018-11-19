@@ -1,14 +1,12 @@
 import * as React from 'react'
-import {Button, Card, Col, Form, Icon, Input, Progress, Radio, Row, Switch, Upload} from 'antd';
-import {applyMiddleware, combineReducers, createStore} from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import reduxApi from '../../lib/reduxApi';
+import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload} from 'antd';
 import cachios from 'cachios';
+import { connect } from 'react-redux';
+import Link from 'next/link';
 import redirect from '../../lib/redirect';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
-import styles from './ConverterForm.less';
+import './ConverterForm.less';
 import Loader from '../Loader/Loader';
-import Link from 'next/link';
 
 const FormItem = Form.Item;
 
@@ -24,7 +22,7 @@ class CForm extends React.Component {
       progress: 0,
       isSubmitting: false,
       uploadType: 'image',
-      // sharingType: 'public',
+      sharingType: 'public',
       errorMsg: '',
       isLoading: true
     };
@@ -32,7 +30,21 @@ class CForm extends React.Component {
 
   componentDidMount() {
     this.converter = new WhatsAppStickersConverter();
-    this.converter.init().catch(e => console.log(e));
+    this.converter.init().catch(() => {
+      Modal.error({
+        title: 'Critical API not loaded!',
+        content: (
+          <div>
+            <p>Please try refreshing the page, and ensure that you are using the latest version of Chrome / Firefox / Safari</p>
+          </div>
+        ),
+        okText: 'Refresh',
+        maskClosable: true,
+        onOk() {
+          location.reload();
+        },
+      });
+    });
 
     this.setState({
       isLoading: false
@@ -64,12 +76,14 @@ class CForm extends React.Component {
             stickersFiles = values.stickers.map(sticker => sticker.originFileObj);
           }
 
-          const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles);
-          let stickersLoaded = 0;
-          emitter.on('stickerLoad', () => {
-            stickersLoaded += 1;
-            this.setState({progress: stickersLoaded / stickersFiles.length * 90});
-          });
+            const packSize = this.props.form.getFieldValue('packSize');
+
+            const emitter = this.converter.convertImagesToPacks(trayFile, stickersFiles, packSize);
+            let stickersLoaded = 0;
+            emitter.on('stickerLoad', () => {
+              stickersLoaded += 1;
+              this.setState({ progress: stickersLoaded / stickersFiles.length * 90 });
+            });
 
           const { tray, trays, stickersInPack } = await new Promise((resolve, reject) => {
             emitter.on('error', reject);
@@ -78,8 +92,7 @@ class CForm extends React.Component {
 
           const stickersData = {
             name: this.props.form.getFieldValue('name'),
-            // sharingType: this.props.form.getFieldValue('sharingType'),
-            sharingType: 'link',
+            sharingType: this.props.form.getFieldValue('sharingType'),
             tray,
             trays,
             stickers: stickersInPack,
@@ -118,6 +131,7 @@ class CForm extends React.Component {
 
   render() {
     const {getFieldDecorator} = this.props.form;
+    const { locales, lang } = this.props;
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'}/>
@@ -135,20 +149,20 @@ class CForm extends React.Component {
         <div className="ConverterWrapper">
           <Row type="flex" justify="start" align="middle" >
           <Col span={24}>
-            <Card title="Submit your Stickers" bordered={true} className="ConverterCard">
+            <Card title={locales[lang].submitStickersLabel} bordered={true} className="ConverterCard">
               <Form onSubmit={this.handleSubmit} hideRequiredMark={true} className="login-form" autoComplete="off">
                 <FormItem>
                   {getFieldDecorator('name', {
-                    rules: [{required: true, message: 'Please input pack name!'}],
+                    rules: [{required: true, message: locales[lang].pleaseInputPackName}],
                   })(
                     <Input prefix={<Icon type="file" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Pack Name"
                            disabled={this.state.isSubmitting}/>
                   )}
                 </FormItem>
-                {/*<FormItem
+                <FormItem
                   label="Sharing"
                   extra={{
-                    public: 'Your stickers will be publicly available',
+                    public: 'Your stickers will be publicly available when Sticker.ooo is out of beta',
                     link: 'Your stickers can only be accessible by link'
                   }[this.state.sharingType]}
                 >
@@ -161,7 +175,20 @@ class CForm extends React.Component {
                       <Radio.Button value="link">Link only</Radio.Button>
                     </Radio.Group>
                   )}
-                </FormItem>*/}
+                </FormItem>
+                <FormItem
+                  label={locales[lang].maxNumOfStickersPerPack}
+                >
+                  {getFieldDecorator('packSize', {
+                    initialValue: 30,
+                  })(
+                    <InputNumber
+                      disabled={this.state.isSubmitting}
+                      min={5}
+                      max={30}
+                    />,
+                  )}
+                </FormItem>
                 <FormItem
                   label="Upload Type"
                 >
@@ -169,8 +196,8 @@ class CForm extends React.Component {
                     initialValue: 'image'
                   })(
                     <Radio.Group name="uploadType" onChange={this.handleFieldChange} disabled={this.state.isSubmitting}>
-                      <Radio.Button value="image">Image Files</Radio.Button>
-                      <Radio.Button value="zip">Zip File</Radio.Button>
+                      <Radio.Button value="image">{locales[lang].imageFiles}</Radio.Button>
+                      <Radio.Button value="zip">{locales[lang].zipFiles}</Radio.Button>
                     </Radio.Group>,
                   )}
                 </FormItem>
@@ -182,11 +209,11 @@ class CForm extends React.Component {
                       {getFieldDecorator('tray', {
                         getValueFromEvent: this.normFile,
                         rules: [
-                          {required: true, message: 'Please select tray icon!'},
+                          {required: true, message: locales[lang].pleaseSelectTrayIcon},
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length > 1 ? false : undefined);
-                            }, message: 'Please select only 1 tray icon!'
+                            }, message: locales[lang].pleaseSelectOnlyOneTrayIcon
                           }
                         ],
 
@@ -196,14 +223,14 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">Choose file or drag file to this area</p>
-                          <p className="ant-upload-hint">Any resolution</p>
+                          <p className="ant-upload-text">{locales[lang].dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales[lang].anyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
                   </FormItem>
                   <FormItem
-                    label="Stickers (3 or more images)"
+                    label={locales[lang].threeOrMoreImages}
                   >
                     <div className="dropbox">
                       {getFieldDecorator('stickers', {
@@ -212,7 +239,7 @@ class CForm extends React.Component {
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length >= 3 ? undefined : false);
-                            }, message: 'Please select 3 or more images!'
+                            }, message: locales[lang].pleaseSelectThreeOrMoreImages
                           }
                         ],
                       })(
@@ -221,8 +248,8 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">Choose files or drag files to this area</p>
-                          <p className="ant-upload-hint">Any resolution</p>
+                          <p className="ant-upload-text">{locales[lang].dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales[lang].anyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
@@ -235,11 +262,11 @@ class CForm extends React.Component {
                       {getFieldDecorator('zip', {
                         getValueFromEvent: this.normFile,
                         rules: [
-                          {required: true, message: 'Please select zip file!'},
+                          {required: true, message: locales[lang].pleaseSelectZipFile},
                           {
                             validator: (rule, value, callback) => {
                               callback(value && value.length > 1 ? false : undefined);
-                            }, message: 'Please select only 1 zip file!'
+                            }, message: locales[lang].pleaseSelectOnlyOneZipFile
                           }
                         ],
                       })(
@@ -248,8 +275,8 @@ class CForm extends React.Component {
                           <p className="ant-upload-drag-icon">
                             <Icon type="inbox"/>
                           </p>
-                          <p className="ant-upload-text">Choose file or drag file to this area</p>
-                          <p className="ant-upload-hint">Zip file with images of any resolution</p>
+                          <p className="ant-upload-text">{locales[lang].dragAndDropLabel}</p>
+                          <p className="ant-upload-hint">{locales[lang].zipWithAnyResolution}</p>
                         </Upload.Dragger>
                       )}
                     </div>
@@ -259,12 +286,12 @@ class CForm extends React.Component {
                   <div>
 
                     <span className="ant-form-text">
-                      By submitting my stickers to Stickers.ooo, I agree to the <Link href="/tnc">Terms & Conditions</Link> of Sticker.ooo
+                      {locales[lang].submitAgreementPrefix} <Link href="/tnc">{locales[lang].termsAndConditions}</Link> {locales[lang].submitAgreementSuffix}
                 </span>
                     {getFieldDecorator('agreeTnC', {
                       rules: [{
                         validator: (rule, value, callback) => callback(value === true ? undefined : false),
-                        message: 'Please agree to the Terms & Conditions',
+                        message: locales[lang].pleaseAgreeTnc,
                       }],
                     })(
                       <Switch checkedChildren={<Icon type="check"/>} unCheckedChildren={<Icon type="close"/>}/>
@@ -288,8 +315,11 @@ class CForm extends React.Component {
 }
 
 const ConverterForm = Form.create({})(CForm);
-const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(combineReducers(reduxApi.reducers), reduxState);
-const mapStateToProps = (reduxState) => ({sticker: reduxState.sticker}); // Use reduxApi endpoint names here
 
-export default ConverterForm
+
+const mapStateToProps = reduxState => ({
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
+});
+
+export default connect(mapStateToProps)(ConverterForm);

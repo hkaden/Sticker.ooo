@@ -293,3 +293,72 @@ Only allow users who have already logged in to logout
         }
      }
      ```
+
+#### `GET /stickerooo` 
+Getting Stickerooo status
+
+*  **Query Params**
+    
+    None
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "GET_APP_STATUS_SUCCESS",
+        "message": "Getting App Status Successfully",
+        "data": {
+            "_id": "5bf0f0823b40df5ef2b0d18c",
+            "version": "beta-0.0.9",
+            "status": "RUNNING"
+        }
+     }
+     ```
+
+#### `POST /stickerooo` 
+Getting Stickerooo status by users with admin role only
+
+*  **Query Params**
+    
+     **Required:**
+     
+    `jwtToken =[String] in cookie`
+
+    `version  =[String]`
+
+    `status   =[String in ['RUNNING', 'SUSPENDED', 'MAINTAINING']]`
+    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "SET_APP_STATUS_SUCCESS",
+        "message": "Setting App Status Successfully"
+     }
+     ```
+
+* **Failed Response:**
+    * **Code:** 401 <br />
+    * **Content:** 
+     ```json
+     {
+        "status": 401,
+        "type": "UnauthorizedError",
+        "message": "No authorization token was found",
+        "stack": "UnauthorizedError: No authorization token was found\n..."
+     }
+     ```
+
+    * **Code:** 500 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "FAILED_TO_SET_APP_STATUS",
+        "message": "Failed to set app status"
+     }
+     ```
