@@ -1,0 +1,109 @@
+@import "../../static/app.less";
+
+#components-form-demo-normal-login .login-form {
+  max-width: 300px;
+}
+
+#components-form-demo-normal-login .login-form-forgot {
+  float: right;
+}
+
+.Wrapper {
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  position: relative;
+  background-color: #fff;
+}
+
+.LoginFormWrapper {
+  width: 500px !important;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+  .Form {
+    width: 100%;
+    position: relative;
+    padding-right: 55px;
+    padding-left: 55px;
+    padding-top: 178px;
+  }
+  .login100-form-title {
+    font-size: 30px;
+    color: #000;
+    line-height: 1.2;
+    text-align: center;
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: @template-bg-color;
+    padding-top: 50px;
+    padding-bottom: 39px;
+  }
+  .inputWrapper {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 27px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 25px;
+
+    .Input {
+      font-size: 15px;
+      color: #1b3815;
+      line-height: 1.2;
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 40px;
+      padding: 0 35px 0 35px;
+      border: 1px solid #d9d9d9;
+      &:focus {
+        border-color: @template-bg-color;
+        box-shadow: 0 0 0 2px rgb(@template-bg-color, 0.2);
+      }
+    }
+
+  }
+
+  & a {
+    color: @template-bg-color
+  }
+}
+
+.login-form-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  width: 390px;
+  height: 50px;
+  background-color: @template-bg-color;
+  font-size: 15px;
+  color: #000;
+  line-height: 1.2;
+  text-transform: uppercase;
+  border-color: #fff;
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  transition: all 0.4s;
+
+  &:hover {
+    color: #fff;
+    border-color: #000;
+    background: #000;
+  }
+
+  &:focus {
+    background-color: @template-bg-color;
+    color: #000;
+    border-color: #fff;
+  }
+}

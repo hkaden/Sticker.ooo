@@ -63,4 +63,5 @@ export const en = {
     confirmEmailMessage: 'Please confirm your email to fully access your website. Check your email inbox as well as spam section for confirmation letter and click on link in it to confirm your account.',
     latest: 'Latest',
     popular: 'Popular',
+  resetPassword: 'Reset Password'
 }

@@ -63,4 +63,5 @@ export const zh = {
     confirmEmailMessage: '請確認電郵以訪問完整網站。檢查您的電郵收件箱以及垃圾郵件部分以獲取確認信，然後單擊其中的鏈接以確認您的帳戶。',
     latest: 'Latest',
     popular: 'Popular',
+  resetPassword: '重置密碼'
 }
