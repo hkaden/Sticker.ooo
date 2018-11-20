@@ -4,14 +4,13 @@ import {Button, Menu, Dropdown, Icon} from 'antd';
 import TweenOne from 'rc-tween-one';
 import { connect } from 'react-redux';
 import cachios from 'cachios';
+import Sidebar from "react-sidebar";
 import redirect from '../../lib/redirect';
 import './Nav.less';
 import Locale from '../Locale/Locale';
 import {
   setIsLoggedIn,
 } from '../../lib/customReducers';
-
-const Item = Menu.Item;
 
 class Nav extends React.Component {
 
@@ -86,7 +85,6 @@ class Nav extends React.Component {
       })
     }
   }
-
   render() {
     const {dispatch, ...props} = this.props;
     const {dataSource, isMobile, locales, lang} = props;
