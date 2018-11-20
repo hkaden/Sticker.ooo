@@ -1,17 +1,23 @@
 
 import * as React from 'react'
 import { Spin } from 'antd';
-import styles from './Loader.less';
+import { connect } from 'react-redux';
+import './Loader.less';
 
 class Loader extends React.Component {
-
     render() {
+        const {locales, lang} = this.props;
         return (
             <div className="loaderWrapper">
-                <Spin tip="Loading..." size="large"/>
+                <Spin tip={locales[lang].loading} size="large"/>
             </div>
         )
     }
 }
 
-export default Loader
+const mapStateToProps = reduxState => ({
+    locales: reduxState.locales.locales,
+    lang: reduxState.locales.lang,
+  });
+  
+  export default connect(mapStateToProps)(Loader);

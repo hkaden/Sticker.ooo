@@ -1,7 +1,5 @@
 import { Component } from 'react';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import withRedux from 'next-redux-wrapper';
+import { connect } from 'react-redux';
 import Head from 'next/head';
 import {
   Card, Col, Row, Button,
@@ -9,7 +7,7 @@ import {
 import Wapper from '../components/Wapper/Wapper';
 import reduxApi from '../lib/reduxApi';
 import {
-  decodeWebp, loadStickersList, stickersListReducer,
+  decodeWebp, loadStickersList,
 } from '../lib/customReducers';
 import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
 import saveAs from 'file-saver';
@@ -103,14 +101,6 @@ class StickerPage extends Component {
     }
 }
 
-const createStoreWithThunkMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-const makeStore = (reduxState, enhancer) => createStoreWithThunkMiddleware(
-  combineReducers({
-    ...reduxApi.reducers,
-    stickersList: stickersListReducer,
-  }),
-  reduxState,
-);
 const mapStateToProps = reduxState => ({
   stickersList: reduxState.stickersList,
 }); // Use reduxApi endpoint names here
@@ -120,10 +110,5 @@ const mapDispatchToProps = dispatch => ({
     dispatch(decodeWebp(converter));
   },
 });
-const IndexPageConnected = withRedux({
-  createStore: makeStore,
-  mapStateToProps,
-  mapDispatchToProps,
-})(StickerPage);
 
-export default IndexPageConnected;
+export default connect(mapStateToProps, mapDispatchToProps)(StickerPage);
