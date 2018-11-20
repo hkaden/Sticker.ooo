@@ -15,7 +15,4 @@ const Converter = ({content}) => (
   </div>
 );
 
-
-const mapStateToProps = state => ({content: state.content});
-
 export default Converter;

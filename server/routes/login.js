@@ -7,6 +7,7 @@ const brute = require('../middleware/brute');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
 const { TYPES, MESSAGES } = require('../configs/constants');
+const fs = require('fs');
 
 module.exports = function (server) {
   // Docs: https://github.com/ryo718/mongoose-crudify
@@ -41,8 +42,8 @@ module.exports = function (server) {
           }
 
           const userAuthJson = user.toAuthJSON();
-
           res.cookie('jwtToken', userAuthJson.token, { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true });
+          
           return res.status(200).json({
             type: TYPES.LOGIN_SUCCESS,
             message: MESSAGES.LOGIN_SUCCESS,

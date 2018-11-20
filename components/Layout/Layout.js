@@ -3,7 +3,9 @@ import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import {Nav00DataSource, FooterDataSource} from '../data.source.js';
 import {enquireScreen} from "enquire-js"
-import styles from "./Layout.less"
+import Loader from '../Loader/Loader';
+import "./Layout.less"
+import { locales } from "../../locales/locales";
 
 let isMobile;
 enquireScreen((b) => {
@@ -15,6 +17,7 @@ class Layout extends React.Component {
     super(props);
     this.state = {
       isMobile,
+      isLoading: true,
     };
   }
 
@@ -22,9 +25,17 @@ class Layout extends React.Component {
     enquireScreen((b) => {
       this.setState({isMobile: !!b});
     });
+
+    this.setState({
+      isLoading: false
+    })
   }
 
   render() {
+    if(this.state.isLoading) {
+      return <Loader/>
+    }
+    
     return (
 
       <div

@@ -1,6 +1,6 @@
-import * as React from 'react'
-import styles from './Wapper.less'
+import * as React from 'react';
 import {Layout, Row} from "antd";
+import './Wapper.less';
 
 const { Content } = Layout;
 

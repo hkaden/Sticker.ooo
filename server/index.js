@@ -7,6 +7,7 @@ const glob = require('glob');
 const morgan = require('morgan');
 const compression = require('compression');
 const next = require('next');
+const { param } = require('express-validator/check');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -16,11 +17,12 @@ const path = require('path');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { logger, httpLogger } = require('./configs/winston');
+const { verifyJwt } = require('./middleware/auth');
 const statisticsHelper = require('./utils/statisticsHelper');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 3001;
-const { defaultErrorHandler } = require('./utils/expressErrorHandlers');
+const { defaultErrorHandler, expressValidatorErrorHandler } = require('./utils/expressErrorHandlers');
 
 app.prepare().then(() => {
   // Helmet
@@ -75,23 +77,31 @@ app.prepare().then(() => {
 
 
   const redirectIfLoggedIn = (req, res) => {
-    const cookies = req.cookies.jwtToken;
-    if(cookies != undefined && cookies != null) {
-      // return res.redirect('/list')
-      return res.redirect('/submit')
+    const mergedQuery = Object.assign({}, req.query, req.params);
+    const token = req.cookies.jwtToken;
+    if (token == null) {
+      return verifyJwt(token, (err, payload) => {
+        if (err) {
+          return app.render(req, res, req.path);
+        }
+        return res.redirect('/list');
+      });
     } else {
-      //TODO: validate cookie first
-      return app.render(req, res, req.path);
+      return app.render(req, res, req.path, mergedQuery);
     }
   }
 
   const validateJwtTokenBeforeRender = (req, res) => {
-    const cookies = req.cookies.jwtToken;
-    if(cookies == undefined || cookies == null) {
-      return res.redirect('/login')
+    const token = req.cookies.jwtToken;
+    if (token == null) {
+      return res.redirect('/login');
     } else {
-      //TODO: validate cookie first
-      return app.render(req, res, req.path);
+      return verifyJwt(token, (err, payload) => {
+        if (err) {
+          return res.redirect('/login')
+        }
+        return app.render(req, res, req.path);
+      });
     }
   }
 
@@ -101,14 +111,16 @@ app.prepare().then(() => {
 
   // Routes
   // server.get('/custom', customRequestHandler.bind(undefined, '/custom-page'));
-  server.get('/sticker/:uuid', (req, res) => {
-    const params = { uuid: req.params.uuid };
-    return app.render(req, res, '/sticker', params);
-  });
+  server.get('/sticker/:uuid', (req, res) => customRequestHandler('/sticker', req, res));
+  server.get('/list/:sort/page/:page', [
+    param('sort').isIn(['popular', 'latest']),
+    param('page').isInt({ min: 1 }),
+    expressValidatorErrorHandler
+  ], (req, res) => customRequestHandler('/list', req, res));
 
   server.get('/login', redirectIfLoggedIn);
   server.get('/submit', validateJwtTokenBeforeRender);
-  server.get('/', (req, res) => res.redirect('/submit'))
+  //server.get('/', (req, res) => res.redirect('/submit'))
 
   server.get('/', customRequestHandler.bind(undefined, '/'));
   server.get('*', defaultRequestHandler);
