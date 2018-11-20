@@ -24,7 +24,6 @@ class CForm extends React.Component {
       progress: 0,
       isSubmitting: false,
       uploadType: 'image',
-      sharingType: 'public',
       errorMsg: '',
       isLoading: true
     };
@@ -151,15 +150,15 @@ class CForm extends React.Component {
                   extra={{
                     public: 'Your stickers will be publicly available when Sticker.ooo is out of beta',
                     link: 'Your stickers can only be accessible by link'
-                  }[this.state.sharingType]}
+                  }[this.props.form.getFieldValue('sharingType')]}
                 >
                   {getFieldDecorator('sharingType', {
-                    initialValue: 'public'
+                    rules: [{required: true, message: 'Please select sharing type!'}],
                   })(
-                    <Radio.Group name="sharingType" onChange={this.handleFieldChange}
+                    <Radio.Group name="sharingType"
                                  disabled={this.state.isSubmitting}>
                       <Radio.Button value="public">Public</Radio.Button>
-                      <Radio.Button value="link">Link only</Radio.Button>
+                      <Radio.Button value="link">Private</Radio.Button>
                     </Radio.Group>
                   )}
                 </FormItem>
