@@ -17,14 +17,11 @@ class CForm extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      trayFile: null,
-      stickersFiles: null,
       progress: 0,
       isSubmitting: false,
       uploadType: 'image',
-      sharingType: 'public',
       errorMsg: '',
-      isLoading: true
+      isLoading: true,
     };
   }
 
@@ -155,24 +152,24 @@ class CForm extends React.Component {
                   {getFieldDecorator('name', {
                     rules: [{required: true, message: locales[lang].pleaseInputPackName}],
                   })(
-                    <Input prefix={<Icon type="file" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Pack Name"
+                    <Input prefix={<Icon type="file" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder={locales[lang].packName}
                            disabled={this.state.isSubmitting}/>
                   )}
                 </FormItem>
                 <FormItem
-                  label="Sharing"
+                  label={locales[lang].sharingType}
                   extra={{
                     public: 'Your stickers will be publicly available when Sticker.ooo is out of beta',
-                    link: 'Your stickers can only be accessible by link'
-                  }[this.state.sharingType]}
+                    link: 'Your stickers can only be accessible with a private link',
+                  }[this.props.form.getFieldValue('sharingType')]}
                 >
                   {getFieldDecorator('sharingType', {
-                    initialValue: 'public'
+                    rules: [{required: true, message: locales[lang].pleaseSelectSharingType}],
                   })(
-                    <Radio.Group name="sharingType" onChange={this.handleFieldChange}
+                    <Radio.Group name="sharingType"
                                  disabled={this.state.isSubmitting}>
-                      <Radio.Button value="public">Public</Radio.Button>
-                      <Radio.Button value="link">Link only</Radio.Button>
+                      <Radio.Button value="public">{locales[lang].public}</Radio.Button>
+                      <Radio.Button value="link">{locales[lang].private}</Radio.Button>
                     </Radio.Group>
                   )}
                 </FormItem>
@@ -181,6 +178,7 @@ class CForm extends React.Component {
                 >
                   {getFieldDecorator('packSize', {
                     initialValue: 30,
+                    rules: [{required: true, message: locales[lang].pleaseInputMaximumNumberOfStickers}],
                   })(
                     <InputNumber
                       disabled={this.state.isSubmitting}
