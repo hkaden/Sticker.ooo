@@ -14,6 +14,7 @@ const { ValidationError } = require('../errors');
 const { expressValidatorErrorHandler, expressValidatorSanitizer } = require('../utils/expressErrorHandlers');
 const { TYPES, MESSAGES } = require('../configs/constants');
 const { siteStatsFields } = require('../utils/statisticsHelper');
+const { paginationValidators } = require('../utils/validators')
 
 const getStickerJsonValidators = [
   param('uuid').isUUID().withMessage(MESSAGES.IS_UUID),
@@ -38,22 +39,14 @@ const createStickerValidators = [
 ];
 
 const listStickerValidators = [
-  query('limit').optional().toInt().custom(v => v >= 1 && v <= 20)
-    .withMessage(MESSAGES.VERIFY_QUERY_LIMIT),
-  query('offset').optional().toInt().custom(v => v >= 0)
-    .withMessage(MESSAGES.VERIFY_QUERY_OFFSET),
-  query('sort').optional().isString()
-    .isIn([...siteStatsFields, 'popular', 'latest', 'updatedAt', 'createdAt'])
-    .withMessage(MESSAGES.VERIFY_QUERY_SORT),
-  query('order').optional().isString().customSanitizer(v => v.toLowerCase())
-    .isIn(['asc', 'desc'])
-    .withMessage(MESSAGES.VERIFY_QUERY_ORDER),
+  ...paginationValidators([...siteStatsFields, 'popular', 'latest', 'updatedAt', 'createdAt']),
   expressValidatorErrorHandler,
 ];
 
+const selectFields = '-__v';
+
 module.exports = (server) => {
   // Docs: https://github.com/ryo718/mongoose-crudify
-  const selectFields = '-__v';
   server.get('/api/stickers/:uuid/packs/:packId.json', getStickerJsonValidators, async (req, res, next) => {
     try {
       // packId starts from 1
@@ -127,54 +120,14 @@ module.exports = (server) => {
           res.sendStatus(405);
         },
         list: async (req, res, next) => {
-          const listDefaults = {
-            limit: 10,
-            offset: 0,
-            sort: 'createdAt',
-            order: 'desc',
-          };
-          const options = {
-            ...listDefaults,
-            ...req.query,
-          };
-
-          options.sort = siteStatsFields.includes(options.sort) ? `stats.${options.sort}` : options.sort;
-          options.sort = options.sort === 'popular' ? 'stats.weeklyDownloads' : options.sort;
-          if (options.sort === 'popular') {
-            options.sort = 'stats.weeklyDownloads';
-          } else if (options.sort === 'latest') {
-            options.sort = 'updatedAt';
-          }
-
           const findConditions = {
             $or: [
               { sharingType: 'public' },
               { sharingType: { $exists: false } },
             ],
           };
-
           try {
-            let query = Sticker.find(findConditions)
-              .limit(options.limit)
-              .skip(options.offset)
-              .sort({ [options.sort]: (options.order === 'asc' ? 1 : -1) })
-              .select(selectFields)
-              // .populate({path: 'createdByUser', select: 'username uuid'});
-
-            let docs = await query;
-
-            docs = docs.map(item => ({
-              ...item.toJSON(),
-              trays: item.trays.slice(0, 1),
-              stickers: item.stickers.slice(0, 1).map(pack => pack.slice(0, 5)),
-            }));
-
-
-
-            const totalCount = await Sticker.count(findConditions);
-
-            res.set('X-Total-Count', totalCount);
-            req.crudify = { result: { count: totalCount, data: docs } };
+            req.crudify = { result: await Sticker.findWithPagination(findConditions, req.query) };
             next();
           } catch (e) {
             next(e);
