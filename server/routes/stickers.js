@@ -18,7 +18,7 @@ const { paginationValidators } = require('../utils/validators')
 
 const getStickerJsonValidators = [
   param('uuid').isUUID().withMessage(MESSAGES.IS_UUID),
-  param('packId').isInt().withMessage(MESSAGES.IS_UUID).toInt(),
+  param('packId').isInt().withMessage(MESSAGES.IS_NUMBER).toInt(),
 ];
 
 const createStickerValidators = [
