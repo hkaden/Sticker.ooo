@@ -55,13 +55,13 @@ class StickerPage extends Component {
           extra={<Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost onClick={() => {
             let url = `/api/stickers/${this.props.uuid}/packs/${index + 1}.json`;
             if (this.props.userAgent.includes('iPhone')) {
-              Router.push(url);
+              location.href = `stickerooo://uuid?uuid=${stickersList[0].uuid}`;
             } else {
               saveAs(url, `${stickersList[0].name}_${index + 1}.json`, {type: 'application/json'});
             }
 
           }} >
-            Download JSON
+            { this.props.userAgent.includes('iPhone') ? 'Open In App' : 'Download JSON' }
           </Button>}
         >
           {
