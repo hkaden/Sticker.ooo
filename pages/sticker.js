@@ -52,17 +52,18 @@ class StickerPage extends Component {
         <Card
           key={index}
           title={`Pack ${index + 1}`}
-          extra={<Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost onClick={() => {
-            let url = `/api/stickers/${this.props.uuid}/packs/${index + 1}.json`;
-            if (this.props.userAgent.includes('iPhone')) {
-              location.href = `stickerooo://uuid?uuid=${stickersList[0].uuid}`;
-            } else {
-              saveAs(url, `${stickersList[0].name}_${index + 1}.json`, {type: 'application/json'});
-            }
-
-          }} >
-            { this.props.userAgent.includes('iPhone') ? 'Open In App' : 'Download JSON' }
-          </Button>}
+          extra={
+            <Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost onClick={() => {
+              const url = `/api/stickers/${this.props.uuid}/packs/${index + 1}.json`;
+              if (this.props.userAgent.includes('iPhone')) {
+                Router.push(url);
+              } else {
+                saveAs(url, `${stickersList[0].name}_${index + 1}.json`, {type: 'application/json'});
+              }
+            }}>
+              Download JSON
+            </Button>
+          }
         >
           {
                     pack.map((item, itemIndex) => <img key={itemIndex} src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)} width="100px" />)
@@ -85,10 +86,14 @@ class StickerPage extends Component {
               <Row type="flex" justify="center">
                 <Col lg={12}>
                   <Card
-                    title={stickersList[0].name
-                    }
+                    title={<div><div>{stickersList[0].name}</div><div><i>by {stickersList[0].publisher}</i></div></div>}
                     extra={
-                      `Publisher: ${stickersList[0].publisher}`
+                      this.props.userAgent.includes('iPhone') &&
+                      <Button style={{ marginLeft: '10px' }} type="primary" icon="plus" size="large" ghost onClick={() => {
+                        location.href = `stickerooo://uuid?uuid=${stickersList[0].uuid}`;
+                      }}>
+                        Open In App
+                      </Button>
                     }
                     bordered={false}
                   >
