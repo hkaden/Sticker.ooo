@@ -243,6 +243,54 @@ Verify an account based on a given token
     }
      ```
 
+#### `POST /resetPassword` Resetting user's password 
+
+*  **Query Params**
+
+    **Required:**
+    
+    `token=[string]`
+    `password=[string]`
+    `confirmPassword=[string]`
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+    {
+        "type": "RESET_PASSWORD_SUCCESS",
+        "message": "The password has been reset successfully"
+    }
+     ```
+* **Failed Response:**
+
+    * **Code:** 400 <br />
+    * **Content:** 
+     ```json
+    {
+        "type": "INVALID_TOKEN",
+        "message": "Invalid Token"
+    }
+     ```
+
+    * **Code:** 400 <br />
+    * **Content:** 
+     ```json
+    {
+        "type": "ACCOUNT_NOT_MATCH_TOKEN",
+        "message": "Account not match with the token"
+    }
+     ```    
+
+    * **Code:** 500 <br />
+    * **Content:** 
+     ```json
+    {
+        "type": "FAILED_TO_RESET_PASSWORD",
+        "message": "Failed to reset password"
+    }
+     ```   
 #### `POST /login` 
 Only allow users who have already verified to login
 

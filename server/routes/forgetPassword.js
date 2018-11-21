@@ -36,19 +36,28 @@ module.exports = function (server) {
           });
 
           token.setToken(email);
+          token.save((err) => {
+            if(err) {
+              return res.status(400).json({
+                type: TYPES.FAILED_TO_SET_TOKEN,
+                message: MESSAGES.FAILED_TO_SET_TOKEN,
+              });
+            }
 
-          let subject = 'Forget Password';
-          let content = `${'Hello,\n\n' + 'You recently have requested to reset password. Please do it by clicking the link: \nhttp:\/\/'}${req.headers.host}\/api\/resetPassword\/${token.token}.\n`;
-          let successReturn = {
-            type: TYPES.RESET_PASSWORD_EMAIL_SENT,
-            message: MESSAGES.RESET_PASSWORD_EMAIL_SENT_SUCCESS + (user.emailExternal || user.email),
-          };
-          let failedReturn = {
-            type: TYPES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
-            message: MESSAGES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
-          };
-          sendEmail(user.emailExternal || user.email, subject, content, req, res, successReturn, failedReturn);
-        });
+            let subject = 'Forget Password';
+            let content = `${'Hello,\n\n' + 'You recently have requested to reset password. Please do it by clicking the link: \nhttp:\/\/'}${req.headers.host}\/api\/resetPassword\/${token.token}.\n`;
+            let successReturn = {
+              type: TYPES.RESET_PASSWORD_EMAIL_SENT,
+              message: MESSAGES.RESET_PASSWORD_EMAIL_SENT_SUCCESS + (user.emailExternal || user.email),
+            };
+            let failedReturn = {
+              type: TYPES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
+              message: MESSAGES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
+            };
+            sendEmail(user.emailExternal || user.email, subject, content, req, res, successReturn, failedReturn);
+          });
+
+           });
       } catch (e) {
         next(e);
       }

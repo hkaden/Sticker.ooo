@@ -83,6 +83,11 @@ UsersSchema.methods.toAuthJSON = function () {
   };
 };
 
+UsersSchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
+
 UsersSchema.plugin(patchHistory, { mongoose, name: 'usersPatches', transforms: [pascalize, v => v] });
 
 module.exports = mongoose.model('User', UsersSchema);
