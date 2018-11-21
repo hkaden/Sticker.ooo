@@ -63,5 +63,7 @@ export const en = {
     confirmEmailMessage: 'Please confirm your email to fully access your website. Check your email inbox as well as spam section for confirmation letter and click on link in it to confirm your account.',
     latest: 'Latest',
     popular: 'Popular',
-  resetPassword: 'Reset Password'
+  resetPassword: 'Reset Password',
+  resetLinkSentMessage: 'Congratulations! An email with your password reset link has been sent to ',
+  resetPasswordSuccessMessage: 'Congratulations! Your password has been reset, please login again. '
 }

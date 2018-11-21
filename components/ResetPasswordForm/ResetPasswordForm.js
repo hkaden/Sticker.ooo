@@ -5,11 +5,11 @@ import cachios from "cachios"
 import _ from "lodash"
 import Loader from "../Loader/Loader"
 import {connect} from 'react-redux';
-import './ForgetForm.less';
+import './ResetPasswordForm.less';
 
 const FormItem = Form.Item;
 
-class Forget extends React.Component {
+class ResetPassword extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,6 +26,15 @@ class Forget extends React.Component {
     });
   }
 
+  compareToFirstPassword = (rule, value, callback) => {
+    const form = this.props.form;
+    if (value && value !== form.getFieldValue('password')) {
+      callback(true);
+    } else {
+      callback();
+    }
+  }
+
   handleSubmit = (e) => {
     const {locales, lang} = this.props;
     e.preventDefault();
@@ -38,17 +47,21 @@ class Forget extends React.Component {
 
         try {
           let credential = {
-            email: values.email
+            token: this.props.query.token,
+            password: values.password,
+            confirmPassword: values.confirmPassword
           }
 
-          const resp = await cachios.post('/api/forgetPassword', credential);
+          const resp = await cachios.post('/api/resetPassword', credential);
 
           if (resp.status === 200) {
-            message.success(locales[lang].resetLinkSentMessage + values.email);
+            message.success(locales[lang].resetPasswordSuccessMessage);
             this.setState({isSubmitting: false});
             this.props.form.setFieldsValue({
-              email: ''
+              password: '',
+              confirmPassword: ''
             });
+            redirect({}, {}, '/login');
           }
 
         } catch (e) {
@@ -59,7 +72,8 @@ class Forget extends React.Component {
             isSubmitting: false,
           });
           this.props.form.setFieldsValue({
-            email: ''
+            password: '',
+            confirmPassword: ''
           });
         }
       }
@@ -81,19 +95,31 @@ class Forget extends React.Component {
           <Col md={6} lg={6} xs={12} sm={12} className="LoginFormWrapper">
             <Form onSubmit={this.handleSubmit} className="login-form" className="Form" autoComplete="off">
               					<span className="login100-form-title">
-              {locales[lang].forgetPasswordLinkLabel}
+              {locales[lang].resetPassword}
 					</span>
               <FormItem className="inputWrapper">
-                {getFieldDecorator('email', {
-                  validateTrigger: 'onBlur',
-                  rules: [{
-                    type: 'email', message: locales[lang].emailValidationMessage
-                  },
-                    {
-                      required: true, message: locales[lang].pleaseInputEmail
-                    }],
+                {getFieldDecorator('password', {
+                  rules: [
+                    {required: true, message: locales[lang].pleaseInputPassword},
+                    {min: 6, message: locales[lang].passwordValidationMessage},
+                  ],
                 })(
-                  <Input placeholder="E-mail Address" className="Input"/>
+                  <Input type="password"
+                         placeholder={locales[lang].password} className="Input"/>
+                )}
+              </FormItem>
+              <FormItem className="inputWrapper">
+                {getFieldDecorator('confirmPassword', {
+                  rules: [
+                    {required: true, message: locales[lang].pleaseInputPassword},
+                    {
+                      validator: this.compareToFirstPassword,
+                      message: locales[lang].passwordNotMatch
+                    }
+                  ],
+                })(
+                  <Input type="password"
+                         placeholder={locales[lang].confirmPassword} className="Input" onBlur={this.handleConfirmBlur}/>
                 )}
               </FormItem>
               <FormItem>
@@ -101,6 +127,7 @@ class Forget extends React.Component {
                         loading={this.state.isSubmitting}>
                   {locales[lang].resetPassword}
                 </Button>
+
               </FormItem>
             </Form>
           </Col>
@@ -110,10 +137,10 @@ class Forget extends React.Component {
   }
 }
 
-const ForgetForm = Form.create({})(Forget);
+const ResetPasswordForm = Form.create({})(ResetPassword);
 const mapStateToProps = reduxState => ({
   locales: reduxState.locales.locales,
   lang: reduxState.locales.lang,
 });
 
-export default connect(mapStateToProps)(ForgetForm)
+export default connect(mapStateToProps)(ResetPasswordForm)

@@ -120,6 +120,7 @@ app.prepare().then(() => {
 
   server.get('/login', redirectIfLoggedIn);
   server.get('/submit', validateJwtTokenBeforeRender);
+  server.get('/resetPassword/:token', (req, res) => customRequestHandler('/resetPassword', req, res));
   //server.get('/', (req, res) => res.redirect('/submit'))
 
   server.get('/', customRequestHandler.bind(undefined, '/'));
