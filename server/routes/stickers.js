@@ -14,6 +14,7 @@ const { ValidationError } = require('../errors');
 const { expressValidatorErrorHandler, expressValidatorSanitizer } = require('../utils/expressErrorHandlers');
 const { TYPES, MESSAGES } = require('../configs/constants');
 const { siteStatsFields } = require('../utils/statisticsHelper');
+const { paginationValidators } = require('../utils/validators')
 
 const getStickerJsonValidators = [
   param('uuid').isUUID().withMessage(MESSAGES.IS_UUID),
@@ -38,24 +39,11 @@ const createStickerValidators = [
 ];
 
 const listStickerValidators = [
-  query('limit').optional().toInt().custom(v => v >= 1 && v <= 20)
-    .withMessage(MESSAGES.VERIFY_QUERY_LIMIT),
-  query('offset').optional().toInt().custom(v => v >= 0)
-    .withMessage(MESSAGES.VERIFY_QUERY_OFFSET),
-  query('sort').optional().isString()
-    .isIn([...siteStatsFields, 'popular', 'latest', 'updatedAt', 'createdAt'])
-    .withMessage(MESSAGES.VERIFY_QUERY_SORT),
-  query('order').optional().isString().customSanitizer(v => v.toLowerCase())
-    .isIn(['asc', 'desc'])
-    .withMessage(MESSAGES.VERIFY_QUERY_ORDER),
+  ...paginationValidators([...siteStatsFields, 'popular', 'latest', 'updatedAt', 'createdAt']),
   expressValidatorErrorHandler,
 ];
 
 const selectFields = '-__v';
-
-const getListStickersResults = async (findConditions, _options) => {
-
-};
 
 module.exports = (server) => {
   // Docs: https://github.com/ryo718/mongoose-crudify

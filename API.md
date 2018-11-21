@@ -156,6 +156,48 @@ Returns stickers, only the first 5 images of the first pack is returned.
 
     * **Code:** 200 <br />
 
+## Users
+#### `GET /stickers/uuid/stickers` Get user stickers with pagination
+Return user stickers. 
+
+*  **URL Params**
+
+    **Required:**
+    
+    `uuid=[string | 'me']`
+    
+    Use `'me'` to retrieve private stickers
+
+*  **Query Params**
+
+    **Optional:**
+    
+    `limit=[integer, max 20]`
+    
+    `offset=[integer]`
+    
+    `sort=['createdAt', 'popular', 'packs', 'stickers',
+            'dailyViews', 'weeklyViews', 'monthlyViews', 'yearlyViews',
+            'dailyDownloads', 'weeklyDownloads', 'monthlyDownloads', 'yearlyDownloads',
+          ]`
+    
+    `order=['asc', 'desc']`
+    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json5
+     {
+         "count": 6,
+         "data": [
+            /* sticker model */,
+            /* sticker model */
+         ]
+     }
+     ```
+
 ## Authentication & Authorization
 #### `POST /register` Register a user
 Register a user and send an verification email to the given email address
