@@ -75,7 +75,7 @@ function populateCreatedUser() {
 }
 
 function setPublisher(docs, next) {
-  const fn = doc => {
+  const fn = (doc) => {
     if (doc) {
       doc._publisher = doc.createdByUser && doc.createdByUser.username ? doc.createdByUser.username : 'Deleted User';
     }
@@ -100,5 +100,41 @@ stickerSchema.post('find', setPublisher);
 stickerSchema.post('findOne', setPublisher);
 
 stickerSchema.plugin(patchHistory, { mongoose, name: 'stickersPatches', transforms: [pascalize, v => v] });
+
+stickerSchema.statics.findWithPagination = async function (findConditions, paginationOptions) {
+  const { siteStatsFields } = require('../utils/statisticsHelper');
+  const listDefaults = {
+    limit: 10,
+    offset: 0,
+    sort: 'createdAt',
+    order: 'desc',
+  };
+  const options = {
+    ...listDefaults,
+    ...paginationOptions,
+  };
+  options.sort = siteStatsFields.includes(options.sort) ? `stats.${options.sort}` : options.sort;
+  options.sort = options.sort === 'popular' ? 'stats.weeklyDownloads' : options.sort;
+  if (options.sort === 'popular') {
+    options.sort = 'stats.weeklyDownloads';
+  } else if (options.sort === 'latest') {
+    options.sort = 'updatedAt';
+  }
+
+  let docs = await this.find(findConditions)
+    .limit(options.limit)
+    .skip(options.offset)
+    .sort({ [options.sort]: (options.order === 'asc' ? 1 : -1) });
+
+  docs = docs.map(item => ({
+    ...item.toJSON(),
+    trays: item.trays.slice(0, 1),
+    stickers: item.stickers.slice(0, 1).map(pack => pack.slice(0, 5)),
+  }));
+
+
+  const totalCount = await this.count(findConditions);
+  return { count: totalCount, data: docs };
+};
 
 module.exports = mongoose.model('Sticker', stickerSchema);

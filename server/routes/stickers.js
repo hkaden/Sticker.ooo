@@ -51,9 +51,14 @@ const listStickerValidators = [
   expressValidatorErrorHandler,
 ];
 
+const selectFields = '-__v';
+
+const getListStickersResults = async (findConditions, _options) => {
+
+};
+
 module.exports = (server) => {
   // Docs: https://github.com/ryo718/mongoose-crudify
-  const selectFields = '-__v';
   server.get('/api/stickers/:uuid/packs/:packId.json', getStickerJsonValidators, async (req, res, next) => {
     try {
       // packId starts from 1
@@ -127,54 +132,14 @@ module.exports = (server) => {
           res.sendStatus(405);
         },
         list: async (req, res, next) => {
-          const listDefaults = {
-            limit: 10,
-            offset: 0,
-            sort: 'createdAt',
-            order: 'desc',
-          };
-          const options = {
-            ...listDefaults,
-            ...req.query,
-          };
-
-          options.sort = siteStatsFields.includes(options.sort) ? `stats.${options.sort}` : options.sort;
-          options.sort = options.sort === 'popular' ? 'stats.weeklyDownloads' : options.sort;
-          if (options.sort === 'popular') {
-            options.sort = 'stats.weeklyDownloads';
-          } else if (options.sort === 'latest') {
-            options.sort = 'updatedAt';
-          }
-
           const findConditions = {
             $or: [
               { sharingType: 'public' },
               { sharingType: { $exists: false } },
             ],
           };
-
           try {
-            let query = Sticker.find(findConditions)
-              .limit(options.limit)
-              .skip(options.offset)
-              .sort({ [options.sort]: (options.order === 'asc' ? 1 : -1) })
-              .select(selectFields)
-              // .populate({path: 'createdByUser', select: 'username uuid'});
-
-            let docs = await query;
-
-            docs = docs.map(item => ({
-              ...item.toJSON(),
-              trays: item.trays.slice(0, 1),
-              stickers: item.stickers.slice(0, 1).map(pack => pack.slice(0, 5)),
-            }));
-
-
-
-            const totalCount = await Sticker.count(findConditions);
-
-            res.set('X-Total-Count', totalCount);
-            req.crudify = { result: { count: totalCount, data: docs } };
+            req.crudify = { result: await Sticker.findWithPagination(findConditions, req.query) };
             next();
           } catch (e) {
             next(e);
