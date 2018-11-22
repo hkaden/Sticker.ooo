@@ -7,11 +7,6 @@ const { MESSAGES } = require('../configs/constants');
 const { siteStatsFields } = require('../utils/statisticsHelper');
 const { paginationValidators } = require('../utils/validators')
 
-const getStickerJsonValidators = [
-  param('uuid').isUUID().withMessage(MESSAGES.IS_UUID),
-  param('packId').isInt().withMessage(MESSAGES.IS_UUID).toInt(),
-];
-
 const listStickerValidators = [
   ...paginationValidators([...siteStatsFields, 'popular', 'latest', 'updatedAt', 'createdAt']),
   expressValidatorErrorHandler,

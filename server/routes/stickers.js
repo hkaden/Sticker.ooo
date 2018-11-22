@@ -18,7 +18,7 @@ const { paginationValidators } = require('../utils/validators')
 
 const getStickerJsonValidators = [
   param('uuid').isUUID().withMessage(MESSAGES.IS_UUID),
-  param('packId').isInt().withMessage(MESSAGES.IS_UUID).toInt(),
+  param('packId').isInt().withMessage(MESSAGES.IS_NUMBER).toInt(),
 ];
 
 const createStickerValidators = [
@@ -34,6 +34,16 @@ const createStickerValidators = [
   body('userTags').optional().isArray().withMessage(MESSAGES.IS_ARRAY),
   body('userTags.*').isString().withMessage(MESSAGES.IS_STRING),
   body().custom(reqBody => reqBody.trays.length === reqBody.stickers.length).withMessage('Lengths of trays and stickers must match'),
+  expressValidatorSanitizer,
+  expressValidatorErrorHandler,
+];
+
+const updateStickerValidators = [
+  auth.required,
+  body('name').optional().isString().isLength({ min: 1, max: 128 }),
+  body('sharingType').optional().isString().withMessage(MESSAGES.IS_STRING),
+  body('userTags').optional().isArray().withMessage(MESSAGES.IS_ARRAY),
+  body('userTags.*').isString().withMessage(MESSAGES.IS_STRING),
   expressValidatorSanitizer,
   expressValidatorErrorHandler,
 ];
@@ -107,14 +117,34 @@ module.exports = (server) => {
           only: ['create'],
         },
         {
+          middlewares: [...updateStickerValidators],
+          only: ['update'],
+        },
+        {
           middlewares: [...listStickerValidators],
           only: ['list'],
         },
       ],
       actions: {
         // disable update and delete
-        update: (req, res) => {
-          res.sendStatus(405);
+        update: async (req, res, next) => {
+          try {
+            const createdBy = req.crudify.sticker.createdBy;
+            const userUuid = auth.getUserUUID(req);
+            const isAdmin = auth.isAdmin(req);
+            if (createdBy === userUuid || isAdmin) {
+              req.crudify.sticker.set(req.body);
+              req.crudify.result = await req.crudify.sticker.save();
+              next();
+            } else {
+              return res.status(401).json({
+                type: TYPES.UNAUTHORIZED_ACTION,
+                message: MESSAGES.UNAUTHORIZED_ACTION,
+              });
+            }
+          } catch (e) {
+            next(e);
+          }
         },
         delete: (req, res) => {
           res.sendStatus(405);
