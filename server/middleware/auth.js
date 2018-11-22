@@ -50,7 +50,7 @@ const auth = {
             message: MESSAGES.FAILED_TO_VERIFY_JWT_TOKEN,
           })
         }
-        
+
         if(payload.role && payload.role.includes('admin')){
           next()
         } else {
@@ -64,6 +64,7 @@ const auth = {
     }
   },
   getUserUUID: req => _.get(req, 'payload.uuid', null),
+  isAdmin: req => _.get(req, 'payload.role', []).includes('admin'),
 };
 
 module.exports = auth;
