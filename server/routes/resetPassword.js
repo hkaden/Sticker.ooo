@@ -23,7 +23,7 @@ module.exports = function (server) {
     async (req, res, next) => {
       try {
         const { token, password } = req.body;
-        const tokenObj = await Token.findOne({ token });
+        const tokenObj = await Token.findOne({ token,  type: TYPES.FORGET_PASSWORD});
         if (!tokenObj) {
           return res.status(400).json({
             type: TYPES.INVALID_TOKEN,
@@ -37,14 +37,30 @@ module.exports = function (server) {
               message: MESSAGES.ACCOUNT_NOT_MATCH_TOKEN,
             });
           } else {
-            console.log(user)
             user.setPassword(password);
-            console.log(user)
-            await user.save();
+            await user.save( (err) => {
+              if(err) {
+                console.err(err);
+                return res.status(500).json({
+                  type: TYPES.FAILED_TO_RESET_PASSWORD,
+                  message: MESSAGES.FAILED_TO_RESET_PASSWORD,
+                });
+              }
 
-            return res.status(200).json({
-              type: TYPES.RESET_PASSWORD_SUCCESS,
-              message: MESSAGES.RESET_PASSWORD_SUCCESS,
+              tokenObj.remove((err) => {
+                if(err) {
+                  console.err(err);
+                  return res.status(500).json({
+                    type: TYPES.FAILED_TO_RESET_PASSWORD,
+                    message: MESSAGES.FAILED_TO_RESET_PASSWORD,
+                  });
+                }
+
+                return res.status(200).json({
+                  type: TYPES.RESET_PASSWORD_SUCCESS,
+                  message: MESSAGES.RESET_PASSWORD_SUCCESS,
+                });
+              })
             });
           }
         }
