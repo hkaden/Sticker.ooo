@@ -26,7 +26,7 @@ module.exports = function (server) {
       try {
         // const { token } = req.body;
         let token = requestParameterValidator(req.path.substr(req.path.lastIndexOf('/') + 1));
-        const tokenObj = await Token.findOne({ token });
+        const tokenObj = await Token.findOne({ token, type: TYPES.REGISTER });
         if (!tokenObj) {
           type = TYPES.INVALID_TOKEN;
         } else {
