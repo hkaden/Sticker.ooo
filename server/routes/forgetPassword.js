@@ -6,7 +6,7 @@ const User = require('../models/User');
 const Token = require('../models/Token');
 const auth = require('../middleware/auth');
 const { expressValidatorErrorHandler } = require('../utils/expressErrorHandlers');
-const { sendEmail } = require('../utils/mailSender');
+const { sendForgetPasswordEmail } = require('../utils/mailSender');
 const { TYPES, MESSAGES } = require('../configs/constants');
 
 module.exports = function (server) {
@@ -44,17 +44,7 @@ module.exports = function (server) {
               });
             }
 
-            let subject = 'Forget Password';
-            let content = `${'Hello,\n\n' + 'You recently have requested to reset password. Please do it by clicking the link: \nhttp:\/\/'}${req.headers.host}\/resetPassword\/${token.token}.\n`;
-            let successReturn = {
-              type: TYPES.RESET_PASSWORD_EMAIL_SENT,
-              message: MESSAGES.RESET_PASSWORD_EMAIL_SENT_SUCCESS + (user.emailExternal || user.email),
-            };
-            let failedReturn = {
-              type: TYPES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
-              message: MESSAGES.FAILED_TO_SEND_RESET_PASSWORD_EMAIL,
-            };
-            sendEmail(user.emailExternal || user.email, subject, content, req, res, successReturn, failedReturn);
+            sendForgetPasswordEmail(user.emailExternal || user.email, token.token, req, res);
           });
 
            });

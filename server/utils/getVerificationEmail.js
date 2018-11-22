@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-module.exports = verificationUrl => `
+module.exports = content => `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 	<head>
@@ -173,7 +173,7 @@ module.exports = verificationUrl => `
 									</tr>
 
 									<tr>
-										<td class="hero-subheader__content" style="font-size: 16px; line-height: 27px; color: #969696; padding: 0 60px 90px 0;" align="left">Please verify your account by clicking <a href="${verificationUrl}">here</a></td>
+										<td class="hero-subheader__content" style="font-size: 16px; line-height: 27px; color: #969696; padding: 0 60px 90px 0;" align="left">${content}</td>
 									</tr>
 								</table>
 	</body>
