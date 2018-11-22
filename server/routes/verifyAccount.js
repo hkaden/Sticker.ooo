@@ -39,6 +39,7 @@ module.exports = function (server) {
           } else {
             user.isVerified = true;
             await user.save();
+            await tokenObj.remove();
             type = TYPES.ACCOUNT_VERIFIED;
             success = true;
           }
