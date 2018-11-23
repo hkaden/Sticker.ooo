@@ -81,7 +81,7 @@ const getIndividualStatsByPeriod = async (uuid, periodName, days) => {
     { $group: { _id: '$uuid', [`${periodName}Downloads`]: { $sum: '$downloads' }, [`${periodName}Views`]: { $sum: '$views' } } },
     { $project: { _id: 0 }},
   ]);
-  return stats[0];
+  return stats[0] || { [`${periodName}Downloads`]: 0, [`${periodName}Views`]: 0 };
 };
 
 const getStickerStatsGrouped = async (uuid) => {
