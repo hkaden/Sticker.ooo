@@ -85,16 +85,16 @@ class StickersList extends Component {
           <div className="Textbox">
             <p>{item.name}</p>
             {
-              sticker.userTags.map( (userTag, itemIndex) => {
+              item.userTags.map((userTag, itemIndex) => {
                 return (
-                  <StickerTag key={itemIndex} value={userTag} />
+                  <StickerTag key={itemIndex} value={userTag}/>
                 )
               })
             }
           </div>
         </Col>
       );
-    }
+    });
 
     const menu = (
       <Menu>

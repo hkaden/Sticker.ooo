@@ -66,9 +66,9 @@ export const en = {
     resetPassword: 'Reset Password',
     resetLinkSentMessage: 'Congratulations! An email with your password reset link has been sent to ',
     resetPasswordSuccessMessage: 'Congratulations! Your password has been reset, please login again. ',
-    language: 'Language',
-    stickerTags: 'Sticker Tag(s):',
-    addStickerTags: 'Add New Tag',
+  language: 'Language',
+  stickerTags: 'Sticker Tag(s):',
+  addStickerTags: 'Add New Tag',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: 'Free. Open Source. Ad-Free'

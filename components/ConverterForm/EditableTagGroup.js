@@ -1,27 +1,27 @@
-import { Tag, Input, Tooltip, Icon } from 'antd';
-import { connect } from 'react-redux';
+import {Tag, Input, Tooltip, Icon} from 'antd';
+import {connect} from 'react-redux';
 
 class EditableTagGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        tags: [],
-        inputVisible: false,
-        inputValue: '',
+      tags: [],
+      inputVisible: false,
+      inputValue: '',
     }
   }
 
   handleClose = (removedTag) => {
     const tags = this.state.tags.filter(tag => tag !== removedTag);
-    this.setState({ tags });
+    this.setState({tags});
   }
 
   showInput = () => {
-    this.setState({ inputVisible: true }, () => this.input.focus());
+    this.setState({inputVisible: true}, () => this.input.focus());
   }
 
   handleInputChange = (e) => {
-    this.setState({ inputValue: e.target.value });
+    this.setState({inputValue: e.target.value});
   }
 
   handleInputConfirm = () => {
@@ -43,8 +43,8 @@ class EditableTagGroup extends React.Component {
   saveInputRef = input => this.input = input
 
   render() {
-    const { locales, lang } = this.props;
-    const { tags, inputVisible, inputValue } = this.state;
+    const {locales, lang} = this.props;
+    const {tags, inputVisible, inputValue} = this.state;
     return (
       <div>
         {tags.map((tag, index) => {
@@ -61,7 +61,7 @@ class EditableTagGroup extends React.Component {
             ref={this.saveInputRef}
             type="text"
             size="small"
-            style={{ width: 78 }}
+            style={{width: 78}}
             value={inputValue}
             onChange={this.handleInputChange}
             onBlur={this.handleInputConfirm}
@@ -71,9 +71,9 @@ class EditableTagGroup extends React.Component {
         {!inputVisible && (
           <Tag
             onClick={this.showInput}
-            style={{ background: '#fff', borderStyle: 'dashed' }}
+            style={{background: '#fff', borderStyle: 'dashed'}}
           >
-            <Icon type="plus" />  {locales[lang].addStickerTags}
+            <Icon type="plus"/> {locales[lang].addStickerTags}
           </Tag>
         )}
       </div>
@@ -82,8 +82,8 @@ class EditableTagGroup extends React.Component {
 }
 
 const mapStateToProps = reduxState => ({
-    locales: reduxState.locales.locales,
-    lang: reduxState.locales.lang,
-  });
-  
+  locales: reduxState.locales.locales,
+  lang: reduxState.locales.lang,
+});
+
 export default connect(mapStateToProps)(EditableTagGroup);

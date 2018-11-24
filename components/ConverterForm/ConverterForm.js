@@ -312,7 +312,7 @@ class CForm extends React.Component {
                 </FormItem>
                 <FormItem>
                   <Button type="primary" htmlType="submit" style={{width: '100%'}} loading={this.state.isSubmitting}>
-                  {locales[lang].upload}
+                    {locales[lang].upload}
                   </Button>
                 </FormItem>
                 <Progress percent={this.state.progress} hidden={!this.state.isSubmitting} showInfo={false}/>

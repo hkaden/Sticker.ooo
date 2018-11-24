@@ -66,9 +66,9 @@ export const zh = {
     resetPassword: '重置密碼',
     resetLinkSentMessage: '恭喜! 重置密碼的連結已發送到 ',
     resetPasswordSuccessMessage: '恭喜! 您的密碼已被重置，請重新登錄 ',
-    language: '語言選項',
-    stickerTags: '貼圖標籤',
-    addStickerTags: '新增貼圖標籤',
+  language: '語言選項',
+  stickerTags: '貼圖標籤',
+  addStickerTags: '新增貼圖標籤',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: '免費、開源、無廣告'
