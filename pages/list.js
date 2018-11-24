@@ -16,7 +16,7 @@ class List extends Component {
     if (typeof page === 'string') {
       page = parseInt(page, 10);
     }
-    const pageSize = 20;
+    const pageSize = 24;
     const stickersData = await store.dispatch(reduxApi.actions.stickers({
       sort,
       order: 'desc',
