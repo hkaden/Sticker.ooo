@@ -66,6 +66,7 @@ export const zh = {
     resetPassword: '重置密碼',
     resetLinkSentMessage: '恭喜! 重置密碼的連結已發送到 ',
     resetPasswordSuccessMessage: '恭喜! 您的密碼已被重置，請重新登錄 ',
+    language: '語言選項',
     PAGE_INDEX: {
       title: 'Sticker.ooo (TC)',
       description: 'TBC'
