@@ -188,7 +188,7 @@ class CForm extends React.Component {
                   )}
                 </FormItem>
                 <FormItem
-                  label="Upload Type"
+                  label={locales[lang].uploadType}
                 >
                   {getFieldDecorator('uploadType', {
                     initialValue: 'image'
@@ -201,7 +201,7 @@ class CForm extends React.Component {
                 </FormItem>
                 {this.state.uploadType === 'image' ? (<div>
                   <FormItem
-                    label="Tray Icon"
+                     label={locales[lang].trayIcon}
                   >
                     <div className="dropbox">
                       {getFieldDecorator('tray', {
