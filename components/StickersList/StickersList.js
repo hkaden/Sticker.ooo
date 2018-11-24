@@ -27,24 +27,22 @@ class StickersList extends Component {
     return this.props.userAgent.includes('Chrome') || this.props.userAgent.includes('Android');
   }
 
-  paginationOnChange = (page) => {
-    this.setState({
-      isLoading: true,
-    });
-    Router.push({
-      pathname: '/list',
-      query: { page, sort: this.props.sort },
-    }, `/list/${this.props.sort}/page/${page}`);
-  };
-
   loadMore = (page) => {
-    cachios.get('/api/stickers?offset=' + page).then((resp) => {
+    cachios.get('/api/stickers', {
+      offset: page
+    }).then((resp) => {
       if (resp) {
         resp.data.data.map((item) => {
           this.state.stickersList.push(item);
         });
+        this.forceUpdate();
       }
+
+      if (this.state.stickersList.length >= resp.data.count)
+        this.state.hasMoreItems = false
+
     });
+
   }
 
   componentDidMount() {
@@ -130,11 +128,12 @@ class StickersList extends Component {
                 <InfiniteScroll
                   pageStart={this.props.page}
                   loadMore={this.loadMore.bind(this)}
-                  hasMore={true}
-                  loader={<div className="loader" key={0}>Loading ...</div>}>
+                  hasMore={this.state.hasMoreItems}
+                  loader={<Loader/>}>
                   {packList}
                 </InfiniteScroll>
               </Row>
+
               <Pagination
                 current={this.props.page}
                 onChange={this.paginationOnChange}
