@@ -33,7 +33,7 @@ const requestParameterValidator = (string) => {
 }
 
 const paginationValidators = (sortKeys) => [
-  query('limit').optional().toInt().custom(v => v >= 1 && v <= 20)
+  query('limit').optional().toInt().custom(v => v >= 1 && v <= 30)
     .withMessage(MESSAGES.VERIFY_QUERY_LIMIT),
   query('offset').optional().toInt().custom(v => v >= 0)
     .withMessage(MESSAGES.VERIFY_QUERY_OFFSET),

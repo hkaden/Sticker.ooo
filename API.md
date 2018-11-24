@@ -54,7 +54,7 @@ Returns stickers, only the first 5 images of the first pack is returned.
 
     **Optional:**
     
-    `limit=[integer, max 20]`
+    `limit=[integer, max 30]`
     
     `offset=[integer]`
     
