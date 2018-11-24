@@ -10,6 +10,7 @@ import './StickersList.less';
 import InfiniteScroll from 'react-infinite-scroller';
 import Loader from '../Loader/Loader';
 import cachios from "cachios";
+import LazyLoad from 'react-lazyload';
 
 class StickersList extends Component {
   converter = null;
@@ -77,7 +78,9 @@ class StickersList extends Component {
       packList.push(
         <Col md={4}>
           <div className="Traybox">
-            <img src={item.tray}/><br/>
+            <LazyLoad height={120}>
+              <img src={item.tray}/>
+            </LazyLoad>
           </div>
           <div className="Textbox">
             <p>{item.name}</p>
