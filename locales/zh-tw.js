@@ -55,6 +55,8 @@ export const zh = {
     pleaseInputPassword: '請輸入密碼!',
     pleaseInputEmail: '請輸入電郵地址!',
     pleaseContactAdmin: '請聯絡管理員協助',
+    pleaseInputSubject: '請輸入主題!',
+    pleaseInputMessage: '請輸入訊息!',
     usernameValidationMessage: '用戶名稱必須在4-20個字元',
     passwordNotMatch: '兩次密碼並不相同',
     passwordValidationMessage: '密碼必須在6個字元以上',
@@ -69,6 +71,10 @@ export const zh = {
     language: '語言選項',
     stickerTags: '貼圖標籤',
     addStickerTags: '新增貼圖標籤',
+    submit: '提交',
+    subject: '主題',
+    message: '訊息',
+    contactUs: '聯絡我們',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: '免費、開源、無廣告'
@@ -100,5 +106,9 @@ export const zh = {
     PAGE_STICKER: {
       title: 'Sticker.ooo - 貼圖',
       description: 'Sticker.ooo - 貼圖'
+    },
+    PAGE_CONTACT_US: {
+      title: 'Sticker.ooo - 聯絡我們',
+      description: 'Sticker.ooo - 聯絡我們'
     },
 }

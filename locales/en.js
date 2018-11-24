@@ -55,6 +55,8 @@ export const en = {
     pleaseInputPassword: 'Please input password!',
     pleaseInputEmail: 'Please input E-mail address!',
     pleaseContactAdmin: 'Please contact administrators for assistance.',
+    pleaseInputSubject: 'Please input subject!',
+    pleaseInputMessage: 'Please input message!',
     usernameValidationMessage: 'Your username must be between 4 and 20 characters long',
     passwordNotMatch: 'Those passwords didn\'t match. Try again. ',
     passwordValidationMessage: 'Your password must be more than 6 characters',
@@ -69,6 +71,10 @@ export const en = {
     language: 'Language',
     stickerTags: 'Sticker Tag(s):',
     addStickerTags: 'Add New Tag',
+    submit: 'Submit',
+    contactUs: 'Contact Us',
+    subject: 'Subject',
+    message: 'Message',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: 'Free. Open Source. Ad-Free'
@@ -100,5 +106,9 @@ export const en = {
     PAGE_STICKER: {
       title: 'Sticker.ooo - Stickers',
       description: 'Sticker.ooo - Stickers'
+    },
+    PAGE_CONTACT_US: {
+      title: 'Sticker.ooo - Contact Us',
+      description: 'Sticker.ooo - Contact Us'
     },
 }
