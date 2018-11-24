@@ -7,6 +7,9 @@ import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
 import { decodeWebp } from '../../lib/customReducers';
 import StickerTag from '../StickerTag/StickerTag';
 import './StickersList.less';
+import InfiniteScroll from 'react-infinite-scroller';
+import Loader from '../Loader/Loader';
+import cachios from "cachios";
 
 class StickersList extends Component {
   converter = null;
@@ -14,7 +17,9 @@ class StickersList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      stickersList: this.props.stickersList,
       isLoading: true,
+      hasMoreItems: true,
     };
   }
 
@@ -31,6 +36,16 @@ class StickersList extends Component {
       query: { page, sort: this.props.sort },
     }, `/list/${this.props.sort}/page/${page}`);
   };
+
+  loadMore = (page) => {
+    cachios.get('/api/stickers?offset=' + page).then((resp) => {
+      if (resp) {
+        resp.data.data.map((item) => {
+          this.state.stickersList.push(item);
+        });
+      }
+    });
+  }
 
   componentDidMount() {
     this.setState({
@@ -56,64 +71,30 @@ class StickersList extends Component {
     }
   }
 
+
   render() {
     const {locales, lang} = this.props;
-    let packList = null;
-    
-    if (this.state.isLoading) {
-      packList = <Card loading />;
-    } else if (this.props.stickersList.length > 0) {
-      packList = this.props.stickersList.map((sticker, itemIndex) => (
-        <Card
-          key={`set-${itemIndex}`}
-          title={
-            <div>
-              <div>{sticker.name}</div>
-              <div>
-                <i>by {sticker.publisher}</i>
-              </div>
-              <div>
-                {
-                  sticker.userTags.map( (userTag, itemIndex) => {
-                    return (
-                      <StickerTag key={itemIndex} value={userTag} />
-                    )
-                  })
-                }
-              </div>
-            </div>}
-          bodyStyle={{display: 'flex'}}
-          extra={(
-            <div>
-              <Link href={{ pathname: '/sticker', query: {uuid: sticker.uuid}}} as={`/sticker/${sticker.uuid}`}>
-                <Button style={{ marginLeft: '10px' }} type="primary" size="large" ghost>
-                  View more
-                </Button>
-              </Link>
-            </div>
-          )}
-        >
-          {
-            sticker.stickers[0].slice(0, 4).map((item, itemIndex) => (
-              <div style={{flexShrink: 1}}>
-                <img
-                  key={`sticker-${itemIndex}`}
-                  src={this.isWebpSupported() ? item : (item.endsWith('.webp') ? '' : item)}
-                  style={{width: '100%', maxWidth: '100px', objectFit: 'contain'}}
-                />
-              </div>
+    let packList = [];
 
-            ))
-          }
-        </Card>
-      ));
-    } else {
-      packList = (
-        <Card>
-         {locales[lang].noStickers}
-        </Card>
+    this.state.stickersList.map((item, i) => {
+      packList.push(
+        <Col md={4}>
+          <div className="Traybox">
+            <img src={item.tray}/><br/>
+          </div>
+          <div className="Textbox">
+            <p>{item.name}</p>
+            {
+              item.userTags.map((userTag, itemIndex) => {
+                return (
+                  <StickerTag key={itemIndex} value={userTag}/>
+                )
+              })
+            }
+          </div>
+        </Col>
       );
-    }
+    });
 
     const menu = (
       <Menu>
@@ -145,7 +126,15 @@ class StickersList extends Component {
             }
           >
             <div>
-              { packList }
+              <Row className="StickersList" type="flex" justify="center">
+                <InfiniteScroll
+                  pageStart={this.props.page}
+                  loadMore={this.loadMore.bind(this)}
+                  hasMore={true}
+                  loader={<div className="loader" key={0}>Loading ...</div>}>
+                  {packList}
+                </InfiniteScroll>
+              </Row>
               <Pagination
                 current={this.props.page}
                 onChange={this.paginationOnChange}
@@ -160,7 +149,7 @@ class StickersList extends Component {
   }
 }
 
-const mapStateToProps = reduxState => ({ 
+const mapStateToProps = reduxState => ({
   stickersList: reduxState.stickersList,
   locales: reduxState.locales.locales,
   lang: reduxState.locales.lang,
