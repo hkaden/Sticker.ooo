@@ -66,36 +66,39 @@ export const en = {
     resetPassword: 'Reset Password',
     resetLinkSentMessage: 'Congratulations! An email with your password reset link has been sent to ',
     resetPasswordSuccessMessage: 'Congratulations! Your password has been reset, please login again. ',
+    language: 'Language',
+    stickerTags: 'Sticker Tag(s):',
+    addStickerTags: 'Add New Tag',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
-      description: 'TBC'
+      description: 'Free. Open Source. Ad-Free'
     },
     PAGE_LIST_STICKERS: {
-      title: 'Sticker.ooo - Listing',
-      description: 'TBC'
+      title: 'Sticker.ooo - List of Stickers',
+      description: 'Sticker.ooo - List of Stickers'
     },
     PAGE_SUBMIT_STICKERS: {
-      title: 'Sticker.ooo - Submit',
-      description: 'TBC'
+      title: 'Sticker.ooo - Submit Stickers',
+      description: 'Sticker.ooo - Submit Stickers'
     },
     PAGE_FORGET_PASSWORD: {
       title: 'Sticker.ooo - Forget Password',
-      description: 'TBC'
+      description: 'Sticker.ooo - Forget Password'
     },
     PAGE_LOGIN: {
       title: 'Sticker.ooo - Login',
-      description: 'TBC'
+      description: 'Sticker.ooo - Login'
     },
     PAGE_REGISTER: {
       title: 'Sticker.ooo - Register',
-      description: 'TBC'
+      description: 'Sticker.ooo - Register'
     },
     PAGE_RESET_PASSWORD: {
       title: 'Sticker.ooo - Reset Password',
-      description: 'TBC'
+      description: 'Sticker.ooo - Reset Password'
     },
     PAGE_STICKER: {
       title: 'Sticker.ooo - Stickers',
-      description: 'TBC'
+      description: 'Sticker.ooo - Stickers'
     },
 }

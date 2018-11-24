@@ -5,6 +5,7 @@ import { Button, Card, Col, Dropdown, Icon, Menu, Pagination, Row } from 'antd';
 import Link from 'next/link';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
 import { decodeWebp } from '../../lib/customReducers';
+import StickerTag from '../StickerTag/StickerTag';
 import './StickersList.less';
 import InfiniteScroll from 'react-infinite-scroller';
 import Loader from '../Loader/Loader';
@@ -50,6 +51,7 @@ class StickersList extends Component {
     this.setState({
       isLoading: false,
     });
+
     if (!this.isWebpSupported()) {
       this.converter = new WhatsAppStickersConverter();
       this.converter.init().then(async () => {
@@ -82,10 +84,17 @@ class StickersList extends Component {
           </div>
           <div className="Textbox">
             <p>{item.name}</p>
+            {
+              sticker.userTags.map( (userTag, itemIndex) => {
+                return (
+                  <StickerTag key={itemIndex} value={userTag} />
+                )
+              })
+            }
           </div>
         </Col>
       );
-    });
+    }
 
     const menu = (
       <Menu>

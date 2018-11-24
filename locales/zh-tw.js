@@ -66,36 +66,39 @@ export const zh = {
     resetPassword: '重置密碼',
     resetLinkSentMessage: '恭喜! 重置密碼的連結已發送到 ',
     resetPasswordSuccessMessage: '恭喜! 您的密碼已被重置，請重新登錄 ',
+    language: '語言選項',
+    stickerTags: '貼圖標籤',
+    addStickerTags: '新增貼圖標籤',
     PAGE_INDEX: {
-      title: 'Sticker.ooo (TC)',
-      description: 'TBC'
+      title: 'Sticker.ooo',
+      description: '免費、開源、無廣告'
     },
     PAGE_LIST_STICKERS: {
-      title: 'Sticker.ooo - Listing (TC)',
-      description: 'TBC'
+      title: 'Sticker.ooo - 貼圖包一覽',
+      description: 'Sticker.ooo - 貼圖包一覽'
     },
     PAGE_SUBMIT_STICKERS: {
-      title: 'Sticker.ooo - Submit (TC)',
-      description: 'TBC'
+      title: 'Sticker.ooo - 我要整一套屬於自己既Stickers',
+      description: 'Sticker.ooo - 我要整一套屬於自己既Stickers'
     },
     PAGE_FORGET_PASSWORD: {
-      title: 'Sticker.ooo - Forget Password (TC)',
-      description: 'TBC'
+      title: 'Sticker.ooo - 重置密碼',
+      description: 'Sticker.ooo - 重置密碼'
     },
     PAGE_LOGIN: {
-      title: 'Sticker.ooo - Login (TC)',
-      description: 'TBC'
+      title: 'Sticker.ooo - 登入',
+      description: 'Sticker.ooo - 登入'
     },
     PAGE_REGISTER: {
-      title: 'Sticker.ooo - Register (TC)',
-      description: 'TBC'
+      title: 'Sticker.ooo - 註冊',
+      description: 'Sticker.ooo - 註冊'
     },
     PAGE_RESET_PASSWORD: {
-      title: 'Sticker.ooo - Reset Password (TC)',
-      description: 'TBC'
+      title: 'Sticker.ooo - 重置密碼',
+      description: 'Sticker.ooo - 重置密碼'
     },
     PAGE_STICKER: {
-      title: 'Sticker.ooo - Stickers (TC)',
-      description: 'TBC'
+      title: 'Sticker.ooo - 貼圖',
+      description: 'Sticker.ooo - 貼圖'
     },
 }

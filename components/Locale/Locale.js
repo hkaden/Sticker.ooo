@@ -49,7 +49,7 @@ class Locale extends React.Component {
     }
 
     render() {
-        const { lang } = this.props;
+        const { locales, lang } = this.props;
       const menu = (
         <Menu>
           <Menu.Item key='en' onClick={this.changeLocale}>English</Menu.Item>
@@ -60,7 +60,7 @@ class Locale extends React.Component {
             <div className="change-locale">
               <Dropdown overlay={menu} trigger={['click']}>
                 <Button style={{marginLeft: 8}} size="small">
-                  {console.log(this.state.locale)}
+                   { locales[lang].language }
                   <Icon type="down"/>
                 </Button>
               </Dropdown>
