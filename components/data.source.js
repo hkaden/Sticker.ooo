@@ -8,7 +8,7 @@ export const Nav00DataSource = {
   Menu: {
     className: 'header0-menu',
     children: [
-      {name: 'item0', a: {children: {en: 'Item1', zh: 'Item1'}, href: '/'}}
+      {name: 'item0', a: {children: {en: 'List of Stickers', zh: '貼圖包一覽'}, href: '/list'}}
     ],
   },
   mobileMenu: {className: 'header0-mobile-menu'},
