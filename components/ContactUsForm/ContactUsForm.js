@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {Form, Input, Button, message, Row, Col, Modal} from 'antd';
+import _ from 'lodash';
+import redirect from '../../lib/redirect'
+import Loader from '../Loader/Loader';
+import cachios from 'cachios';
 import './ContactUsForm.less';
 
 const FormItem = Form.Item;
@@ -21,12 +25,63 @@ class ContactUs extends React.Component {
       })
     }
 
+    handleSubmit = (e) => {
+      const {locales, lang} = this.props;
+      e.preventDefault();
+      this.props.form.validateFields(async (err, values) => {
+        if (!err) {
+          this.setState({
+            isSubmitting: true,
+          });
+  
+          try {
+            let data = {
+              email: values.email,
+              subject: values.subject,
+              message: values.message
+            }
+  
+            const resp = await cachios.post('/api/contactUs', data);
+  
+            if (resp.status === 200) {
+              Modal.info({
+                title: locales[lang].contactUsModalTitle,
+                content: (
+                  <div>
+                    <p>{locales[lang].confirmContactUsMessage}</p>
+                  </div>
+                ),
+                onOk() {
+                  redirect({}, e, '/')
+                },
+              });
+            }
+          } catch (e) {
+  
+            const errorMsg = _.get(e, 'response.data.message', e.message || e.toString())
+            message.error(errorMsg);
+            this.setState({
+              isSubmitting: false,
+              errorMsg,
+            })
+            this.props.form.setFieldsValue({
+              email: '',
+              subject: '',
+              message: '',
+            })
+          }
+        }
+      });
+    }
+
     render() {
       const {getFieldDecorator} = this.props.form;
       const {locales, lang} = this.props;
       
         if(this.state.isLoading){
-          return (null)
+          return (
+            <Loader/>
+          )
         }
         
         return (

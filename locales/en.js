@@ -63,6 +63,7 @@ export const en = {
     emailValidationMessage: 'The input is not valid E-mail!',
     loginSuccessMessage: 'Congratulations! You can now login and create your own stickers!',
     confirmEmailMessage: 'Please confirm your email to fully access your website. Check your email inbox as well as spam section for confirmation letter and click on link in it to confirm your account.',
+    confirmContactUsMessage: "Thank you for your message. We'll get back to you as soon as possible",
     latest: 'Latest',
     popular: 'Popular',
     resetPassword: 'Reset Password',
@@ -75,6 +76,7 @@ export const en = {
     contactUs: 'Contact Us',
     subject: 'Subject',
     message: 'Message',
+    contactUsModalTitle: 'Your email has been sent',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: 'Free. Open Source. Ad-Free'

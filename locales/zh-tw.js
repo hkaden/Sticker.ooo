@@ -63,6 +63,7 @@ export const zh = {
     emailValidationMessage: '此為錯誤的電郵地址!',
     loginSuccessMessage: '恭喜!你現在可以登入及製作屬於自己的貼圖!',
     confirmEmailMessage: '請確認電郵以訪問完整網站。檢查您的電郵收件箱以及垃圾郵件部分以獲取確認信，然後單擊其中的鏈接以確認您的帳戶。',
+    confirmContactUsMessage: "Thank you for your message. We'll get back to you as soon as possible",
     latest: 'Latest',
     popular: 'Popular',
     resetPassword: '重置密碼',
@@ -74,6 +75,7 @@ export const zh = {
     submit: '提交',
     subject: '主題',
     message: '訊息',
+    contactUsModalTitle: 'Your email has been sent',
     contactUs: '聯絡我們',
     PAGE_INDEX: {
       title: 'Sticker.ooo',

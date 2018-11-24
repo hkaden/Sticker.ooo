@@ -1,6 +1,7 @@
 const mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
 const { TYPES, MESSAGES } = require('../configs/constants');
-const getHtmlEmail = require('./getVerificationEmail')
+const getHtmlEmail = require('./getVerificationEmail');
+const getContactUsHtmlEmail = require('./getContactUsEmail');
 
 const sendEmail = (email, subject, content, req, res, successReturn, failedReturn) => {
   const mailOptions = {
@@ -13,10 +14,34 @@ const sendEmail = (email, subject, content, req, res, successReturn, failedRetur
   mailgun.messages().send(mailOptions, function (error, body) {
     if (error) {
       console.error(error)
-      return res.status(400).json(failedReturn);
+      return res.status(500).json(failedReturn);
     }
 
     return res.status(200).json(successReturn);
+  });
+};
+
+const sendContactUsEmail = (email, subject, content, req, res) => {
+  const mailOptions = {
+    from: email,
+    to: 'account@sticker.ooo',
+    subject: subject,
+    html: getContactUsHtmlEmail(content),
+  };
+  
+  mailgun.messages().send(mailOptions, function (error, body) {
+    if (error) {
+      console.error(error)
+      return res.status(500).json({
+        type: TYPES.FAILED_TO_SEND_CONTACT_US_EMAIL,
+        message: MESSAGES.FAILED_TO_SEND_CONTACT_US_EMAIL
+      });
+    }
+
+    return res.status(200).json({
+      type: TYPES.CONTACT_US_EMAIL_SENT,
+      message: MESSAGES.CONTACT_US_EMAIL_SENT
+    });
   });
 };
 
@@ -51,5 +76,6 @@ const sendForgetPasswordEmail = (email, token, req, res) => {
 module.exports = {
   sendEmail,
   sendVerificationEmail,
-  sendForgetPasswordEmail
+  sendForgetPasswordEmail,
+  sendContactUsEmail
 };
