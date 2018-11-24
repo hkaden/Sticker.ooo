@@ -28,9 +28,8 @@ class StickersList extends Component {
   }
 
   loadMore = (page) => {
-    cachios.get('/api/stickers', {
-      offset: page
-    }).then((resp) => {
+    cachios.get('/api/stickers?offset=' + page + '&limit=24')
+      .then((resp) => {
       if (resp) {
         resp.data.data.map((item) => {
           this.state.stickersList.push(item);
