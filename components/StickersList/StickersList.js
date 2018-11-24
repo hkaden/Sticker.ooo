@@ -132,13 +132,6 @@ class StickersList extends Component {
                   {packList}
                 </InfiniteScroll>
               </Row>
-
-              <Pagination
-                current={this.props.page}
-                onChange={this.paginationOnChange}
-                total={this.props.itemCount}
-                pageSize={this.props.pageSize}
-              />
             </div>
           </Card>
         </Col>
