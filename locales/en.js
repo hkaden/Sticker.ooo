@@ -66,6 +66,7 @@ export const en = {
     resetPassword: 'Reset Password',
     resetLinkSentMessage: 'Congratulations! An email with your password reset link has been sent to ',
     resetPasswordSuccessMessage: 'Congratulations! Your password has been reset, please login again. ',
+    language: 'Language',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: 'TBC'
