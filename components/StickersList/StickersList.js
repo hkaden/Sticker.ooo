@@ -5,6 +5,7 @@ import { Button, Card, Col, Dropdown, Icon, Menu, Pagination, Row } from 'antd';
 import Link from 'next/link';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
 import { decodeWebp } from '../../lib/customReducers';
+import StickerTag from '../StickerTag/StickerTag';
 import './StickersList.less';
 
 class StickersList extends Component {
@@ -58,14 +59,29 @@ class StickersList extends Component {
   render() {
     const {locales, lang} = this.props;
     let packList = null;
-
+    
     if (this.state.isLoading) {
       packList = <Card loading />;
     } else if (this.props.stickersList.length > 0) {
       packList = this.props.stickersList.map((sticker, itemIndex) => (
         <Card
           key={`set-${itemIndex}`}
-          title={<div><div>{sticker.name}</div><div><i>by {sticker.publisher}</i></div></div>}
+          title={
+            <div>
+              <div>{sticker.name}</div>
+              <div>
+                <i>by {sticker.publisher}</i>
+              </div>
+              <div>
+                {
+                  sticker.userTags.map( (userTag, itemIndex) => {
+                    return (
+                      <StickerTag key={itemIndex} value={userTag} />
+                    )
+                  })
+                }
+              </div>
+            </div>}
           bodyStyle={{display: 'flex'}}
           extra={(
             <div>

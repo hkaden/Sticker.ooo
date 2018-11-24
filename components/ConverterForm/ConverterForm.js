@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Link from 'next/link';
 import redirect from '../../lib/redirect';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
+import EditableTagGroup from './EditableTagGroup';
 import './ConverterForm.less';
 import Loader from '../Loader/Loader';
 
@@ -22,7 +23,10 @@ class CForm extends React.Component {
       uploadType: 'image',
       errorMsg: '',
       isLoading: true,
+      userTags: []
     };
+
+    this.handleUserTags = this.handleUserTags.bind(this);
   }
 
   componentDidMount() {
@@ -93,6 +97,7 @@ class CForm extends React.Component {
             tray,
             trays,
             stickers: stickersInPack,
+            userTags: this.state.userTags
           };
 
 
@@ -117,6 +122,12 @@ class CForm extends React.Component {
       [e.target.name]: e.target.value,
     })
   };
+
+  handleUserTags = (tags) => {
+    this.setState({
+      userTags: tags
+    })
+  }
 
   beforeUpload = () => {
     return false;
@@ -186,6 +197,9 @@ class CForm extends React.Component {
                       max={30}
                     />,
                   )}
+                </FormItem>
+                <FormItem label={locales[lang].stickerTags}>
+                  <EditableTagGroup handleUserTags={this.handleUserTags}/>
                 </FormItem>
                 <FormItem
                   label={locales[lang].uploadType}
@@ -298,7 +312,7 @@ class CForm extends React.Component {
                 </FormItem>
                 <FormItem>
                   <Button type="primary" htmlType="submit" style={{width: '100%'}} loading={this.state.isSubmitting}>
-                    Upload
+                  {locales[lang].upload}
                   </Button>
                 </FormItem>
                 <Progress percent={this.state.progress} hidden={!this.state.isSubmitting} showInfo={false}/>
