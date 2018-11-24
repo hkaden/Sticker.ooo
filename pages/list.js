@@ -3,6 +3,7 @@ import Head from 'next/head';
 import reduxApi from '../lib/reduxApi';
 import Layout from '../components/Layout/Layout';
 import StickersList from '../components/StickersList/StickersList'
+import PageHead from "../components/PageHead/PageHead";
 import { loadStickersList } from '../lib/customReducers';
 
 class List extends Component {
@@ -33,16 +34,12 @@ class List extends Component {
 
   render() {
     return (
-      <div>
-        <Head>
-          <title>List page</title>
-          <meta name="description" content="Converter page description" />
-          <script src="/static/libwebpjs.out.js" />
-        </Head>
+      <React.Fragment>
+        <PageHead pageId="PAGE_LIST_STICKERS" requireLibWebpJs={true}/>
         <Layout>
           <StickersList {...this.props} />
         </Layout>
-      </div>
+      </React.Fragment>
     );
   }
 }

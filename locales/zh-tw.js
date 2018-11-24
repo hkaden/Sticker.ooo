@@ -63,7 +63,39 @@ export const zh = {
     confirmEmailMessage: '請確認電郵以訪問完整網站。檢查您的電郵收件箱以及垃圾郵件部分以獲取確認信，然後單擊其中的鏈接以確認您的帳戶。',
     latest: 'Latest',
     popular: 'Popular',
-  resetPassword: '重置密碼',
-  resetLinkSentMessage: '恭喜! 重置密碼的連結已發送到 ',
-  resetPasswordSuccessMessage: '恭喜! 您的密碼已被重置，請重新登錄 '
+    resetPassword: '重置密碼',
+    resetLinkSentMessage: '恭喜! 重置密碼的連結已發送到 ',
+    resetPasswordSuccessMessage: '恭喜! 您的密碼已被重置，請重新登錄 ',
+    PAGE_INDEX: {
+      title: 'Sticker.ooo (TC)',
+      description: 'TBC'
+    },
+    PAGE_LIST_STICKERS: {
+      title: 'Sticker.ooo - Listing (TC)',
+      description: 'TBC'
+    },
+    PAGE_SUBMIT_STICKERS: {
+      title: 'Sticker.ooo - Submit (TC)',
+      description: 'TBC'
+    },
+    PAGE_FORGET_PASSWORD: {
+      title: 'Sticker.ooo - Forget Password (TC)',
+      description: 'TBC'
+    },
+    PAGE_LOGIN: {
+      title: 'Sticker.ooo - Login (TC)',
+      description: 'TBC'
+    },
+    PAGE_REGISTER: {
+      title: 'Sticker.ooo - Register (TC)',
+      description: 'TBC'
+    },
+    PAGE_RESET_PASSWORD: {
+      title: 'Sticker.ooo - Reset Password (TC)',
+      description: 'TBC'
+    },
+    PAGE_STICKER: {
+      title: 'Sticker.ooo - Stickers (TC)',
+      description: 'TBC'
+    },
 }

@@ -63,7 +63,39 @@ export const en = {
     confirmEmailMessage: 'Please confirm your email to fully access your website. Check your email inbox as well as spam section for confirmation letter and click on link in it to confirm your account.',
     latest: 'Latest',
     popular: 'Popular',
-  resetPassword: 'Reset Password',
-  resetLinkSentMessage: 'Congratulations! An email with your password reset link has been sent to ',
-  resetPasswordSuccessMessage: 'Congratulations! Your password has been reset, please login again. '
+    resetPassword: 'Reset Password',
+    resetLinkSentMessage: 'Congratulations! An email with your password reset link has been sent to ',
+    resetPasswordSuccessMessage: 'Congratulations! Your password has been reset, please login again. ',
+    PAGE_INDEX: {
+      title: 'Sticker.ooo',
+      description: 'TBC'
+    },
+    PAGE_LIST_STICKERS: {
+      title: 'Sticker.ooo - Listing',
+      description: 'TBC'
+    },
+    PAGE_SUBMIT_STICKERS: {
+      title: 'Sticker.ooo - Submit',
+      description: 'TBC'
+    },
+    PAGE_FORGET_PASSWORD: {
+      title: 'Sticker.ooo - Forget Password',
+      description: 'TBC'
+    },
+    PAGE_LOGIN: {
+      title: 'Sticker.ooo - Login',
+      description: 'TBC'
+    },
+    PAGE_REGISTER: {
+      title: 'Sticker.ooo - Register',
+      description: 'TBC'
+    },
+    PAGE_RESET_PASSWORD: {
+      title: 'Sticker.ooo - Reset Password',
+      description: 'TBC'
+    },
+    PAGE_STICKER: {
+      title: 'Sticker.ooo - Stickers',
+      description: 'TBC'
+    },
 }

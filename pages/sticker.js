@@ -4,15 +4,16 @@ import Head from 'next/head';
 import {
   Card, Col, Row, Button,
 } from 'antd';
-import Wapper from '../components/Wapper/Wapper';
+import saveAs from 'file-saver';
+import Router from 'next/router';
+import Wapper from '../components/Wapper/Wapper';;
+import Layout from '../components/Layout/Layout';
+import PageHead from "../components/PageHead/PageHead";
 import reduxApi from '../lib/reduxApi';
 import {
   decodeWebp, loadStickersList,
 } from '../lib/customReducers';
 import WhatsAppStickersConverter from '../lib/WhatsAppStickersConverter';
-import saveAs from 'file-saver';
-import Router from 'next/router';
-import Layout from '../components/Layout/Layout'
 
 class StickerPage extends Component {
     converter = null;
@@ -71,14 +72,8 @@ class StickerPage extends Component {
 
 
       return (
-        <div>
-          <Head>
-            <title>{`${stickersList[0].name} - Sticker.ooo`}</title>
-            <meta name="description" content="Converter page description" />
-            <script src="../static/libwebpjs.out.js" />
-          </Head>
-
-
+        <React.Fragment>
+          <PageHead pageId="PAGE_STICKER" requireLibWebpJs={true} overrideTitle={`Sticker.ooo - ${stickersList[0].name}`} />
           <Layout>
             <Wapper>
               <Row type="flex" justify="center">
@@ -101,7 +96,7 @@ class StickerPage extends Component {
               </Row>
             </Wapper>
           </Layout>
-        </div>
+        </React.Fragment>
       );
     }
 }

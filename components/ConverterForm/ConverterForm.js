@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload} from 'antd';
+import {Button, Card, Col, Form, Icon, Input, InputNumber, Progress, Radio, Row, Switch, Upload, Modal} from 'antd';
 import cachios from 'cachios';
 import { connect } from 'react-redux';
 import Link from 'next/link';
