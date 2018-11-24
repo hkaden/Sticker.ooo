@@ -452,3 +452,39 @@ Getting Stickerooo status by users with admin role only
         "message": "Failed to set app status"
      }
      ```
+
+#### `POST /contactUs` 
+Sending message to account@sticker.ooo
+
+*  **Query Params**
+    
+     **Required:**
+     
+    `email =[Email]`
+
+    `subject =[String]`
+
+    `message  =[String]`
+    
+
+* **Success Response:**
+
+    * **Code:** 200 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "CONTACT_US_EMAIL_SENT",
+        "message": "The email has been sent successfully"
+     }
+     ```
+
+* **Failed Response:**
+
+    * **Code:** 500 <br />
+    * **Content:** 
+     ```json
+     {
+        "type": "FAILED_TO_SEND_CONTACT_US_EMAIL",
+        "message": "Failed to send an email. Please try again."
+     }
+     ```

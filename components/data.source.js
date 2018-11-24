@@ -53,7 +53,8 @@ export const FooterDataSource = {
   Menu: {
     className: 'header0-menu',
     children: [
-      {name: 'item0', a: {children: {en: 'Terms & Conditions', zh: '服務條款'}, href: '/tnc'}}
+      {name: 'item0', a: {children: {en: 'Terms & Conditions', zh: '服務條款'}, href: '/tnc'}},
+      {name: 'item1', a: {children: {en: 'Contact Us', zh: '聯絡我們'}, href: '/contact'}}
     ],
   },
   mobileMenu: {className: 'header0-mobile-menu'},

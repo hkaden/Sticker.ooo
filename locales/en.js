@@ -55,20 +55,28 @@ export const en = {
     pleaseInputPassword: 'Please input password!',
     pleaseInputEmail: 'Please input E-mail address!',
     pleaseContactAdmin: 'Please contact administrators for assistance.',
+    pleaseInputSubject: 'Please input subject!',
+    pleaseInputMessage: 'Please input message!',
     usernameValidationMessage: 'Your username must be between 4 and 20 characters long',
     passwordNotMatch: 'Those passwords didn\'t match. Try again. ',
     passwordValidationMessage: 'Your password must be more than 6 characters',
     emailValidationMessage: 'The input is not valid E-mail!',
     loginSuccessMessage: 'Congratulations! You can now login and create your own stickers!',
     confirmEmailMessage: 'Please confirm your email to fully access your website. Check your email inbox as well as spam section for confirmation letter and click on link in it to confirm your account.',
+    confirmContactUsMessage: "Thank you for your message. We'll get back to you as soon as possible",
     latest: 'Latest',
     popular: 'Popular',
     resetPassword: 'Reset Password',
     resetLinkSentMessage: 'Congratulations! An email with your password reset link has been sent to ',
     resetPasswordSuccessMessage: 'Congratulations! Your password has been reset, please login again. ',
-  language: 'Language',
-  stickerTags: 'Sticker Tag(s):',
-  addStickerTags: 'Add New Tag',
+    language: 'Language',
+    stickerTags: 'Sticker Tag(s):',
+    addStickerTags: 'Add New Tag',
+    submit: 'Submit',
+    contactUs: 'Contact Us',
+    subject: 'Subject',
+    message: 'Message',
+    contactUsModalTitle: 'Your email has been sent',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: 'Free. Open Source. Ad-Free'
@@ -100,5 +108,9 @@ export const en = {
     PAGE_STICKER: {
       title: 'Sticker.ooo - Stickers',
       description: 'Sticker.ooo - Stickers'
+    },
+    PAGE_CONTACT_US: {
+      title: 'Sticker.ooo - Contact Us',
+      description: 'Sticker.ooo - Contact Us'
     },
 }

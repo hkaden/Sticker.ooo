@@ -165,15 +165,11 @@ module.exports = content => `
 								<table class="container header" border="0" cellpadding="0" cellspacing="0" width="620" style="width: 620px;">
 									<tr>
 										<td style="padding: 30px 0 30px 0; border-bottom: solid 1px #eeeeee;" align="left">
-											<a style="font-size: 30px; text-decoration: none; color: #000000;">Sticker.ooo</a>
+											<a style="font-size: 30px; text-decoration: none; color: #000000;">Sticker.ooo - Contact Us</a>
 										</td>
 									</tr>
 								</table>
 								<table class="container hero-subheader" border="0" cellpadding="0" cellspacing="0" width="620" style="width: 620px;">
-									<tr>
-										<td class="hero-subheader__title" style="font-size: 43px; font-weight: bold; padding: 80px 0 15px 0;" align="left">Hello,</td>
-									</tr>
-
 									<tr>
 										<td class="hero-subheader__content" style="font-size: 16px; line-height: 27px; color: #969696; padding: 0 60px 90px 0;" align="left">
 											<pre>
