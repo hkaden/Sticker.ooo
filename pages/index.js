@@ -3,7 +3,8 @@ import Banner from '../components/Banner/Banner';
 import Layout from '../components/Layout/Layout';
 //import StickerList from '../components/StickerList/StickerList';
 import {Banner00DataSource, FactArea00DataSource} from '../components/data.source.js';
-import FactArea from "../components/FactArea/FactArea"
+import FactArea from "../components/FactArea/FactArea";
+import PageHead from "../components/PageHead/PageHead";
 
 let isMobile;
 enquireScreen((b) => {
@@ -41,10 +42,12 @@ export default class Home extends React.Component {
       //<StickerList/>
     ];
     return (
-      <Layout>
-        {children}
-      </Layout>
-
+      <React.Fragment>
+        <PageHead pageId="PAGE_INDEX"/>
+        <Layout>
+          {children}
+        </Layout>
+      </React.Fragment>
     );
   }
 }

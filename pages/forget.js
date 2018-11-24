@@ -1,14 +1,17 @@
-import Layout from '../components/Layout/Layout'
-import ForgetForm from '../components/ForgetForm/ForgetForm'
+import Layout from '../components/Layout/Layout';
+import ForgetForm from '../components/ForgetForm/ForgetForm';
+import PageHead from "../components/PageHead/PageHead";
 
 export default class Forget extends React.Component {
 
   render() {
-
-    return (
-      <Layout>
-        <ForgetForm/>
-      </Layout>
+    return (      
+      <React.Fragment>
+        <PageHead pageId="PAGE_FORGET_PASSWORD"/>
+        <Layout>
+          <ForgetForm/>
+        </Layout>
+      </React.Fragment>
     );
   }
 }
