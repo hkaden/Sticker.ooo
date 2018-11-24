@@ -29,7 +29,7 @@ class StickersList extends Component {
   }
 
   loadMore = (page) => {
-    cachios.get('/api/stickers?offset=' + page + '&limit=24')
+    cachios.get('/api/stickers?offset=' + page + '&limit=24' + '&sort=createdAt')
       .then((resp) => {
       if (resp) {
         resp.data.data.map((item) => {
@@ -76,14 +76,19 @@ class StickersList extends Component {
 
     this.state.stickersList.map((item, i) => {
       packList.push(
-        <Col md={4}>
+        <Col md={4} xs={8}>
           <div className="Traybox">
             <LazyLoad height={120}>
+              <Link href={{ pathname: '/sticker', query: {uuid: item.uuid}}} as={`/sticker/${item.uuid}`}>
               <img src={item.tray}/>
+              </Link>
             </LazyLoad>
           </div>
           <div className="Textbox">
+            <Link href={{ pathname: '/sticker', query: {uuid: item.uuid}}} as={`/sticker/${item.uuid}`}>
             <p>{item.name}</p>
+            </Link>
+            <p className="publisher">{item.publisher}</p>
             {
               item.userTags.map((userTag, itemIndex) => {
                 return (
@@ -91,7 +96,9 @@ class StickersList extends Component {
                 )
               })
             }
+
           </div>
+
         </Col>
       );
     });
@@ -115,8 +122,8 @@ class StickersList extends Component {
       <Row type="flex" justify="center" style={{paddingTop: '10px'}}>
         <Col xs={24} md={18} lg={12}>
           <Card
-            title="Stickers List"
             bodyStyle={{ justifyContent: 'center' }}
+            bordered={false}
             extra={
               <Dropdown overlay={menu}>
                 <a className="ant-dropdown-link">
