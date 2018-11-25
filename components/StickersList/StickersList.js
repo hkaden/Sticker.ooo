@@ -6,6 +6,7 @@ import Link from 'next/link';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
 import { decodeWebp } from '../../lib/customReducers';
 import StickerTag from '../StickerTag/StickerTag';
+import SearchBar from '../SearchBar/SearchBar';
 import './StickersList.less';
 import InfiniteScroll from 'react-infinite-scroller';
 import Loader from '../Loader/Loader';
@@ -22,6 +23,8 @@ class StickersList extends Component {
       isLoading: true,
       hasMoreItems: true,
     };
+
+    this.search = this.search.bind(this);
   }
 
   isWebpSupported() {
@@ -67,6 +70,10 @@ class StickersList extends Component {
         this.props.dispatch(decodeWebp(this.converter));
       }
     }
+  }
+
+  search = (value) => {
+    console.log("value=" + value)
   }
 
 
@@ -124,6 +131,7 @@ class StickersList extends Component {
           <Card
             bodyStyle={{ justifyContent: 'center' }}
             bordered={false}
+            title={<SearchBar search={this.search}/>}
             extra={
               <Dropdown overlay={menu}>
                 <a className="ant-dropdown-link">
