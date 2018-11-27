@@ -22,6 +22,8 @@ class StickersList extends Component {
       stickersList: this.props.stickersList,
       isLoading: true,
       hasMoreItems: true,
+      searching: false,
+      filtered_stickersList: []
     };
 
     this.search = this.search.bind(this);
@@ -32,7 +34,8 @@ class StickersList extends Component {
   }
 
   loadMore = (page) => {
-    cachios.get('/api/stickers?offset=' + page + '&limit=24' + '&sort=createdAt')
+    if(!this.state.searching) {
+      cachios.get('/api/stickers?offset=' + page + '&limit=24' + '&sort=createdAt')
       .then((resp) => {
       if (resp) {
         resp.data.data.map((item) => {
@@ -45,7 +48,7 @@ class StickersList extends Component {
         this.state.hasMoreItems = false
 
     });
-
+    } 
   }
 
   componentDidMount() {
@@ -73,7 +76,18 @@ class StickersList extends Component {
   }
 
   search = (value) => {
-    console.log("value=" + value)
+    this.setState({
+      searching: value? true : false
+    });
+    let { stickersList } = this.state;
+    value = value.toLowerCase();
+    let filtered_stickersList = stickersList.filter((sticker) => {
+      let name = sticker.name.toLowerCase();
+      return name.indexOf(value) > -1;
+    });
+    this.setState({
+      filtered_stickersList
+    });
   }
 
 
@@ -81,7 +95,8 @@ class StickersList extends Component {
     const {locales, lang} = this.props;
     let packList = [];
 
-    this.state.stickersList.map((item, i) => {
+    let stickerList = this.state.filtered_stickersList.length > 0 ? this.state.filtered_stickersList : this.state.stickersList;
+    stickerList.map((item, i) => {
       packList.push(
         <Col md={4} xs={8}>
           <div className="Traybox">
@@ -146,7 +161,7 @@ class StickersList extends Component {
                   pageStart={this.props.page}
                   loadMore={this.loadMore.bind(this)}
                   hasMore={this.state.hasMoreItems}
-                  loader={<Loader/>}>
+                  loader={this.state.searching? null: <Loader/>}>
                   {packList}
                 </InfiniteScroll>
               </Row>
