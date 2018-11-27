@@ -7,7 +7,7 @@ class SearchBar extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-          
+        
       };
     }
 
@@ -20,7 +20,7 @@ class SearchBar extends React.Component {
             <React.Fragment>
                <Search
                 placeholder="input search text"
-                onSearch={value => this.handleOnSearch(value)}
+                onChange={e => this.handleOnSearch(e.target.value)}
                 enterButton
                 />
             </React.Fragment>
