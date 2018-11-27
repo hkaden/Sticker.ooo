@@ -150,12 +150,35 @@ module.exports = (server) => {
           res.sendStatus(405);
         },
         list: async (req, res, next) => {
-          const findConditions = {
+          let findConditions = {
             $or: [
               { sharingType: 'public' },
               { sharingType: { $exists: false } },
             ],
           };
+
+          // @deprecated
+          // wingkwong: filtered in frontend 
+          //            refer to StickersList.js -> search()
+
+          // if(req.query.search) {
+          //   const val = req.query.search;
+            
+          //   const searchConditions = {
+          //     $and: [
+          //       {
+          //         $or: [
+          //           { name: { '$regex' : val, '$options' : 'i' } },
+          //           // may consider to search userTags as well here
+          //         ]
+          //       },
+          //       findConditions
+          //     ]
+          //   };
+
+          //   findConditions = searchConditions
+          // }
+
           try {
             req.crudify = { result: await Sticker.findWithPagination(findConditions, req.query) };
             next();
