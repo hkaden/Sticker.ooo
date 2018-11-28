@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Input } from 'antd';
+import { connect } from 'react-redux';
 
 const Search = Input.Search;
 
@@ -16,10 +17,11 @@ class SearchBar extends React.Component {
     }
 
     render() {
+        const { locales, lang } = this.props;
         return (
             <React.Fragment>
                <Search
-                placeholder="input search text"
+                placeholder={locales[lang].search}
                 onChange={e => this.handleOnSearch(e.target.value)}
                 enterButton
                 />
@@ -28,4 +30,9 @@ class SearchBar extends React.Component {
     }
 }
 
-export default SearchBar;
+const mapStateToProps = reduxState => ({
+    locales: reduxState.locales.locales,
+    lang: reduxState.locales.lang,
+  });
+  
+export default connect(mapStateToProps)(SearchBar);

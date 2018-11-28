@@ -76,6 +76,7 @@ export const zh = {
     subject: '主題',
     message: '訊息',
     contactUsModalTitle: 'Your email has been sent',
+    search: '搜索 ...',
     contactUs: '聯絡我們',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
