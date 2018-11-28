@@ -98,7 +98,7 @@ class StickersList extends Component {
     let stickerList = this.state.filtered_stickersList.length > 0 ? this.state.filtered_stickersList : this.state.stickersList;
     stickerList.map((item, i) => {
       packList.push(
-        <Col md={4} xs={8}>
+        <Col className="TrayWrapper" xs={8} md={4}>
           <div className="Traybox">
             <LazyLoad height={120}>
               <Link href={{ pathname: '/sticker', query: {uuid: item.uuid}}} as={`/sticker/${item.uuid}`}>
@@ -142,7 +142,7 @@ class StickersList extends Component {
 
     return (
       <Row type="flex" justify="center" style={{paddingTop: '10px'}}>
-        <Col xs={24} md={18} lg={12}>
+        <Col xs={24}>
           <Card
             bodyStyle={{ justifyContent: 'center' }}
             bordered={false}
