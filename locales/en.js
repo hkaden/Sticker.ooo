@@ -77,6 +77,7 @@ export const en = {
     subject: 'Subject',
     message: 'Message',
     contactUsModalTitle: 'Your email has been sent',
+    search: 'Search ...',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: 'Free. Open Source. Ad-Free'
