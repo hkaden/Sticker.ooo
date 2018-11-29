@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {findDOMNode} from 'react-dom';
-import {Button, Menu, Dropdown, Icon} from 'antd';
+import {Button, Icon, Drawer, Menu} from 'antd';
 import TweenOne from 'rc-tween-one';
 import { connect } from 'react-redux';
 import cachios from 'cachios';
@@ -11,6 +11,10 @@ import Locale from '../Locale/Locale';
 import {
   setIsLoggedIn,
 } from '../../lib/customReducers';
+import {Nav00DataSource} from "../data.source"
+
+const SubMenu = Menu.SubMenu;
+const MenuItemGroup = Menu.ItemGroup;
 
 class Nav extends React.Component {
 
@@ -21,7 +25,8 @@ class Nav extends React.Component {
       menuHeight: 0,
       isLoading: true,
       isLoggedIn: false,
-      isSubmitting: false
+      isSubmitting: false,
+      MobileNavvisible: false,
     };
     this.handleLogoutButtonClick = this.handleLogoutButtonClick.bind(this);
   }
@@ -45,6 +50,30 @@ class Nav extends React.Component {
     return <li className="item seperator" onClick={this.handleLoginButtonClick}>{locales[lang].login}</li>
   }
 
+  renderMobileLoginLogOutButton = () => {
+    const {isLoggedIn} = this.state;
+    const {locales, lang} = this.props;
+    if (isLoggedIn) {
+      return <Menu.Item className="item">
+        <a
+          onClick={this.handleLogoutButtonClick}
+          className="link"
+        >
+          {locales[lang].logout}
+        </a>
+      </Menu.Item>
+    }
+    return <Menu.Item className="item">
+      <a
+        onClick={this.handleLoginButtonClick}
+        className="link"
+      >
+        {locales[lang].login}
+      </a>
+    </Menu.Item>
+  }
+
+
 
   phoneClick = () => {
     const menu = findDOMNode(this.menu);
@@ -55,6 +84,17 @@ class Nav extends React.Component {
     });
   };
 
+  onClose = () => {
+    this.setState({
+      MobileNavvisible: false,
+    });
+  }
+
+  onOpen = () => {
+    this.setState({
+      MobileNavvisible: true,
+    });
+  }
   handleButtonClick = () => {
     location.href = "/submit"
   }
@@ -103,6 +143,19 @@ class Nav extends React.Component {
           {navData[key].a.children[lang]}
         </a>
       </li>
+
+    ));
+    const mobileNavChildren = Object.keys(navData).map((key, i) => (
+      <Menu.Item key={i.toString()} {...navData[key]} className="item">
+        <a
+          {...navData[key].a}
+          href={navData[key].a.href}
+          target={navData[key].a.target}
+          className="link"
+        >
+          {navData[key].a.children[lang]}
+        </a>
+      </Menu.Item>
     ));
 
     if(this.state.isLoading) {
@@ -119,10 +172,14 @@ class Nav extends React.Component {
         <div
           className="home-page"
         >
+
           <TweenOne
             {...dataSource.logo}
           >
             <img className="site-logo" width="100%" src={dataSource.logo.children} alt="img" onClick={this.handleLogoClick}/>
+            <div className="MobileNav">
+              <Icon type="ellipsis" style={{fontSize: '30px'}} className="openMobileNav" onClick={this.onOpen}/>
+            </div>
           </TweenOne>
           <div className="link">
             <ul className="nav">
@@ -136,6 +193,22 @@ class Nav extends React.Component {
           <div className="buttonsList">
             <Button type="primary" className="haveSticker" size="large" onClick={this.handleButtonClick}>{locales[lang].createStickers}</Button>
           </div>
+          <Drawer
+            placement="right"
+            closable={false}
+            onClose={this.onClose}
+            visible={this.state.MobileNavvisible}
+          >
+            <Menu mode="inline">
+              {mobileNavChildren}
+              <Menu.Divider/>
+              <Menu.Item>
+                <li className="item seperator" onClick={this.handleButtonClick}>{locales[lang].createStickers}</li>
+              </Menu.Item>
+              {this.renderMobileLoginLogOutButton()}
+              <Locale/>
+            </Menu>
+          </Drawer>
         </div>
       </TweenOne>
     );

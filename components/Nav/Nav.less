@@ -98,15 +98,28 @@
     //display: inline-block;
 
     position: relative;
-    width: 120px;
     line-height: 64px;
     & img {
+      width: 120px;
+      position: relative;
       vertical-align: middle;
       display: inline-block;
       cursor: pointer;
+
     }
     & a {
       display: block;
+    }
+
+    & .openMobileNav {
+      width: 16px;
+      height: 14px;
+      cursor: pointer;
+      position: absolute;
+      bottom: 30px;
+      right: 10px;
+      z-index: 100;
+      display: none;
     }
   }
   &-menu {
@@ -158,5 +171,10 @@
     .buttonsList {
       display: none;
     }
+
+    .openMobileNav {
+      display: block;
+    }
+
   }
 }
