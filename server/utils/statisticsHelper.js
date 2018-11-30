@@ -12,8 +12,8 @@ const persistInterval = 1000 * 60 * 1; // 1 min
 // const persistInterval = 1000 * 10; // 10 sec
 
 const siteStatsFields = ['packs', 'stickers',
-  'dailyViews', 'weeklyViews', 'monthlyViews', 'yearlyViews',
-  'dailyDownloads', 'weeklyDownloads', 'monthlyDownloads', 'yearlyDownloads',
+  'dailyViews', 'weeklyViews', 'monthlyViews', 'yearlyViews', 'totalViews',
+  'dailyDownloads', 'weeklyDownloads', 'monthlyDownloads', 'yearlyDownloads', 'totalDownloads',
 ];
 const stickerStatsFields = ['downloads', 'views'];
 
@@ -31,10 +31,12 @@ const getSiteStatsFromDB = async () => {
         weeklyViews: { $sum: '$stats.weeklyViews' },
         monthlyViews: { $sum: '$stats.monthlyViews' },
         yearlyViews: { $sum: '$stats.yearlyViews' },
+        totalViews: { $sum: '$stats.totalViews' },
         dailyDownloads: { $sum: '$stats.dailyDownloads' },
         weeklyDownloads: { $sum: '$stats.weeklyDownloads' },
         monthlyDownloads: { $sum: '$stats.monthlyDownloads' },
         yearlyDownloads: { $sum: '$stats.yearlyDownloads' },
+        totalDownloads: { $sum: '$stats.totalDownloads' },
       },
     },
     { $addFields: { sharingType: '$_id' } },
@@ -90,6 +92,7 @@ const getStickerStatsGrouped = async (uuid) => {
     weekly: 7,
     monthly: 14,
     yearly: 365,
+    total: 3650,
   };
   const results = await Promise.all(Object.keys(periods)
     .map(period => getIndividualStatsByPeriod(uuid, period, periods[period])));
@@ -148,6 +151,7 @@ const incrementStickerStats = async (uuid, field) => {
 };
 
 const init = async () => {
+  await persistAllStickerStats();
   await persistSiteStats();
   setInterval(() => persistSiteStats(), persistInterval);
   const resetStatsTime = moment().utcOffset(8).add(1, 'day').hour(4).minute(0).second(0); // next 4 am
