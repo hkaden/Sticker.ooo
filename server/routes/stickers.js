@@ -97,7 +97,7 @@ module.exports = (server) => {
   });
   server.use(
     '/api/stickers',
-    auth.optional,
+    //auth.optional,
     mongooseCrudify({
       Model: Sticker,
       identifyingKey: 'uuid',
