@@ -78,6 +78,8 @@ export const en = {
     message: 'Message',
     contactUsModalTitle: 'Your email has been sent',
     search: 'Search ...',
+    public: 'Your stickers will be publicly available',
+    link: 'Your stickers can only be accessible with a private link',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: 'Free. Open Source. Ad-Free'
