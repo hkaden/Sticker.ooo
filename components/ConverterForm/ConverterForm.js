@@ -170,8 +170,8 @@ class CForm extends React.Component {
                 <FormItem
                   label={locales[lang].sharingType}
                   extra={{
-                    public: 'Your stickers will be publicly available when Sticker.ooo is out of beta',
-                    link: 'Your stickers can only be accessible with a private link',
+                    public: locales[lang].public,
+                    link: locales[lang].link,
                   }[this.props.form.getFieldValue('sharingType')]}
                 >
                   {getFieldDecorator('sharingType', {
