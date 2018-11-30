@@ -9,6 +9,7 @@ export const zh = {
     totalWeeklyDownloads: '一星期下載總數',
     totalMonthlyDownloads: '一個月下載總數',
     totalYearlyDownloads: '一年下載總數',
+    totalDownloads: '累積下載總數',
     termsAndConditions: '使用條款及免責聲明',
     login: '登入',
     logout: '登出',

@@ -40,10 +40,12 @@ const stickerSchema = new Schema({
     weeklyViews: { type: Number, default: 0, index: true },
     monthlyViews: { type: Number, default: 0, index: true },
     yearlyViews: { type: Number, default: 0, index: true },
+    totalViews: { type: Number, default: 0, index: true },
     dailyDownloads: { type: Number, default: 0, index: true },
     weeklyDownloads: { type: Number, default: 0, index: true },
     monthlyDownloads: { type: Number, default: 0, index: true },
     yearlyDownloads: { type: Number, default: 0, index: true },
+    totalDownloads: { type: Number, default: 0, index: true },
   },
   createdAt: {
     type: Date,

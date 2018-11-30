@@ -9,6 +9,7 @@ export const en = {
     totalWeeklyDownloads: 'Total Weekly Downloads',
     totalMonthlyDownloads: 'Total Monthly Downloads',
     totalYearlyDownloads: 'Total Yearly Downloads',
+    totalDownloads: 'Total Downloads',
     termsAndConditions: 'Terms & Conditions',
     login: 'Login',
     logout: 'Logout',
