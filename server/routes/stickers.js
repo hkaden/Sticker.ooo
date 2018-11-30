@@ -100,7 +100,7 @@ module.exports = (server) => {
   });
   server.use(
     '/api/stickers',
-    auth.optional,
+    //auth.optional,
     mongooseCrudify({
       Model: Sticker,
       identifyingKey: 'uuid',
@@ -158,12 +158,12 @@ module.exports = (server) => {
           };
 
           // @deprecated
-          // wingkwong: filtered in frontend 
+          // wingkwong: filtered in frontend
           //            refer to StickersList.js -> search()
 
           // if(req.query.search) {
           //   const val = req.query.search;
-            
+
           //   const searchConditions = {
           //     $and: [
           //       {
