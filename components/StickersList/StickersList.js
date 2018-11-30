@@ -5,13 +5,12 @@ import { Button, Card, Col, Dropdown, Icon, Menu, Pagination, Row } from 'antd';
 import Link from 'next/link';
 import WhatsAppStickersConverter from '../../lib/WhatsAppStickersConverter';
 import { decodeWebp } from '../../lib/customReducers';
-import StickerTag from '../StickerTag/StickerTag';
 import SearchBar from '../SearchBar/SearchBar';
 import './StickersList.less';
 import InfiniteScroll from 'react-infinite-scroller';
 import Loader from '../Loader/Loader';
 import cachios from "cachios";
-import LazyLoad from 'react-lazyload';
+import StickerCard from './StickerCard';
 
 class StickersList extends Component {
   converter = null;
@@ -98,29 +97,8 @@ class StickersList extends Component {
     let stickerList = this.state.filtered_stickersList.length > 0 ? this.state.filtered_stickersList : this.state.stickersList;
     stickerList.map((item, i) => {
       packList.push(
-        <Col className="TrayWrapper" xs={8} md={4}>
-          <div className="Traybox">
-            <LazyLoad height={120}>
-              <Link href={{ pathname: '/sticker', query: {uuid: item.uuid}}} as={`/sticker/${item.uuid}`}>
-              <img src={item.tray}/>
-              </Link>
-            </LazyLoad>
-          </div>
-          <div className="Textbox">
-            <Link href={{ pathname: '/sticker', query: {uuid: item.uuid}}} as={`/sticker/${item.uuid}`}>
-            <p>{item.name}</p>
-            </Link>
-            <p className="publisher">{item.publisher}</p>
-            {
-              item.userTags.map((userTag, itemIndex) => {
-                return (
-                  <StickerTag key={itemIndex} value={userTag}/>
-                )
-              })
-            }
-
-          </div>
-
+        <Col xs={32} md={8} lg={6}>
+          <StickerCard sticker={item}/>
         </Col>
       );
     });
