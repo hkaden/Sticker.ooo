@@ -11,7 +11,7 @@ const { requestParameterValidator } = require('../utils/validators');
 module.exports = function (server) {
   server.get(
     '/api/stickerooo',
-    auth.optional,
+    //auth.optional,
     async (req, res, next) => {
       try {
         let query = Stickerooo
