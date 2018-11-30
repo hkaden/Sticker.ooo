@@ -14,10 +14,12 @@ Endpoint: `https://stickerizdemo.hkaden.me/api`
         "adminTags": ["original"],
         "userTags": ["Pet", "Dog"],
         "stats": {
+            "totalDownloads": 15,
             "yearlyDownloads": 15,
             "monthlyDownloads": 15,
             "weeklyDownloads": 15,
             "dailyDownloads": 15,
+            "totalViews": 1,
             "yearlyViews": 1,
             "monthlyViews": 1,
             "weeklyViews": 1,
@@ -112,10 +114,12 @@ Returns stickers, only the first 5 images of the first pack is returned.
         "weeklyViews": 25,
         "monthlyViews": 25,
         "yearlyViews": 25,
+        "totalViews": 25,
         "dailyDownloads": 15,
         "weeklyDownloads": 15,
         "monthlyDownloads": 15,
-        "yearlyDownloads": 15
+        "yearlyDownloads": 15,
+        "totalDownloads": 15
       },
       "link": {
         "packs": 0,
@@ -124,10 +128,12 @@ Returns stickers, only the first 5 images of the first pack is returned.
         "weeklyViews": 25,
         "monthlyViews": 25,
         "yearlyViews": 25,
+        "totalViews": 25,
         "dailyDownloads": 15,
         "weeklyDownloads": 15,
         "monthlyDownloads": 15,
-        "yearlyDownloads": 15
+        "yearlyDownloads": 15,
+        "totalDownloads": 15
       },
       "private": {
         "packs": 0,
@@ -136,10 +142,12 @@ Returns stickers, only the first 5 images of the first pack is returned.
         "weeklyViews": 25,
         "monthlyViews": 25,
         "yearlyViews": 25,
+        "totalViews": 25,
         "dailyDownloads": 15,
         "weeklyDownloads": 15,
         "monthlyDownloads": 15,
         "yearlyDownloads": 15
+        "totalDownloads": 15
       }
     }
      ```
