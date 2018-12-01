@@ -28,13 +28,13 @@ class StickerCard extends React.Component {
                 title={sticker.name}
                 actions={[
                     <div>
-                        Pack <br/> {sticker.stats.packs}
+                       {locales[lang].stickers} <br/> {sticker.stats.stickers}
                     </div>, 
                     <div>
-                        View <br/> TBC
+                        {locales[lang].views} <br/> {sticker.stats.totalViews}
                     </div>, 
                     <div>
-                        Download <br/> TBC
+                        {locales[lang].downloads} <br/> {sticker.stats.totalDownloads}
                     </div>, 
             ]}
             >
@@ -45,7 +45,7 @@ class StickerCard extends React.Component {
                             </LazyLoad>
                     </Col>
                     <Col xs={12}>
-                        Publisher: { sticker.publisher} <br/>
+                        { sticker.publisher} <br/>
                         {
                           sticker.userTags.map((userTag, itemIndex) => {
                             return (

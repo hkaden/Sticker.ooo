@@ -81,6 +81,9 @@ export const en = {
     search: 'Search ...',
     public: 'Your stickers will be publicly available',
     link: 'Your stickers can only be accessible with a private link',
+    stickers: 'Stickers',
+    views: 'Views',
+    downloads: 'Donwloads',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: 'Free. Open Source. Ad-Free'
