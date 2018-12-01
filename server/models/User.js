@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const patchHistory = require('mongoose-patch-history').default;
 const { pascalize } = require('humps');
+const fs = require('fs');
 
 const Schema = mongoose.Schema;
 
@@ -33,7 +34,10 @@ const UsersSchema = new Schema({
     default: Date.now,
   },
   createdBy: { type: String },
-  updatedBy: { type: String },
+  updatedBy: {  type: String },
+  role: { 
+    type: [{ type: String, enum: ['user', 'admin'], required: true }]
+  }
 });
 
 UsersSchema.methods.setPassword = function (password) {
@@ -47,14 +51,27 @@ UsersSchema.methods.validatePassword = function (password) {
 };
 
 UsersSchema.methods.generateJWT = function () {
+  const cert = fs.readFileSync(`${__dirname}/../private.pem`);
   return jwt.sign({
     username: this.username,
     email: this.email,
     uuid: this.uuid,
-  }, process.env.JWT_SECRET, {
+    role: this.role
+  }, cert, {
+    algorithm: 'RS256',
     expiresIn: '60 days',
   });
 };
+
+// @deprecated
+// use auth.verifyJwt instead
+//
+// UsersSchema.methods.verifyJWT = function (token) {
+//   const cert = fs.readFileSync(`${__dirname}/../public.pem`);
+//   return jwt.verify(token, cert, { algorithm: 'RS256' }, function(err, payload) {
+//     return err ? null : payload;
+//   });
+// }
 
 UsersSchema.methods.toAuthJSON = function () {
   return {
@@ -62,8 +79,14 @@ UsersSchema.methods.toAuthJSON = function () {
     username: this.username,
     email: this.email,
     token: this.generateJWT(),
+    role: this.role
   };
 };
+
+UsersSchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
 
 UsersSchema.plugin(patchHistory, { mongoose, name: 'usersPatches', transforms: [pascalize, v => v] });
 
