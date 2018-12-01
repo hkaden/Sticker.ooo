@@ -81,6 +81,9 @@ export const zh = {
     contactUs: '聯絡我們',
     public: '你的貼紙將公開發布',
     link: '您的貼紙只能通過私人鏈接訪問',
+    stickers: '貼紙',
+    views: '瀏覽次數',
+    downloads: '下載次數',
     PAGE_INDEX: {
       title: 'Sticker.ooo',
       description: '免費、開源、無廣告'
