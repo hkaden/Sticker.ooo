@@ -42,7 +42,7 @@ module.exports = function (server) {
   //FIXME: use the commented out instead after beta
   server.post(
     '/api/stickerooo',
-    auth.optional,
+    //auth.optional,
     async (req, res, next) => {
       try {
         let query = Stickerooo
